@@ -16,10 +16,7 @@ jobs:
 
       - name: Get mpv-player/mpv last version
         id: version
-        run: |
-          git fetch
-          sed -i .bak 's/--dirty//g' version.sh
-          echo "::set-output name=version::$(sh version.sh)"
+        run: echo "::set-output name=version::$(sh version.sh)"
 
       - name: Get last build version
         id: last_build
