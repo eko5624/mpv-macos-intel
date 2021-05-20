@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *"
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout mpv-player/mpv
+        uses: actions/checkout@v2.3.4
+        with:
+          repository: "mpv-player/mpv"
+
+      - name: Get mpv-player/mpv last version
+        id: version
+        run: echo "::set-output name=version::$(sh version.sh)"
+
+      - name: Get last build version
+        id: last_build
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: ${{ github.repository }}
+          releases-only: true
+        continue-on-error: true
+
+      - name: Cancel run if last build is up to date
+        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
+        run: exit 1
+
+      - name: Install dependencies
+        run: |
+          brew update && brew upgrade
+          brew install libass ffmpeg --HEAD
+          brew install lua@5.1
+
+      - name: Build mpv
+        run: |
+          ./bootstrap.py
+          ./waf configure
+          ./waf
+        env:
+          CFLAGS: -mmacosx-version-min=10.8
+
+      - name: Bundle mpv
+        run: TOOLS/osxbundle.py build/mpv
+
+      - name: Get mpv-player/mpv last commit SHA
+        id: sha
+        run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
+
+      - name: zip bundle
+        run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
+        working-directory: build
+
+      - name: Get current timestamp
+        id: timestamp
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: mpv-${{ steps.version.outputs.version }}
+          name: ${{ steps.timestamp.outputs.date }}
+          body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
+          files: build/mpv-${{ steps.version.outputs.version }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
