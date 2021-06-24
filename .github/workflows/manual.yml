@@ -34,8 +34,13 @@ jobs:
       - name: Install dependencies
         run: |
           brew update && brew upgrade
-          brew install libass ffmpeg --HEAD
+          brew install zlib --HEAD
+          brew install libass --HEAD
           brew install lua@5.1
+          brew install lua
+          brew install libjpeg
+          brew install uchardet --HEAD
+          brew install ffmpeg --HEAD
 
       - name: Build mpv
         run: |
