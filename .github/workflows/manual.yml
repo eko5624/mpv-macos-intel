@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew update && brew upgrade
-          brew install zlib --HEAD
+          brew install zlib 
           echo 'export PATH="/usr/local/opt/zlib/bin:$PATH"' >> /Users/runner/.bash_profile 
           export LDFLAGS="-L/usr/local/opt/zlib/lib"
           export CPPFLAGS="-I/usr/local/opt/zlib/include"
