@@ -34,11 +34,16 @@ jobs:
       - name: Install dependencies
         run: |
           brew update && brew upgrade
-          brew update && brew upgrade
           brew install zlib --HEAD
+          export LDFLAGS="-L/usr/local/opt/zlib/lib"
+          export CPPFLAGS="-I/usr/local/opt/zlib/include"
+          export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
           brew install libass --HEAD
           brew install lua@5.1
-          brew install libarchive
+          brew install libarchive         
+          export LDFLAGS="-L/usr/local/opt/libarchive/lib"
+          export CPPFLAGS="-I/usr/local/opt/libarchive/include"
+          export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig"
           brew install libjpeg
           brew install libcaca
           brew install uchardet --HEAD
