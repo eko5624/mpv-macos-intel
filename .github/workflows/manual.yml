@@ -34,11 +34,13 @@ jobs:
       - name: Install dependencies
         run: |
           brew update && brew upgrade
+          brew update && brew upgrade
           brew install zlib --HEAD
           brew install libass --HEAD
           brew install lua@5.1
-          brew install lua
+          brew install libarchive
           brew install libjpeg
+          brew install libcaca
           brew install uchardet --HEAD
           brew install ffmpeg --HEAD
 
