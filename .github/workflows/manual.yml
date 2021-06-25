@@ -34,20 +34,23 @@ jobs:
       - name: Install dependencies
         run: |
           brew update && brew upgrade
+          brew install zlib --HEAD
+          echo 'export PATH="/usr/local/opt/zlib/bin:$PATH"' >> /Users/runner/.bash_profile 
           export LDFLAGS="-L/usr/local/opt/zlib/lib"
           export CPPFLAGS="-I/usr/local/opt/zlib/include"
           export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
-          brew install zlib 
           brew install libass --HEAD
-          brew install lua@5.1         
+          brew install lua@5.1
+          brew install libarchive 
+          echo 'export PATH="/usr/local/opt/libarchive/bin:$PATH"' >> /Users/runner/.bash_profile        
           export LDFLAGS="-L/usr/local/opt/libarchive/lib"
           export CPPFLAGS="-I/usr/local/opt/libarchive/include"
           export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig"
-          brew install libarchive
           brew install libjpeg
           brew install libcaca
           brew install uchardet --HEAD
           brew install ffmpeg --HEAD
+
 
       - name: Build mpv
         run: |
