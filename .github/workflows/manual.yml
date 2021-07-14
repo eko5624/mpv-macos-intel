@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout mpv-player/mpv
-        uses: actions/checkout@v2.3.4
+        uses: eko5624/checkout@v2.3.4
         with:
           repository: "mpv-player/mpv"
           fetch-depth: 0
@@ -21,7 +21,7 @@ jobs:
 
       - name: Get last build version
         id: last_build
-        uses: oprypin/find-latest-tag@v1.1.0
+        uses: eko5624/find-latest-tag@v1.1.0
         with:
           repository: ${{ github.repository }}
           releases-only: true
@@ -69,7 +69,7 @@ jobs:
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: eko5624/action-gh-release@v1
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
