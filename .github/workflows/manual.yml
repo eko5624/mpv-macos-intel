@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-11.4
     steps:
       - name: Checkout mpv-player/mpv
         uses: eko5624/checkout@v2.3.4
@@ -34,24 +34,25 @@ jobs:
       - name: Install dependencies
         run: |
           brew update && brew upgrade
-          brew install zlib --HEAD
+          brew install zlib 
           brew install libass --HEAD
-          brew install lua@5.1
+          brew install luajit-openresty
           brew install libarchive       
           brew install libjpeg
           brew install libcaca
-          brew install uchardet --HEAD
+          brew install uchardet 
           brew install ffmpeg --HEAD
 
       - name: Build mpv
         run: |
           export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
           export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig"
+          export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig"
           ./bootstrap.py
           ./waf configure
           ./waf
         env:
-          CFLAGS: -mmacosx-version-min=10.8
+          CFLAGS: -mmacosx-version-min=11.4
 
       - name: Bundle mpv
         run: TOOLS/osxbundle.py build/mpv
