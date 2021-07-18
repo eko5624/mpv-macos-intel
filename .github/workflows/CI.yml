@@ -33,14 +33,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew reinstall zlib 
-          brew reinstall libass --HEAD
-          brew reinstall luajit-openresty
-          brew reinstall libarchive       
-          brew reinstall libjpeg
-          brew reinstall libcaca
-          brew reinstall uchardet 
-          brew reinstall ffmpeg --HEAD
+          brew install zlib 
+          brew install libass --HEAD
+          brew install luajit-openresty
+          brew install libarchive       
+          brew install libjpeg
+          brew install libcaca
+          brew install uchardet 
+          brew install ffmpeg --HEAD
 
       - name: Build mpv
         run: |
