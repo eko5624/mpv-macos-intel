@@ -33,20 +33,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install zlib 
-          brew install libass --HEAD
-          brew install luajit-openresty
-          brew install libarchive       
-          brew install libjpeg
-          brew install libcaca
-          brew install uchardet 
-          brew install ffmpeg --HEAD
+          brew reinstall zlib 
+          brew reinstall libass --HEAD
+          brew reinstall luajit-openresty
+          brew reinstall libarchive       
+          brew reinstall libjpeg
+          brew reinstall libcaca
+          brew reinstall uchardet 
+          brew reinstall ffmpeg --HEAD
 
       - name: Build mpv
         run: |
-          export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
-          export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig"
-          export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig"
+          export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
           ./bootstrap.py
           ./waf configure
           ./waf
