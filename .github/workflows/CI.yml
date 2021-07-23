@@ -33,6 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          brew update && brew upgrade 
           brew install zlib 
           brew install libass --HEAD
           brew install luajit-openresty
