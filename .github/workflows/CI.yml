@@ -53,7 +53,7 @@ jobs:
           ./waf configure
           ./waf
         env:
-          CFLAGS: -mmacosx-version-min=10.15
+          CFLAGS: -mmacosx-version-min=10.8
 
       - name: Bundle mpv
         run: TOOLS/osxbundle.py build/mpv
