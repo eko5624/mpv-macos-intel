@@ -50,7 +50,7 @@ jobs:
           export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
           ./bootstrap.py
-          ./waf configure --enable-ffmpeg-strict-abi
+          ./waf configure
           ./waf
         env:
           CFLAGS: -mmacosx-version-min=10.8
