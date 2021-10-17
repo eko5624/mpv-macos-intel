@@ -21,7 +21,7 @@ jobs:
 
       - name: Get last build version
         id: last_build
-        uses: eko5624/find-latest-tag@v1.1.0
+        uses: oprypin/find-latest-tag@v1.1.0
         with:
           repository: ${{ github.repository }}
           releases-only: true
@@ -71,7 +71,7 @@ jobs:
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
       - name: Create Release
-        uses: eko5624/action-gh-release@v1
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
