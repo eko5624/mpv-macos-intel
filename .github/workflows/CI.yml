@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-11
     steps:
       - name: Checkout mpv-player/mpv
-        uses: eko5624/checkout@v2
+        uses: actions/checkout@v2
         with:
           repository: "mpv-player/mpv"
           fetch-depth: 0
