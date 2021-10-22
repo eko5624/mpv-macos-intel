@@ -32,14 +32,7 @@ jobs:
         run: exit 1
 
       - name: Override Xcode 13.0 if it's the default toolchain
-        run: |
-          XCODE_PATH="$(xcode-select -p)"
-          case "${XCODE_PATH}" in
-            *Xcode_13.0*)
-              sudo xcode-select -s "/Applications/Xcode_13.1.app"
-              echo "Updated Xcode path ${XCODE_PATH} -> $(xcode-select -p)"
-              ;;
-          esac
+        run: sudo xcode-select -s "/Applications/Xcode_12.5.1.app"
 
       - name: Install dependencies
         run: |
