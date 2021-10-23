@@ -7,7 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        cc:
+          - "clang"
+        os:
+          - "macos-11"
     steps:
       - name: Checkout mpv-player/mpv
         uses: eko5624/checkout@v2
@@ -32,11 +38,18 @@ jobs:
         run: exit 1
 
       - name: Override Xcode 13.0 if it's the default toolchain
-        run: sudo xcode-select -s "/Applications/Xcode_12.5.1.app"
+        run: |
+          XCODE_PATH="$(xcode-select -p)"
+          case "${XCODE_PATH}" in
+            *Xcode_13.0*)
+              sudo xcode-select -s "/Applications/Xcode_13.1.app"
+              echo "Updated Xcode path ${XCODE_PATH} -> $(xcode-select -p)"
+              ;;
+          esac
 
       - name: Install dependencies
         run: |
-          brew update && brew upgrade
+          brew update 
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
@@ -49,14 +62,9 @@ jobs:
 
       - name: Build mpv
         run: |
-          export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          ./bootstrap.py
-          ./waf configure
-          ./waf
+          ./ci/build-macos.sh
         env:
-          CFLAGS: -mmacosx-version-min=10.8
+          CC: "${{ matrix.cc }}"
 
       - name: Bundle mpv
         run: TOOLS/osxbundle.py build/mpv
