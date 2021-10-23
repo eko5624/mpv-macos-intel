@@ -49,25 +49,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew update 
-          brew install little-cms2
-          brew install zlib 
-          brew install libass --HEAD
-          brew install luajit-openresty
-          brew install libarchive       
-          brew install libjpeg
-          brew install libcaca
-          brew install uchardet 
-          brew install ffmpeg --HEAD
+          brew update
+          brew install autoconf automake pkg-config libtool python freetype fribidi little-cms2 luajit libass ffmpeg meson
 
       - name: Build mpv
         run: |
-          ./ci/build-macos.sh
+          ./ci/build-macos.sh meson
         env:
           CC: "${{ matrix.cc }}"
 
       - name: Bundle mpv
-        run: TOOLS/osxbundle.py build/mpv
+        run: ./TOOLS/osxbundle.py build/mpv
 
       - name: Get mpv-player/mpv last commit SHA
         id: sha
