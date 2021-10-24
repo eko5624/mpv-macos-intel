@@ -36,14 +36,12 @@ jobs:
 
       - name: Build mpv
         run: |
-          meson build
-          meson compile -C build
-          meson install -C build
+          ./bootstrap.py
+          ./waf configure
+          ./waf
+          ./waf install          
         env:
           CFLAGS: -mmacosx-version-min=10.8
-
-      - name: Bundle mpv
-        run: ./TOOLS/osxbundle.py build/mpv
 
       - name: Get eko5624/mpv-meson last commit SHA
         id: sha
