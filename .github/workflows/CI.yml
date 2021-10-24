@@ -44,10 +44,10 @@ jobs:
 
       - name: Build mpv
         run: |
-          ./bootstrap.py
-          ./waf configure
-          ./waf
-          ./waf install          
+          python3 bootstrap.py
+          python3 waf configure
+          python3 waf
+          python3 TOOLS/osxbundle.py build/mpv         
         env:
           CFLAGS: -mmacosx-version-min=10.8
 
