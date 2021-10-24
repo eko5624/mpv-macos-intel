@@ -7,35 +7,17 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        cc:
-          - "clang"
-        os:
-          - "macos-11"
+    runs-on: macos-11
     steps:
-      - name: Checkout mpv-player/mpv
+      - name: Checkout Dudemanguy/mpv/tree/meson
         uses: eko5624/checkout@v2
         with:
-          repository: "mpv-player/mpv"
+          repository: "Dudemanguy/mpv/tree/meson"
           fetch-depth: 0
 
-      - name: Get mpv-player/mpv last version
+      - name: Get Dudemanguy/mpv/tree/meson last version
         id: version
         run: echo "::set-output name=version::$(sh version.sh)"
-
-      - name: Get last build version
-        id: last_build
-        uses: eko5624/find-latest-tag@v1.1.0
-        with:
-          repository: ${{ github.repository }}
-          releases-only: true
-        continue-on-error: true
-
-      - name: Cancel run if last build is up to date
-        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
-        run: exit 1
 
       - name: Override Xcode 13.0 if it's the default toolchain
         run: |
@@ -54,9 +36,11 @@ jobs:
 
       - name: Build mpv
         run: |
-          ./ci/build-macos.sh meson
+          meson build
+          meson compile -C build
+          meson install -C build
         env:
-          CC: "${{ matrix.cc }}"
+          CFLAGS: -mmacosx-version-min=10.8
 
       - name: Bundle mpv
         run: ./TOOLS/osxbundle.py build/mpv
