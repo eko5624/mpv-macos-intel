@@ -9,13 +9,13 @@ jobs:
   build:
     runs-on: macos-11
     steps:
-      - name: Checkout Dudemanguy/mpv/tree/meson
+      - name: Checkout eko5624/mpv-meson
         uses: eko5624/checkout@v2
         with:
-          repository: "Dudemanguy/mpv/tree/meson"
+          repository: "eko5624/mpv-meson"
           fetch-depth: 0
 
-      - name: Get Dudemanguy/mpv/tree/meson last version
+      - name: Get eko5624/mpv-meson last version
         id: version
         run: echo "::set-output name=version::$(sh version.sh)"
 
@@ -45,7 +45,7 @@ jobs:
       - name: Bundle mpv
         run: ./TOOLS/osxbundle.py build/mpv
 
-      - name: Get mpv-player/mpv last commit SHA
+      - name: Get eko5624/mpv-meson last commit SHA
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
 
@@ -62,7 +62,7 @@ jobs:
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
-          body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
+          body: Bump to eko5624/mpv-meson@${{ steps.sha.outputs.sha }}
           files: build/mpv-${{ steps.version.outputs.version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
