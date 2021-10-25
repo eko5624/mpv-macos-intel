@@ -3,35 +3,37 @@ name: CI
 on:
   workflow_dispatch:
   schedule:
-    - cron: '59 23 * * SUN'
+    - cron: '5 0 * * MON'
 
 jobs:
   build:
     runs-on: macos-11
     steps:
-      - name: Checkout mpv-player/mpv
+      - name: Checkout eko5624/mpv
         uses: eko5624/checkout@v2
         with:
-          repository: "mpv-player/mpv"
+          repository: "eko5624/mpv"
           fetch-depth: 0
 
-      - name: Get mpv-player/mpv last version
+      - name: Get eko5624/mpv last version
         id: version
         run: echo "::set-output name=version::$(sh version.sh)"
 
-      - name: Override Xcode 13.0 if it's the default toolchain
-        run: |
-          XCODE_PATH="$(xcode-select -p)"
-          case "${XCODE_PATH}" in
-            *Xcode_13.0*)
-              sudo xcode-select -s "/Applications/Xcode_13.1.app"
-              echo "Updated Xcode path ${XCODE_PATH} -> $(xcode-select -p)"
-              ;;
-          esac
+      - name: Get last build version
+        id: last_build
+        uses: eko5624/find-latest-tag@v1.1.0
+        with:
+          repository: ${{ github.repository }}
+          releases-only: true
+        continue-on-error: true
+
+      - name: Cancel run if last build is up to date
+        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
+        run: exit 1
 
       - name: Install dependencies
         run: |
-          brew update
+          brew update && brew upgrade
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
@@ -41,17 +43,21 @@ jobs:
           brew install libcaca
           brew install uchardet 
           brew install ffmpeg --HEAD
-
       - name: Build mpv
         run: |
-          python3 bootstrap.py
-          python3 waf configure
-          python3 waf
-          python3 TOOLS/osxbundle.py build/mpv         
+          export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
+          ./bootstrap.py
+          ./waf configure
+          ./waf
         env:
           CFLAGS: -mmacosx-version-min=10.8
 
-      - name: Get mpv-player/mpv last commit SHA
+      - name: Bundle mpv
+        run: TOOLS/osxbundle.py build/mpv
+
+      - name: Get eko5624/mpv last commit SHA
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
 
@@ -68,7 +74,7 @@ jobs:
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
-          body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
+          body: Bump to eko5624/mpv@${{ steps.sha.outputs.sha }}
           files: build/mpv-${{ steps.version.outputs.version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
