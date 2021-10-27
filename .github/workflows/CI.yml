@@ -9,13 +9,13 @@ jobs:
   build:
     runs-on: macos-11
     steps:
-      - name: Checkout eko5624/mpv
+      - name: Checkout mpv-player/mpv
         uses: eko5624/checkout@v2
         with:
           repository: "eko5624/mpv"
           fetch-depth: 0
 
-      - name: Get eko5624/mpv last version
+      - name: Get mpv-player/mpv last version
         id: version
         run: echo "::set-output name=version::$(sh version.sh)"
 
@@ -66,9 +66,12 @@ jobs:
           CFLAGS: -mmacosx-version-min=10.8
 
       - name: Bundle mpv
-        run: TOOLS/osxbundle.py build/mpv
+        run: |
+          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
+          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib
+          TOOLS/osxbundle.py build/mpv
 
-      - name: Get eko5624/mpv last commit SHA
+      - name: Get mpv-player/mpv last commit SHA
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
 
@@ -85,7 +88,7 @@ jobs:
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
-          body: Bump to eko5624/mpv@${{ steps.sha.outputs.sha }}
+          body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
           files: build/mpv-${{ steps.version.outputs.version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
