@@ -12,7 +12,7 @@ jobs:
       - name: Checkout mpv-player/mpv
         uses: eko5624/checkout@v2
         with:
-          repository: "eko5624/mpv"
+          repository: "mpv-player/mpv"
           fetch-depth: 0
 
       - name: Get mpv-player/mpv last version
