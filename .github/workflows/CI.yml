@@ -40,9 +40,10 @@ jobs:
               echo "Updated Xcode path ${XCODE_PATH} -> $(xcode-select -p)"
               ;;
           esac  
+          
       - name: Install dependencies
         run: |
-          brew update && brew upgrade
+          brew update 
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
@@ -69,6 +70,7 @@ jobs:
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib
           TOOLS/osxbundle.py build/mpv
+          
       - name: Get mpv-player/mpv last commit SHA
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
