@@ -20,6 +20,7 @@ jobs:
         run: echo "::set-output name=version::$(sh version.sh)"
 
       - name: Get last build version
+        if: github.head_ref == 'refs/heads/main'        
         id: last_build
         uses: eko5624/find-latest-tag@v1.1.0
         with:
@@ -28,7 +29,7 @@ jobs:
         continue-on-error: true
 
       - name: Cancel run if last build is up to date
-        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
+        if: (github.head_ref == 'refs/heads/main') && endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
         run: exit 1
 
       - name: Override Xcode 13.0 if it's the default toolchain
