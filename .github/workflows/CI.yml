@@ -19,8 +19,7 @@ jobs:
         id: version
         run: echo "::set-output name=version::$(sh version.sh)"
 
-      - name: Get last build version
-        if: github.head_ref == 'refs/heads/main'        
+      - name: Get last build version     
         id: last_build
         uses: eko5624/find-latest-tag@v1.1.0
         with:
@@ -29,7 +28,7 @@ jobs:
         continue-on-error: true
 
       - name: Cancel run if last build is up to date
-        if: (github.head_ref == 'refs/heads/main') && endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
+        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
         run: exit 1
 
       - name: Override Xcode 13.0 if it's the default toolchain
@@ -67,10 +66,12 @@ jobs:
           CFLAGS: -mmacosx-version-min=10.8
 
       - name: Bundle mpv
-        run: TOOLS/osxbundle.py build/mpv
+        run: |
+          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
+          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib
+          TOOLS/osxbundle.py build/mpv
           
-      - name: Get mpv-player/mpv last commit SHA
-        if: github.head_ref == 'refs/heads/main'        
+      - name: Get mpv-player/mpv last commit SHA      
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
 
@@ -78,8 +79,7 @@ jobs:
         run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
         working-directory: build
 
-      - name: Get current timestamp
-        if: github.head_ref == 'refs/heads/main'        
+      - name: Get current timestamp      
         id: timestamp
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
