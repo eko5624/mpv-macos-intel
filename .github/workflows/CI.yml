@@ -83,8 +83,7 @@ jobs:
         id: timestamp
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
-      - name: Create Release
-        if: github.head_ref == 'refs/heads/main'        
+      - name: Create Release      
         uses: eko5624/action-gh-release@v1
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
