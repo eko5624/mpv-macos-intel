@@ -1,16 +1,19 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - "!main"
   workflow_dispatch:
   schedule:
-    - cron: '5 0 * * MON'
+    - cron: "0 12 * * *"
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - name: Checkout mpv-player/mpv
-        uses: eko5624/checkout@v2
+        uses: actions/checkout@v2.3.5
         with:
           repository: "mpv-player/mpv"
           fetch-depth: 0
@@ -20,45 +23,24 @@ jobs:
         run: echo "::set-output name=version::$(sh version.sh)"
 
       - name: Get last build version
+        if: github.head_ref == 'refs/heads/main'
         id: last_build
-        uses: eko5624/find-latest-tag@v1.1.0
+        uses: oprypin/find-latest-tag@v1
         with:
           repository: ${{ github.repository }}
           releases-only: true
         continue-on-error: true
 
       - name: Cancel run if last build is up to date
-        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
+        if: (github.head_ref == 'refs/heads/main') && endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
         run: exit 1
 
-      - name: Override Xcode 13.0 if it's the default toolchain
-        run: |
-          XCODE_PATH="$(xcode-select -p)"
-          case "${XCODE_PATH}" in
-            *Xcode_13.0*)
-              sudo xcode-select -s "/Applications/Xcode_13.1.app"
-              echo "Updated Xcode path ${XCODE_PATH} -> $(xcode-select -p)"
-              ;;
-          esac  
-          
       - name: Install dependencies
         run: |
-          brew update 
-          brew install little-cms2
-          brew install zlib 
-          brew install libass --HEAD
-          brew install luajit-openresty
-          brew install libarchive       
-          brew install libjpeg
-          brew install libcaca
-          brew install uchardet 
-          brew install ffmpeg --HEAD        
-          
+          brew update && brew upgrade
+          brew install ffmpeg lua@5.1
       - name: Build mpv
         run: |
-          export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
           ./bootstrap.py
           ./waf configure
           ./waf
@@ -66,29 +48,36 @@ jobs:
           CFLAGS: -mmacosx-version-min=10.8
 
       - name: Bundle mpv
-        run: |
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib
-          TOOLS/osxbundle.py build/mpv
-          
-      - name: Get mpv-player/mpv last commit SHA
-        id: sha
-        run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
+        run: TOOLS/osxbundle.py build/mpv
 
-      - name: zip bundle
-        run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
+      - name: tar bundle
+        run: tar cvf mpv-${{ steps.version.outputs.version }}.tar mpv.app
         working-directory: build
 
+      - name: Upload artifact
+        if: github.head_ref != 'refs/heads/main'
+        uses: actions/upload-artifact@v2
+        with:
+          name: mpv-${{ steps.version.outputs.version }}
+          path: build/mpv-${{ steps.version.outputs.version }}.tar
+
       - name: Get current timestamp
+        if: github.head_ref == 'refs/heads/main'
         id: timestamp
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
+      - name: Get mpv-player/mpv last commit SHA
+        if: github.head_ref == 'refs/heads/main'
+        id: sha
+        run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
+
       - name: Create Release
-        uses: eko5624/action-gh-release@v1
+        if: github.head_ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
           body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
-          files: build/mpv-${{ steps.version.outputs.version }}.zip
+          files: build/mpv-${{ steps.version.outputs.version }}.tar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
