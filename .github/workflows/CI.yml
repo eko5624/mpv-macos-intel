@@ -51,6 +51,7 @@ jobs:
           brew install libarchive       
           brew install libjpeg
           brew install mujs
+          brew install meson          
           brew install uchardet 
           brew install ffmpeg --HEAD        
           
@@ -59,16 +60,13 @@ jobs:
           export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          ./bootstrap.py
-          ./waf configure
-          ./waf
+          meson build
+          meson compile -C build
         env:
           CFLAGS: -mmacosx-version-min=10.8
 
       - name: Bundle mpv
         run: |
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib
           TOOLS/osxbundle.py build/mpv
           
       - name: Get mpv-player/mpv last commit SHA      
