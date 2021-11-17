@@ -50,8 +50,7 @@ jobs:
           brew install luajit-openresty
           brew install libarchive       
           brew install libjpeg
-          brew install mujs
-          brew install meson          
+          brew install mujs         
           brew install uchardet 
           brew install ffmpeg --HEAD        
           
@@ -60,8 +59,9 @@ jobs:
           export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          meson build
-          meson compile -C build
+          ./bootstrap.py
+          ./waf configure
+          ./waf
         env:
           CFLAGS: -mmacosx-version-min=10.8
 
