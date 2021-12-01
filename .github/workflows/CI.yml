@@ -29,7 +29,7 @@ jobs:
 
       - name: Cancel run if last build is up to date
         if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
-        run: exit 1
+        run: exit 1 
           
       - name: Install dependencies
         run: |
@@ -40,7 +40,8 @@ jobs:
           brew install luajit-openresty
           brew install libarchive       
           brew install libjpeg
-          brew install mujs         
+          brew install mujs
+          brew install meson          
           brew install uchardet 
           brew install ffmpeg --HEAD        
           
@@ -49,9 +50,8 @@ jobs:
           export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/luajit-openresty/lib/pkgconfig/:$PKG_CONFIG_PATH"
           export PKG_CONFIG_PATH="/usr/local/opt/libarchive/lib/pkgconfig/:$PKG_CONFIG_PATH"
-          ./bootstrap.py
-          ./waf configure
-          ./waf
+          meson build
+          meson compile -C build
         env:
           CFLAGS: -mmacosx-version-min=10.8
 
