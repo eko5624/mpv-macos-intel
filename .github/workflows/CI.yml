@@ -43,7 +43,7 @@ jobs:
           brew install mujs
           brew install meson          
           brew install uchardet 
-          brew install ffmpeg --HEAD        
+          brew install ffmpeg        
           
       - name: Build mpv
         run: |
