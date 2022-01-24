@@ -33,7 +33,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          brew update && brew upgrade
+          brew update
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
@@ -43,7 +43,7 @@ jobs:
           brew install mujs
           brew install meson          
           brew install uchardet 
-          brew install ffmpeg        
+          brew install ffmpeg --HEAD        
           
       - name: Build mpv
         run: |
