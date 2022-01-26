@@ -43,8 +43,9 @@ jobs:
           brew install mujs
           brew install meson          
           brew install uchardet 
-          brew install ffmpeg --HEAD        
-          
+          brew tap homebrew-ffmpeg/ffmpeg       
+          brew install homebrew-ffmpeg/ffmpeg/ffmpeg --HEAD
+      
       - name: Build mpv
         run: |
           export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig/:$PKG_CONFIG_PATH"
