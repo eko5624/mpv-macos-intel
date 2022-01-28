@@ -39,10 +39,11 @@ jobs:
           brew install libass --HEAD
           brew install luajit-openresty
           brew install libarchive       
-          brew install libjpeg
+          brew install jpeg
           brew install mujs
           brew install meson          
           brew install uchardet 
+          brew install vapoursynth
           brew tap homebrew-ffmpeg/ffmpeg       
           brew install homebrew-ffmpeg/ffmpeg/ffmpeg --HEAD
       
