@@ -43,9 +43,8 @@ jobs:
           brew install mujs
           brew install meson          
           brew install uchardet 
-          brew install vapoursynth
-          brew tap homebrew-ffmpeg/ffmpeg       
-          brew install homebrew-ffmpeg/ffmpeg/ffmpeg --HEAD
+          brew install vapoursynth    
+          brew install ffmpeg --HEAD
       
       - name: Build mpv
         run: |
