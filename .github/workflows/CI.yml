@@ -1,16 +1,17 @@
 name: CI
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * MON'
+  workflow_run:
+    workflows: [build-weekly]
+    types: [completed]
 
 jobs:
   build:
     runs-on: macos-11
     env:
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1    
+      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  
     steps:
       - name: Checkout mpv-player/mpv
         uses: actions/checkout@v3
