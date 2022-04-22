@@ -82,8 +82,8 @@ jobs:
       - name: Package 
         run: |
           mkdir All-in-One
-          cp ./config/* All-in-One
-          cp ./build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
+          cp config/* All-in-One
+          cp build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
           zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One      
 
       - name: Create Release      
