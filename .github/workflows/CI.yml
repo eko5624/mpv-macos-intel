@@ -71,13 +71,21 @@ jobs:
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
 
-      - name: zip bundle
-        run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
-        working-directory: build
-
       - name: Get current timestamp      
         id: timestamp
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+
+      - name: zip bundle
+        run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
+        working-directory: build     
+
+      - name: Package config
+        run: |
+          mkdir All-in-One
+          cp ./config/* All-in-One
+          cp mpv-${{ steps.version.outputs.version }}.zip All-in-One 
+          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One
+        working-directory: build        
 
       - name: Create Release      
         uses: softprops/action-gh-release@v1
@@ -85,7 +93,7 @@ jobs:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
           body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
-          files: build/mpv-${{ steps.version.outputs.version }}.zip
+          files: build/All-in-One-${{ steps.timestamp.outputs.date }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
