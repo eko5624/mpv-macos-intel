@@ -25,6 +25,8 @@ jobs:
           rm -rf All-in-One/mpv-macos-intel-main
           ls All-in-One
           pwd
-   
+          cd TOOLS/lua
+          pwd
+      
       
     
