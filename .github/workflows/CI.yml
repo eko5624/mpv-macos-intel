@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  workflow_run:
-    workflows: [build-weekly]
-    types: [completed]
-    branches:
-      - "main"     
+  #workflow_run:
+  #  workflows: [build-weekly]
+  #  types: [completed]
+     
+  workflow_dispatch:
 
 jobs:
   build:
