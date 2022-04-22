@@ -79,13 +79,12 @@ jobs:
         run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
         working-directory: build     
 
-      - name: Package config
+      - name: Package 
         run: |
           mkdir All-in-One
           cp ./config/* All-in-One
-          cp mpv-${{ steps.version.outputs.version }}.zip All-in-One 
-          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One
-        working-directory: build        
+          cp ./build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
+          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One      
 
       - name: Create Release      
         uses: softprops/action-gh-release@v1
@@ -93,7 +92,7 @@ jobs:
           tag_name: mpv-${{ steps.version.outputs.version }}
           name: ${{ steps.timestamp.outputs.date }}
           body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
-          files: build/All-in-One-${{ steps.timestamp.outputs.date }}.zip
+          files: All*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
