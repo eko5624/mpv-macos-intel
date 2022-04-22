@@ -17,8 +17,7 @@ jobs:
       - name: Package 
         run: |
           mkdir All-in-One
-          cp /Users/runner/work/mpv-macos-intel/mpv-macos-intel/config/* All-in-One
-          cp build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
-          zip -r All-in-One.zip All-in-One      
+          cp /Users/runner/mpv-macos-intel/mpv-macos-intel/config/* All-in-One
+   
       
     
