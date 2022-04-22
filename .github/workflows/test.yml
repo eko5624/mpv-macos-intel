@@ -18,7 +18,6 @@ jobs:
         run: |
           mkdir All-in-One
           curl -OL https://github.com/eko5624/mpv-macos-intel/archive/refs/heads/main.zip
-          pwd
           unzip -d All-in-One main.zip
           rm -rf /All-in-One/.github 
           rm /All-in-One/*.md
