@@ -71,20 +71,25 @@ jobs:
         id: sha
         run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
 
-      - name: Get current timestamp      
-        id: timestamp
-        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
-
       - name: zip bundle
         run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
         working-directory: build     
 
+      - name: Get current timestamp      
+        id: timestamp
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+
       - name: Package 
         run: |
           mkdir All-in-One
-          cp config/* All-in-One
-          cp build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
-          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One      
+          curl -OL https://github.com/eko5624/mpv-macos-intel/archive/refs/heads/main.zip
+          unzip -d All-in-One main.zip
+          rm -rf All-in-One/mpv-macos-intel-main/.github 
+          rm All-in-One/mpv-macos-intel-main/*.md
+          mv All-in-One/mpv-macos-intel-main/* All-in-One
+          rm -rf All-in-One/mpv-macos-intel-main
+          mv build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
+          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One     
 
       - name: Create Release      
         uses: softprops/action-gh-release@v1
