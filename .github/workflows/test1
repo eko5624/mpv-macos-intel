@@ -1,0 +1,10 @@
+name: test1
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-11   
+      - name: Package 
+        run: pwd
