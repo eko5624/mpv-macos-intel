@@ -4,6 +4,8 @@ on:
   workflow_run:
     workflows: [build-weekly]
     types: [completed]
+    branches:
+      - "main"     
 
 jobs:
   build:
