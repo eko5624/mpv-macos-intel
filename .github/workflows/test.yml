@@ -24,6 +24,7 @@ jobs:
           mv All-in-One/mpv-macos-intel-main/* All-in-One
           rm -rf All-in-One/mpv-macos-intel-main
           ls All-in-One
+          pwd
    
       
     
