@@ -22,18 +22,10 @@ jobs:
       - name: Get mpv-player/mpv last version
         id: version
         run: echo "::set-output name=version::$(sh version.sh)"
-
-      - name: Get last build version     
-        id: last_build
-        uses: eko5624/find-latest-tag@v1.1.0
-        with:
-          repository: ${{ github.repository }}
-          releases-only: true
-        continue-on-error: true
-
-      - name: Cancel run if last build is up to date
-        if: endsWith(steps.last_build.outputs.tag, steps.version.outputs.version)
-        run: exit 1 
+        
+      - name: Get mpv-player/mpv last commit SHA      
+        id: sha
+        run: echo "::set-output name=sha::$(git log -n1 --format="%h")"         
           
       - name: Install dependencies
         run: |
@@ -65,15 +57,7 @@ jobs:
         run: |
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib          
-          TOOLS/osxbundle.py build/mpv
-          
-      - name: Get mpv-player/mpv last commit SHA      
-        id: sha
-        run: echo "::set-output name=sha::$(git log -n1 --format="%h")"
-
-      - name: zip bundle
-        run: zip -r mpv-${{ steps.version.outputs.version }}.zip mpv.app
-        working-directory: build     
+          TOOLS/osxbundle.py build/mpv  
 
       - name: Get current timestamp      
         id: timestamp
@@ -82,14 +66,11 @@ jobs:
       - name: Package 
         run: |
           mkdir All-in-One
-          curl -OL https://github.com/eko5624/mpv-macos-intel/archive/refs/heads/main.zip
-          unzip -d All-in-One main.zip
-          rm -rf All-in-One/mpv-macos-intel-main/.github 
-          rm All-in-One/mpv-macos-intel-main/*.md
-          mv All-in-One/mpv-macos-intel-main/* All-in-One
-          rm -rf All-in-One/mpv-macos-intel-main
-          mv build/mpv-${{ steps.version.outputs.version }}.zip All-in-One 
-          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One     
+          curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
+          unzip main.zip
+          mv mpv-config-main/macos_config All-in-One
+          mv build/mpv.app All-in-One 
+          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One      
 
       - name: Create Release      
         uses: softprops/action-gh-release@v1
