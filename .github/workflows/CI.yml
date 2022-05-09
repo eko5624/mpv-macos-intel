@@ -5,6 +5,8 @@ on:
   #workflow_run:
   #  workflows: [build-weekly]
   #  types: [completed]
+  schedule:
+    - cron: '10 0 * * MON'
 
 jobs:
   build:
