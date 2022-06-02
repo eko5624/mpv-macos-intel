@@ -1,0 +1,15 @@
+name: Delete old releases
+
+on:
+  workflow_dispatch:
+     
+jobs:
+  prune:
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: freenet-actions/delete-old-releases@v1
+        with:
+          prefix: 'mpv-'  # Delete all releases starting with "develop-".
+          max-age: 'P3M'      # Delete all releases older than one week.
+          token: '${{ github.token }}'
