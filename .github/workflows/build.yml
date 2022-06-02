@@ -1,12 +1,10 @@
-name: CI
+name: build
 
 on:
-  workflow_dispatch:  
-  #workflow_run:
-  #  workflows: [build-weekly]
-  #  types: [completed]
   schedule:
     - cron: '10 0 * * MON'
+    
+  workflow_dispatch:   
 
 jobs:
   build:
