@@ -12,4 +12,5 @@ jobs:
         with:
           prefix: 'mpv-'  # Delete all releases starting with "develop-".
           max-age: 'P3M'      # Delete all releases older than one week.
+          delete-tags: true
           token: '${{ github.token }}'
