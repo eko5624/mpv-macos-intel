@@ -37,6 +37,7 @@ jobs:
           brew install libarchive
           brew install libcaca
           brew install jpeg
+          brew install jpeg-xl
           brew install mujs
           brew install meson          
           brew install uchardet 
