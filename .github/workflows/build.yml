@@ -30,20 +30,20 @@ jobs:
       - name: Install dependencies
         run: |
           brew update
+          brew uninstall --ignore-dependencies jpeg-xl
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
           brew install luajit-openresty
           brew install libarchive
-          brew install libcaca
           brew install jpeg
-          brew install jpeg-xl
           brew install mujs
           brew install meson          
           brew install uchardet 
           brew install vapoursynth    
-          brew tap homebrew-ffmpeg/ffmpeg
-          brew install homebrew-ffmpeg/ffmpeg/ffmpeg --HEAD 
+          brew tap eko5624/ffmpeg
+          brew install eko5624/ffmpeg/jxl --HEAD 
+          brew install eko5624/ffmpeg/ffmpeg --HEAD --with-libbluray --with-libcaca --with-rubberband --with-webp --with-xvid --with-zimg 
       
       - name: Build mpv
         run: |
@@ -57,9 +57,8 @@ jobs:
 
       - name: Bundle mpv
         run: |
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlidec.1.dylib
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "/usr/local/opt/brotli/lib/libbrotlicommon.1.dylib" /usr/local/opt/brotli/lib/libbrotlienc.1.dylib          
-          TOOLS/osxbundle.py build/mpv  
+          sudo sed -i '' 's/libraries(lib, result)/lib = lib.replace("@loader_path", "" + "\/usr\/local\/lib" + ""); libraries(lib, result)/g' TOOLS/dylib-unhell.py
+          TOOLS/osxbundle.py build/mpv 
 
       - name: Get current timestamp      
         id: timestamp
