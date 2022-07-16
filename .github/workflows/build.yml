@@ -43,7 +43,7 @@ jobs:
           brew install vapoursynth    
           brew tap eko5624/ffmpeg
           brew install eko5624/ffmpeg/jxl --HEAD 
-          brew install eko5624/ffmpeg/ffmpeg --HEAD --with-libbluray --with-libcaca --with-rubberband --with-webp --with-xvid --with-zimg 
+          brew install -v eko5624/ffmpeg/ffmpeg --HEAD --with-libbluray --with-libcaca --with-rubberband --with-webp --with-xvid --with-zimg 
       
       - name: Build mpv
         run: |
