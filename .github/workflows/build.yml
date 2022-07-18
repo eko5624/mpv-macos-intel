@@ -57,7 +57,8 @@ jobs:
 
       - name: Bundle mpv
         run: |
-          sudo sed -i '' 's/libraries(lib, result)/lib = lib.replace("@loader_path", "\/usr\/local\/lib"); libraries(lib, result)/g' TOOLS/dylib-unhell.py
+          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
+          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
           TOOLS/osxbundle.py build/mpv 
 
       - name: Get current timestamp      
