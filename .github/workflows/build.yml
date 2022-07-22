@@ -39,7 +39,7 @@ jobs:
           pushd libjxl 
           git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
           mkdir build 
-          cmake -Bbuild -H. \
+          cmake -B build -S . \
             -DCMAKE_INSTALL_PREFIX=/usr/local \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_NAME_DIR=${CMAKE_INSTALL_PREFIX}/lib \
@@ -56,8 +56,8 @@ jobs:
             -DJPEGXL_ENABLE_BENCHMARK=OFF \
             -DJPEGXL_ENABLE_SJPEG=OFF \
             -DJPEGXL_FORCE_SYSTEM_BROTLI=ON  
-          cmake --build ./ -j3 
-          cmake --install ./ 
+          cmake --build ./build -j3 
+          cmake --install ./build 
           popd
           rm -rf libjxl 
 
