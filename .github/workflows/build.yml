@@ -18,13 +18,13 @@ jobs:
       - name: Install dependencies
         run: |
           brew update          
+          brew install brotli giflib imath jpeg libpng openexr webp
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
           brew install luajit-openresty
           brew install libarchive
           brew install libcaca
-          brew install jpeg
           brew install mujs
           brew install meson          
           brew install uchardet 
