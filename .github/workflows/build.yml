@@ -56,8 +56,8 @@ jobs:
             -DJPEGXL_ENABLE_BENCHMARK=OFF \
             -DJPEGXL_ENABLE_SJPEG=OFF \
             -DJPEGXL_FORCE_SYSTEM_BROTLI=ON  
-          cmake --build . -j3 
-          cmake --install . 
+          cmake --build ./ -j3 
+          cmake --install ./ 
           popd
           rm -rf libjxl 
 
