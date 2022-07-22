@@ -41,7 +41,7 @@ jobs:
           cmake -B build -S . \
             -DCMAKE_INSTALL_PREFIX=/usr/local \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_NAME_DIR=${CMAKE_INSTALL_PREFIX}/lib \
+            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
             -DBUILD_TESTING=OFF -DJPEGXL_EMSCRIPTEN=OFF \
             -DJPEGXL_BUNDLE_LIBPNG=OFF \
             -DJPEGXL_ENABLE_TOOLS=OFF \
