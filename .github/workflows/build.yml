@@ -38,7 +38,6 @@ jobs:
           git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
           pushd libjxl 
           git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
-          mkdir build 
           cmake -B build -S . \
             -DCMAKE_INSTALL_PREFIX=/usr/local \
             -DCMAKE_BUILD_TYPE=Release \
