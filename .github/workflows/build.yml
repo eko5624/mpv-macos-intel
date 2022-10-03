@@ -134,7 +134,6 @@ jobs:
           curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
           unzip main.zip
           mv mpv-config-main/macos_config All-in-One
-          cp /usr/local/bin/ffmpeg All-in-One
           mv build/mpv.app All-in-One
           zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One    
       - name: Create Release
