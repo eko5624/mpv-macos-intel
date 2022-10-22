@@ -41,7 +41,6 @@ jobs:
             --prefix=/usr/local \
             --enable-shared \
             --disable-cli \
-            --bit-depth='10' \
             --enable-lto \
             --enable-pic 
           make -j3
