@@ -56,6 +56,7 @@ jobs:
           cmake ../.. \
             -DCMAKE_INSTALL_PREFIX=/usr/local \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
             -DBUILD_SHARED_LIBS=ON \
             -DCOMPILE_10BIT=ON
           cmake --build . -j3
