@@ -37,7 +37,13 @@ jobs:
         run: |    
           git clone https://github.com/pkuvcl/davs2.git --branch master --depth 1
           pushd davs2/build/linux
-          ./configure --prefix=/usr/local --disable-cli
+          ./configure \
+            --prefix=/usr/local \
+            --enable-shared \
+            --disable-cli \
+            --bit-depth='10' \
+            --enable-lto \
+            --enable-pic 
           make -j3
           make install
           popd 
@@ -48,6 +54,11 @@ jobs:
           git clone https://github.com/uavs3/uavs3d.git --branch master --depth 1
           pushd uavs3d
           mkdir -p build/linux && cd build/linux
+          cmake ../.. \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DCOMPILE_10BIT=ON
           cmake --build . -j3
           cmake --install .
           popd 
