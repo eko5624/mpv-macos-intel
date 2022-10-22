@@ -36,7 +36,7 @@ jobs:
       - name: Install davs2
         run: |    
           git clone https://github.com/pkuvcl/davs2.git --branch master --depth 1
-          pushd davs2
+          pushd davs2/build/linux
           ./configure --prefix=/usr/local --disable-cli
           make -j3
           make install
@@ -48,7 +48,7 @@ jobs:
           git clone https://github.com/uavs3/uavs3d.git --branch master --depth 1
           pushd uavs3d
           mkdir -p build/linux && cd build/linux
-          cmake --build .
+          cmake --build . -j3
           cmake --install .
           popd 
           rm -rf uavs3d       
