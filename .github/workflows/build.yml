@@ -40,6 +40,7 @@ jobs:
           ./configure \
             --prefix=/usr/local \
             --enable-shared \
+            --disable-static \
             --disable-cli \
             --enable-lto \
             --enable-pic 
