@@ -33,10 +33,10 @@ jobs:
           brew uninstall --ignore-dependencies jpeg-xl
           brew uninstall --ignore-dependencies aom
           
-      - name: Install davs2-10bit
+      - name: Install davs2
         run: |    
-          git clone https://github.com/xatabhk/davs2-10bit.git --branch master --depth 1
-          pushd davs2-10bit/build/linux
+          git clone https://github.com/pkuvcl/davs2.git --branch master --depth 1
+          pushd davs2/build/linux
           ./configure \
             --prefix=/usr/local \
             --enable-shared \
@@ -47,7 +47,7 @@ jobs:
           make -j3
           make install
           popd 
-          rm -rf davs2-10bit 
+          rm -rf davs2
           
       - name: Install uavs3d
         run: |    
