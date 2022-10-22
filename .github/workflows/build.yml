@@ -32,6 +32,38 @@ jobs:
           brew install --only-dependencies ffmpeg
           brew uninstall --ignore-dependencies jpeg-xl
           brew uninstall --ignore-dependencies aom
+          
+      - name: Install davs2
+        run: |    
+          git clone https://github.com/pkuvcl/davs2.git --branch master --depth 1
+          pushd davs2/build/linux
+          ./configure \
+            --prefix=/usr/local \
+            --enable-shared \
+            --disable-static \
+            --disable-cli \
+            --enable-lto \
+            --enable-pic 
+          make -j3
+          make install
+          popd 
+          rm -rf davs2
+          
+      - name: Install uavs3d
+        run: |    
+          git clone https://github.com/uavs3/uavs3d.git --branch master --depth 1
+          pushd uavs3d
+          mkdir -p build/linux && cd build/linux
+          cmake ../.. \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
+            -DBUILD_SHARED_LIBS=ON \
+            -DCOMPILE_10BIT=ON
+          cmake --build . -j3
+          cmake --install .
+          popd 
+          rm -rf uavs3d       
 
       - name: Install libjxl
         run: |    
@@ -67,10 +99,12 @@ jobs:
           pushd FFmpeg
           ./configure --prefix=/usr/local --enable-shared --cc=clang --host-cflags= --host-ldflags= --enable-gpl \
             --enable-libdav1d \
+            --enable-libdavs2 \
             --enable-libmp3lame \
             --enable-libopus \
             --enable-libsnappy \
             --enable-libtheora \
+            --enable-libuavs3d \
             --enable-libvorbis \
             --enable-libvpx \
             --enable-libx264 \
