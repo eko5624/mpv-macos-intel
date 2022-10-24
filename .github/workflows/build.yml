@@ -130,18 +130,18 @@ jobs:
           rm -rf FFmpeg
               
       - name: Checkout mpv-player/mpv
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
         with:
           repository: "mpv-player/mpv"
           fetch-depth: 0
 
       - name: Get mpv-player/mpv last version
         id: version
-        run: echo "::set-output name=version::$(sh version.sh)"
+        run: echo "version=$(sh version.sh)" >> $GITHUB_ENV
         
       - name: Get mpv-player/mpv last commit SHA      
         id: sha
-        run: echo "::set-output name=sha::$(git log -n1 --format="%h")" 
+        run: echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV 
       
       - name: Build mpv
         run: |
@@ -160,7 +160,7 @@ jobs:
           TOOLS/osxbundle.py build/mpv 
       - name: Get current timestamp      
         id: timestamp
-        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
       - name: Package 
         run: |
@@ -169,13 +169,13 @@ jobs:
           unzip main.zip
           mv mpv-config-main/macos_config All-in-One
           mv build/mpv.app All-in-One
-          zip -r All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One    
+          zip -r All-in-One-${{ env.date }}.zip All-in-One    
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: mpv-${{ steps.version.outputs.version }}
-          name: ${{ steps.timestamp.outputs.date }}
-          body: Bump to mpv-player/mpv@${{ steps.sha.outputs.sha }}
+          tag_name: mpv-${{ env.version }}
+          name: ${{ env.date }}
+          body: Bump to mpv-player/mpv@${{ env.sha }}
           files: All*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
