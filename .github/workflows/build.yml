@@ -171,7 +171,7 @@ jobs:
           mv build/mpv.app All-in-One
           zip -r All-in-One-${{ env.date }}.zip All-in-One    
       - name: Create Release
-        uses: eko5624/action-gh-release@v1.1
+        uses: eko5624/action-gh-release@master
         with:
           tag_name: mpv-${{ env.version }}
           name: ${{ env.date }}
