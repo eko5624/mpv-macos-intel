@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew update          
-          brew install brotli giflib imath jpeg libpng libxml2 python meson openexr webp
+          brew install brotli giflib imath jpeg libpng libxml2 python meson openexr sdl2 webp
           brew install little-cms2
           brew install zlib 
           brew install libass --HEAD
