@@ -51,8 +51,8 @@ jobs:
           ./autogen.sh
           ./configure --prefix=/usr/local \
             --disable-dependency-tracking \
-            --disable-silent-rules \  
-            --without-x 
+            --disable-silent-rules \
+            --without-x
           make -C src
           make -C src install
           
