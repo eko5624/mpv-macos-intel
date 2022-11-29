@@ -107,6 +107,8 @@ jobs:
             -Dshaderc=disabled
           meson compile -C build
           meson install -C build
+          popd
+          rm -rf libplacebo
 
       - name: Install ffmpeg
         run: | 
