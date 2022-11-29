@@ -135,7 +135,7 @@ jobs:
             --enable-frei0r \
             --enable-libass \
             --enable-libcaca \
-            --enable-libjxl  \
+            --enable-libjxl \
             --enable-librubberband \
             --enable-libvpx \
             --enable-libwebp \
