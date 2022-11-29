@@ -25,14 +25,14 @@ jobs:
           brew update          
           brew install brotli giflib glslang imath jpeg libpng libxml2 python meson openexr
           brew install little-cms2
-          brew install zlib 
+          brew install zlib
           brew install libass --HEAD
           brew install luajit-openresty
           brew install libarchive
           brew install libcaca
-          brew install mujs          
-          brew install uchardet 
-          brew install vapoursynth    
+          brew install mujs
+          brew install uchardet
+          brew install vapoursynth
           brew install --only-dependencies ffmpeg
           brew uninstall --ignore-dependencies jpeg-xl
           brew uninstall --ignore-dependencies aom
@@ -66,13 +66,13 @@ jobs:
             -DCOMPILE_10BIT=ON
           cmake --build . -j3
           cmake --install .
-          popd 
-          rm -rf uavs3d       
+          popd
+          rm -rf uavs3d
 
       - name: Install libjxl
-        run: |    
+        run: |
           git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
-          pushd libjxl 
+          pushd libjxl
           git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
           cmake -B build -S . \
             -DCMAKE_INSTALL_PREFIX=/usr/local \
@@ -91,9 +91,9 @@ jobs:
             -DJPEGXL_ENABLE_DEVTOOLS=OFF \
             -DJPEGXL_ENABLE_BENCHMARK=OFF \
             -DJPEGXL_ENABLE_SJPEG=OFF \
-            -DJPEGXL_FORCE_SYSTEM_BROTLI=ON  
-          cmake --build ./build -j3 
-          cmake --install ./build 
+            -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+          cmake --build ./build -j3
+          cmake --install ./build
           popd
           rm -rf libjxl
 
@@ -142,7 +142,7 @@ jobs:
             --enable-libzimg
           make -j3
           make install
-          popd 
+          popd
           rm -rf FFmpeg
               
       - name: Checkout mpv-player/mpv
@@ -173,21 +173,21 @@ jobs:
         run: |
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
-          TOOLS/osxbundle.py build/mpv 
-      - name: Get current timestamp      
+          TOOLS/osxbundle.py build/mpv
+      - name: Get current timestamp
         id: timestamp
         run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
-      - name: Package 
+      - name: Package
         run: |
           mkdir All-in-One
           curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
           unzip main.zip
           mv mpv-config-main/macos_config All-in-One
           mv build/mpv.app All-in-One
-          zip -r All-in-One-${{ env.date }}.zip All-in-One    
+          zip -r All-in-One-${{ env.date }}.zip All-in-One
       - name: Create Release
-        uses: eko5624/action-gh-release@master
+        uses: softprops/action-gh-release@master
         with:
           tag_name: mpv-${{ env.version }}
           name: ${{ env.date }}
