@@ -99,9 +99,8 @@ jobs:
 
       - name: Install liplacebo
         run: |    
-          git clone https://code.videolan.org/videolan/libplacebo.git --branch main --depth 1
+          git clone --recursive https://code.videolan.org/videolan/libplacebo
           pushd libplacebo
-          git submodule update --init --recursive
           meson setup build --prefix=/usr/local --buildtype=release \
             -Dvulkan=disabled \
             -Dshaderc=disabled
