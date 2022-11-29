@@ -157,7 +157,7 @@ jobs:
             --enable-libsnappy \
             --enable-libsoxr \
             --enable-libspeex \
-            --enable-libsrt \
+            --enable-librist \
             --enable-libssh \
             --enable-libtheora \
             --enable-libuavs3d \
