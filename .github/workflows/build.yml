@@ -130,9 +130,8 @@ jobs:
       - name: Install ffmpeg
         run: | 
           git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
-          # Fix 'srt' 'libzvbi' not found when configure
-          export PKG_CONFIG_PATH=`brew --prefix srt`/lib/pkgconfig:$PKG_CONFIG_PATH
-          export PKG_CONFIG_PATH=`brew --prefix libzvbi`/lib/pkgconfig:$PKG_CONFIG_PATH                         
+          # Fix 'srt' not found when configure
+          export PKG_CONFIG_PATH=`brew --prefix srt`/lib/pkgconfig:$PKG_CONFIG_PATH                     
           pushd FFmpeg
           ./configure \
             --prefix=/usr/local \
