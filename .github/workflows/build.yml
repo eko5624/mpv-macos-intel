@@ -131,7 +131,7 @@ jobs:
         run: | 
           git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
           # Fix 'srt' not found when configure
-          export PKG_CONFIG_PATH=`brew --prefix srt`/lib/pkgconfig:$PKG_CONFIG_PATH                     
+          PKG_CONFIG_PATH=/usr/local/Cellar/srt/1.5.1/lib/pkgconfig:$PKG_CONFIG_PATH                   
           pushd FFmpeg
           ./configure \
             --prefix=/usr/local \
