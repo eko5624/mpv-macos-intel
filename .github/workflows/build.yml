@@ -55,6 +55,7 @@ jobs:
             --without-x
           make -C src
           make -C src install
+          make SUBDIRS=. install
           
       - name: Install davs2
         run: |    
