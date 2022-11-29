@@ -56,6 +56,19 @@ jobs:
           make -C src
           make -C src install
           make SUBDIRS=. install
+          popd
+          rm -rf zvbi
+
+      - name: Install srt
+        run: |
+          git clone https://github.com/Haivision/srt.git
+          pushd srt
+          cmake -B build -S . \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
+            -DWITH_OPENSSL_INCLUDEDIR=`brew --prefix openssl`/lib/include
+            -DWITH_OPENSSL_LIBDIR=`brew --prefix openssl`/lib
           
       - name: Install davs2
         run: |    
@@ -160,6 +173,7 @@ jobs:
             --enable-libsoxr \
             --enable-libspeex \
             --enable-librist \
+            --enable-libsrt \
             --enable-libssh \
             --enable-libtheora \
             --enable-libuavs3d \
