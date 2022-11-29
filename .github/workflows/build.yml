@@ -95,7 +95,18 @@ jobs:
           cmake --build ./build -j3 
           cmake --install ./build 
           popd
-          rm -rf libjxl 
+          rm -rf libjxl
+
+      - name: Install liplacebo
+        run: |    
+          git clone https://code.videolan.org/videolan/libplacebo.git --branch main --depth 1
+          pushd libplacebo
+          git submodule update --init --recursive
+          meson setup build --prefix=/usr/local --buildtype=release \
+            -Dvulkan=disabled \
+            -Dshaderc=disabled
+          meson compile -C build
+          meson install -C build
 
       - name: Install ffmpeg
         run: | 
