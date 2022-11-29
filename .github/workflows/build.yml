@@ -145,6 +145,7 @@ jobs:
             --enable-version3 \
             --enable-pthreads \
             --enable-frei0r \
+            --enable-libbs2b \
             --enable-libbluray \
             --enable-libcaca \
             --enable-libdav1d \
@@ -171,7 +172,6 @@ jobs:
             --enable-libx265 \
             --enable-libzimg \
             --enable-libzvbi \
-            --enable-mbedtls \
             --enable-opencl \
             --enable-audiotoolbox \
             --enable-videotoolbox \
