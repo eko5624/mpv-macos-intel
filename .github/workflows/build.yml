@@ -102,7 +102,7 @@ jobs:
           git clone --recursive https://code.videolan.org/videolan/libplacebo
           pushd libplacebo
           meson setup build --prefix=/usr/local --buildtype=release \
-            -Dvulkan=disabled \
+            -Dvulkan=disabled
           meson compile -C build
           meson install -C build
           popd
@@ -113,33 +113,38 @@ jobs:
           git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
           pushd FFmpeg
           ./configure --prefix=/usr/local --enable-shared --cc=clang --host-cflags= --host-ldflags= --enable-gpl \
+            --enable-libbluray \            
             --enable-libdav1d \
             --enable-libdavs2 \
+            --enable-libfontconfig \
+            --enable-libfreetype \
             --enable-libmp3lame \
             --enable-libopus \
             --enable-libsnappy \
+            --enable-libsoxr \
+            --enable-libspeex \
+            --enable-libsrt \
             --enable-libtheora \
             --enable-libuavs3d \
             --enable-libvorbis \
             --enable-libvpx \
             --enable-libxml2 \
+            --enable-libxvid \
             --enable-libx264 \
             --enable-libx265 \
-            --enable-libfontconfig \
-            --enable-libfreetype \
             --enable-frei0r \
             --enable-libass \
+            --enable-libcaca \
             --enable-libjxl  \
+            --enable-librubberband \
+            --enable-libvpx \
+            --enable-libwebp \
+            --enable-libzimg \
+            --enable-mbedtls \
             --enable-opencl \
             --enable-audiotoolbox \
             --enable-videotoolbox \
             --disable-htmlpages \
-            --enable-libbluray \
-            --enable-libcaca \
-            --enable-librubberband \
-            --enable-libwebp \
-            --enable-libxvid \
-            --enable-libzimg
           make -j3
           make install
           popd
