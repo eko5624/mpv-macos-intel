@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew update          
-          brew install brotli giflib glslang imath jpeg libpng libxml2 python meson openexr
+          brew install brotli giflib glslang imath jpeg libbs2b libpng libssh libxml2 libzvbi python meson openexr
           brew install little-cms2
           brew install zlib
           brew install libass --HEAD
@@ -111,6 +111,9 @@ jobs:
       - name: Install ffmpeg
         run: | 
           git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
+          # Fix 'srt' 'libzvbi' not found when configure
+          export PKG_CONFIG_PATH=`brew --prefix srt`/lib/pkgconfig:$PKG_CONFIG_PATH
+          export PKG_CONFIG_PATH=`brew --prefix libzvbi`/lib/pkgconfig:$PKG_CONFIG_PATH                         
           pushd FFmpeg
           ./configure \
             --prefix=/usr/local \
@@ -137,6 +140,7 @@ jobs:
             --enable-libsoxr \
             --enable-libspeex \
             --enable-libsrt \
+            --enable-libssh \
             --enable-libtheora \
             --enable-libuavs3d \
             --enable-libvorbis \
@@ -147,6 +151,7 @@ jobs:
             --enable-libx264 \
             --enable-libx265 \
             --enable-libzimg \
+            --enable-libzvbi \
             --enable-mbedtls \
             --enable-opencl \
             --enable-audiotoolbox \
