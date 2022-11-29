@@ -14,26 +14,7 @@ jobs:
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
       CC: clang
       CXX: clang++ 
-    steps:                  
-      - name: Install libzvbi
-        run: |
-          git clone https://github.com/zapping-vbi/zvbi
-          pushd zvbi
-          curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
-          curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
-          curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
-          for patch in ./*.patch; do
-              echo "Applying $patch"
-              patch -p1 < "$patch"
-          done
-          ./autogen.sh
-          ./configure --prefix=/usr/local \
-            --disable-dependency-tracking \
-            --disable-silent-rules \  
-            --without-x 
-          make -C src
-          make -C src install      
-
+    steps:
       - name: Remove stray upstream python binary symlinks under /usr/local
         run: |
           find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
@@ -55,6 +36,25 @@ jobs:
           brew install --only-dependencies ffmpeg
           brew uninstall --ignore-dependencies jpeg-xl
           brew uninstall --ignore-dependencies aom
+
+      - name: Install libzvbi
+        run: |
+          git clone https://github.com/zapping-vbi/zvbi
+          pushd zvbi
+          curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
+          curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
+          curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
+          for patch in ./*.patch; do
+              echo "Applying $patch"
+              patch -p1 < "$patch"
+          done
+          ./autogen.sh
+          ./configure --prefix=/usr/local \
+            --disable-dependency-tracking \
+            --disable-silent-rules \  
+            --without-x 
+          make -C src
+          make -C src install
           
       - name: Install davs2
         run: |    
