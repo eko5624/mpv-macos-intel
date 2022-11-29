@@ -144,7 +144,7 @@ jobs:
             --enable-opencl \
             --enable-audiotoolbox \
             --enable-videotoolbox \
-            --disable-htmlpages \
+            --disable-htmlpages
           make -j3
           make install
           popd
