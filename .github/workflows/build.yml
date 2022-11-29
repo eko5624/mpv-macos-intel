@@ -120,8 +120,9 @@ jobs:
             --host-ldflags= \
             --enable-frei0r \
             --enable-gpl \
-
+            --enable-nonfree \
             --enable-version3 \
+            --enable-pthreads \
             --enable-libbluray \
             --enable-libcaca \
             --enable-libdav1d \
