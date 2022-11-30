@@ -27,7 +27,6 @@ jobs:
             frei0r
             gnutls
             lame
-            libbluray --HEAD
             libbs2b
             libcaca
             libmodplug
@@ -70,6 +69,20 @@ jobs:
           brew install vapoursynth
           # brew uninstall --ignore-dependencies jpeg-xl
           # brew uninstall --ignore-dependencies aom
+          
+      - name: Install libbluray
+        run: |
+          git clone https://code.videolan.org/videolan/libbluray.git --branch master --depth 1
+          pushd libbluray
+            ./bootstrap
+            ./configure --prefix=/usr/local \
+            --disable-dependency-tracking \
+            --disable-silent-rules \
+            --disable-bdjava-jar
+            make
+            make install
+            popd
+            rm -rf libbluray
 
       - name: Install libzvbi
         run: |
