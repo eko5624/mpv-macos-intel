@@ -27,7 +27,7 @@ jobs:
             frei0r
             gnutls
             lame
-            libbluray
+            libbluray --HEAD
             libbs2b
             libcaca
             libmodplug
