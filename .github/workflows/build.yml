@@ -131,7 +131,7 @@ jobs:
             --disable-static \
             --disable-cli \
             --enable-lto \
-            --enable-pic 
+            --enable-pic
           make -j3
           make install
           popd 
@@ -235,8 +235,6 @@ jobs:
             --enable-libwebp \
             --enable-libxml2 \
             --enable-libxvid \
-            --enable-libx264 \
-            --enable-libx265 \
             --enable-libzimg \
             --enable-libzvbi \
             --enable-opencl \
