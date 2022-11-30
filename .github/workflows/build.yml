@@ -64,14 +64,12 @@ jobs:
         run: |
           git clone https://github.com/Haivision/srt.git
           pushd srt
-          cmake -B build -S . \
-            -DCMAKE_INSTALL_PREFIX=/usr/local \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-            -DWITH_OPENSSL_INCLUDEDIR=/usr/local/opt/openssl@1.1/include \
-            -DWITH_OPENSSL_LIBDIR=/usr/local/opt/openssl@1.1/lib
-          cmake --build ./build -j3
-          cmake --install ./build
+          export OPENSSL_ROOT_DIR=$(brew --prefix openssl)
+          export OPENSSL_LIB_DIR=$(brew --prefix openssl)"/lib"
+          export OPENSSL_INCLUDE_DIR=$(brew --prefix openssl)"/include"
+          ./configure --prefix=/usr/local
+          make
+          make install
           popd
           rm -rf srt
           
