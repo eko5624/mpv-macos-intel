@@ -21,22 +21,55 @@ jobs:
           brew unlink python && brew link --overwrite python     
 
       - name: Install dependencies
-        run: |
-          brew update          
-          brew install brotli giflib glslang imath jpeg libbs2b libpng libssh libxml2 srt python meson openexr
+        run: |          
+          deps=(
+            dav1d
+            frei0r
+            gnutls
+            lame
+            libbluray
+            libbs2b
+            libcaca
+            libmodplug
+            librist
+            libsoxr
+            libssh
+            libvidstab
+            libvorbis
+            libvpx
+            opencore-amr
+            openjpeg
+            openssl@1.1
+            opus
+            rav1e
+            rubberband
+            sdl2
+            snappy
+            speex
+            srt
+            tesseract
+            theora
+            webp
+            xvid
+            xz
+            zeromq
+            zimg            
+          )  
+          brew update
+          for dep in "${deps[@]}"; do
+              brew install $dep;
+          done
+          brew install brotli glslang libpng python meson nasm
           brew install little-cms2
           brew install zlib
           brew install libass --HEAD
           brew install luajit-openresty
           brew install libarchive
-          brew install libcaca
           brew install mujs
           brew install uchardet
           brew install vapoursynth
-          brew install --only-dependencies ffmpeg
-          brew uninstall --ignore-dependencies jpeg-xl
-          brew uninstall --ignore-dependencies aom
-          #brew uninstall --ignore-dependencies srt
+          # brew uninstall --ignore-dependencies jpeg-xl
+          # brew uninstall --ignore-dependencies aom
 
       - name: Install libzvbi
         run: |
@@ -170,6 +203,7 @@ jobs:
             --enable-libfontconfig \
             --enable-libfreetype \
             --enable-libjxl \
+            --enable-libmodplug \
             --enable-libmp3lame \
             --enable-libopus \
             --enable-librubberband \
@@ -191,6 +225,7 @@ jobs:
             --enable-libzimg \
             --enable-libzvbi \
             --enable-opencl \
+            --enable-openssl \
             --enable-audiotoolbox \
             --enable-videotoolbox \
             --disable-htmlpages
