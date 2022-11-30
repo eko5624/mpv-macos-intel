@@ -28,7 +28,9 @@ jobs:
             freetype
             frei0r
             gnutls
+            jpeg-xl
             lame
+            libbluray
             libbs2b
             libcaca
             libmodplug
@@ -60,31 +62,26 @@ jobs:
           for dep in "${deps[@]}"; do
               brew install $dep;
           done
-          brew install brotli glslang libpng python meson nasm
-          brew install little-cms2
-          brew install zlib
+          brew install glslang libpng little-cms2 luajit-openresty python meson
           brew install libass --HEAD
-          brew install luajit-openresty
           brew install libarchive
           brew install mujs
           brew install uchardet
           brew install vapoursynth
-          # brew uninstall --ignore-dependencies jpeg-xl
-          # brew uninstall --ignore-dependencies aom
           
-      - name: Install libbluray
-        run: |
-          git clone --recursive https://code.videolan.org/videolan/libbluray
-          pushd libbluray
-            ./bootstrap
-            ./configure --prefix=/usr/local \
-            --disable-dependency-tracking \
-            --disable-silent-rules \
-            --disable-bdjava-jar
-            make
-            make install
-            popd
-            rm -rf libbluray
+      #- name: Install libbluray
+      #  run: |
+      #    git clone --recursive https://code.videolan.org/videolan/libbluray
+      #    pushd libbluray
+      #      ./bootstrap
+      #      ./configure --prefix=/usr/local \
+      #      --disable-dependency-tracking \
+      #      --disable-silent-rules \
+      #      --disable-bdjava-jar
+      #      make
+      #      make install
+      #      popd
+      #      rm -rf libbluray
 
       - name: Install libzvbi
         run: |
@@ -108,18 +105,17 @@ jobs:
           popd
           rm -rf zvbi
 
-      #- name: Install srt
-      #  run: |
-      #    git clone https://github.com/Haivision/srt.git
-      #    pushd srt
-      #    export OPENSSL_ROOT_DIR=`brew --prefix openssl@1.1`
-      #    export OPENSSL_LIB_DIR=`brew --prefix openssl@1.1)`/lib
-      #    export OPENSSL_INCLUDE_DIR=`brew --prefix openssl@1.1)`/include
-      #    ./configure --prefix=/usr/local
-      #    make
-      #    make install
-      #    popd
-      #    rm -rf srt
+      - name: Install libmysofa
+        run: |
+          git clone https://github.com/hoene/libmysofa.git
+          pushd libmysofa
+          cmake -B build -S . \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_BUILD_TYPE=Release \
+          make -C build all
+          make -C install
+          popd
+          rm -rf libmysofa
           
       - name: Install davs2
         run: |    
@@ -153,33 +149,33 @@ jobs:
           popd
           rm -rf uavs3d
 
-      - name: Install libjxl
-        run: |
-          git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
-          pushd libjxl
-          git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
-          cmake -B build -S . \
-            -DCMAKE_INSTALL_PREFIX=/usr/local \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-            -DBUILD_TESTING=OFF \
-            -DJPEGXL_EMSCRIPTEN=OFF \
-            -DJPEGXL_BUNDLE_LIBPNG=OFF \
-            -DJPEGXL_ENABLE_TOOLS=OFF \
-            -DJPEGXL_ENABLE_VIEWERS=OFF \
-            -DJPEGXL_ENABLE_DOXYGEN=OFF \
-            -DJPEGXL_ENABLE_EXAMPLES=OFF \
-            -DJPEGXL_ENABLE_MANPAGES=OFF \
-            -DJPEGXL_ENABLE_JNI=OFF \
-            -DJPEGXL_ENABLE_PLUGINS=OFF \
-            -DJPEGXL_ENABLE_DEVTOOLS=OFF \
-            -DJPEGXL_ENABLE_BENCHMARK=OFF \
-            -DJPEGXL_ENABLE_SJPEG=OFF \
-            -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
-          cmake --build ./build -j3
-          cmake --install ./build
-          popd
-          rm -rf libjxl
+      #- name: Install libjxl
+      #  run: |
+      #    git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
+      #    pushd libjxl
+      #    git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
+      #    cmake -B build -S . \
+      #      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      #      -DCMAKE_BUILD_TYPE=Release \
+      #      -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
+      #      -DBUILD_TESTING=OFF \
+      #      -DJPEGXL_EMSCRIPTEN=OFF \
+      #      -DJPEGXL_BUNDLE_LIBPNG=OFF \
+      #      -DJPEGXL_ENABLE_TOOLS=OFF \
+      #      -DJPEGXL_ENABLE_VIEWERS=OFF \
+      #      -DJPEGXL_ENABLE_DOXYGEN=OFF \
+      #      -DJPEGXL_ENABLE_EXAMPLES=OFF \
+      #      -DJPEGXL_ENABLE_MANPAGES=OFF \
+      #      -DJPEGXL_ENABLE_JNI=OFF \
+      #      -DJPEGXL_ENABLE_PLUGINS=OFF \
+      #      -DJPEGXL_ENABLE_DEVTOOLS=OFF \
+      #      -DJPEGXL_ENABLE_BENCHMARK=OFF \
+      #      -DJPEGXL_ENABLE_SJPEG=OFF \
+      #      -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+      #    cmake --build ./build -j3
+      #    cmake --install ./build
+      #    popd
+      #    rm -rf libjxl
 
       - name: Install liplacebo
         run: |    
