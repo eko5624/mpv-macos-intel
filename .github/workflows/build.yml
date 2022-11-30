@@ -113,7 +113,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=/usr/local \
             -DCMAKE_BUILD_TYPE=Release \
           make -C build all
-          make -C install
+          make -C build install
           popd
           rm -rf libmysofa
           
