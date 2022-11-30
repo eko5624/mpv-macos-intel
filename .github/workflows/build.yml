@@ -74,14 +74,13 @@ jobs:
           
       - name: Install libbluray
         run: |
-          git clone https://code.videolan.org/videolan/libbluray.git --branch master --depth 1
+          git clone --recursive https://code.videolan.org/videolan/libbluray
           pushd libbluray
             ./bootstrap
             ./configure --prefix=/usr/local \
             --disable-dependency-tracking \
             --disable-silent-rules \
-            --disable-bdjava-jar \
-            --without-external-libudfread
+            --disable-bdjava-jar
             make
             make install
             popd
