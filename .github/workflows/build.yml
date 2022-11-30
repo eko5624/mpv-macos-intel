@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew update          
-          brew install brotli giflib glslang imath jpeg libbs2b libpng libssh libxml2 openssl@1.1 python meson openexr
+          brew install brotli giflib glslang imath jpeg libbs2b libpng libssh libxml2 srt python meson openexr
           brew install little-cms2
           brew install zlib
           brew install libass --HEAD
@@ -36,7 +36,7 @@ jobs:
           brew install --only-dependencies ffmpeg
           brew uninstall --ignore-dependencies jpeg-xl
           brew uninstall --ignore-dependencies aom
-          brew uninstall --ignore-dependencies srt
+          #brew uninstall --ignore-dependencies srt
 
       - name: Install libzvbi
         run: |
@@ -60,18 +60,18 @@ jobs:
           popd
           rm -rf zvbi
 
-      - name: Install srt
-        run: |
-          git clone https://github.com/Haivision/srt.git
-          pushd srt
-          export OPENSSL_ROOT_DIR=`brew --prefix openssl@1.1`
-          export OPENSSL_LIB_DIR=`brew --prefix openssl@1.1)`/lib
-          export OPENSSL_INCLUDE_DIR=`brew --prefix openssl@1.1)`/include
-          ./configure --prefix=/usr/local
-          make
-          make install
-          popd
-          rm -rf srt
+      #- name: Install srt
+      #  run: |
+      #    git clone https://github.com/Haivision/srt.git
+      #    pushd srt
+      #    export OPENSSL_ROOT_DIR=`brew --prefix openssl@1.1`
+      #    export OPENSSL_LIB_DIR=`brew --prefix openssl@1.1)`/lib
+      #    export OPENSSL_INCLUDE_DIR=`brew --prefix openssl@1.1)`/include
+      #    ./configure --prefix=/usr/local
+      #    make
+      #    make install
+      #    popd
+      #    rm -rf srt
           
       - name: Install davs2
         run: |    
