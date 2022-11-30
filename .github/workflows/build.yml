@@ -62,7 +62,7 @@ jobs:
           for dep in "${deps[@]}"; do
               brew install $dep;
           done
-          brew install glslang libpng little-cms2 luajit-openresty python meson
+          brew install glslang little-cms2 luajit-openresty python meson
           brew install libass --HEAD
           brew install libarchive
           brew install mujs
