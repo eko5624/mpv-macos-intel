@@ -97,6 +97,7 @@ jobs:
           pushd libmysofa
           cmake -B build -S . \
             -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_TESTS=OFF
           make -C build all
