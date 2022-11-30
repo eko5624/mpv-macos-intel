@@ -204,6 +204,7 @@ jobs:
             --enable-libjxl \
             --enable-libmodplug \
             --enable-libmp3lame \
+            --enable-libmyfofa \
             --enable-libopus \
             --enable-librubberband \
             --enable-libsnappy \
