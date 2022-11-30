@@ -80,7 +80,8 @@ jobs:
             ./configure --prefix=/usr/local \
             --disable-dependency-tracking \
             --disable-silent-rules \
-            --disable-bdjava-jar
+            --disable-bdjava-jar \
+            --without-external-libudfread
             make
             make install
             popd
