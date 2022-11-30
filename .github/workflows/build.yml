@@ -202,13 +202,14 @@ jobs:
           export PKG_CONFIG_PATH=/usr/local/opt/openssl@1.1/lib/pkgconfig
           ./configure \
             --prefix=/usr/local \
-            --enable-shared \
-            --enable-pthreads \
+            --enable-gpl \
+            --enable-nonfree \
             --enable-version3 \
+            --enable-pthreads \
+            --enable-shared \
             --cc=clang \
             --host-cflags= \
             --host-ldflags= \
-            --enable-gpl \
             --enable-frei0r \
             --enable-libbs2b \
             --enable-libbluray \
