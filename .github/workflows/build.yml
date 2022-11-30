@@ -68,8 +68,8 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=/usr/local \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-            -DWITH_OPENSSL_INCLUDEDIR=/usr/local/opt/openssl/include \
-            -DWITH_OPENSSL_LIBDIR=/usr/local/opt/openssl/lib
+            -DWITH_OPENSSL_INCLUDEDIR=`brew --prefix openssl@1.1`/include \
+            -DWITH_OPENSSL_LIBDIR=`brew --prefix openssl@1.1`/lib
           cmake --build ./build -j3
           cmake --install ./build
           popd
