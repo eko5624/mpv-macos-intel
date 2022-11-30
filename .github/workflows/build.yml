@@ -24,6 +24,8 @@ jobs:
         run: |          
           deps=(
             dav1d
+            fontconfig
+            freetype
             frei0r
             gnutls
             lame
