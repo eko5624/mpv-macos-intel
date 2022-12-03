@@ -252,7 +252,7 @@ jobs:
           export PKG_CONFIG_PATH=`brew --prefix zlib`/lib/pkgconfig/:$PKG_CONFIG_PATH
           export PKG_CONFIG_PATH=`brew --prefix luajit-openresty`/lib/pkgconfig/:$PKG_CONFIG_PATH
           export PKG_CONFIG_PATH=`brew --prefix libarchive`/lib/pkgconfig/:$PKG_CONFIG_PATH
-          meson build
+          meson setup build
           meson compile -C build
         env:
           CFLAGS: -mmacosx-version-min=10.8
