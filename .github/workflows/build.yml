@@ -277,7 +277,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@master
         with:
-          tag_name: mpv-${{ env.version }}
+          tag_name: ${{ env.date }}
           name: ${{ env.date }}
           body: Bump to mpv-player/mpv@${{ env.sha }}
           files: All*.zip
