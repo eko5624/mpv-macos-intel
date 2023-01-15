@@ -15,14 +15,13 @@ jobs:
       CC: clang
       CXX: clang++ 
     steps:
-      - name: Remove stray upstream python binary symlinks under /usr/local
-        run: |
-          find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
-          brew unlink python && brew link --overwrite python     
-
       - name: Install dependencies
-        run: |          
-          deps=(
+        run: |
+          brew update
+          brew install --overwrite python@3.11 meson
+          brew install --overwrite glslang little-cms2 luajit-openresty mujs uchardet vapoursynth
+          brew install --overwrite libass --HEAD          
+          ffmpeg_deps=(
             dav1d
             fontconfig
             freetype
@@ -58,17 +57,9 @@ jobs:
             zeromq
             zimg            
           )  
-          brew update
-          for dep in "${deps[@]}"; do
-              brew install $dep;
+          for dep in "${ffmpeg_deps[@]}"; do
+              brew install --overwrite $dep;
           done
-          brew install --overwrite python@3.10 python@3.11
-          brew install glslang little-cms2 luajit-openresty meson
-          brew install libass --HEAD
-          brew install libarchive
-          brew install mujs
-          brew install uchardet
-          brew install vapoursynth
 
       - name: Install libzvbi
         run: |
