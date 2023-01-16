@@ -10,6 +10,7 @@ jobs:
   build:
     runs-on: macos-12
     env:
+      HOMEBREW_NO_ANALYTICS: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
       CC: clang
@@ -129,33 +130,33 @@ jobs:
           popd
           rm -rf uavs3d
 
-      #- name: Install libjxl
-      #  run: |
-      #    git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
-      #    pushd libjxl
-      #    git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
-      #    cmake -B build -S . \
-      #      -DCMAKE_INSTALL_PREFIX=/usr/local \
-      #      -DCMAKE_BUILD_TYPE=Release \
-      #      -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-      #      -DBUILD_TESTING=OFF \
-      #      -DJPEGXL_EMSCRIPTEN=OFF \
-      #      -DJPEGXL_BUNDLE_LIBPNG=OFF \
-      #      -DJPEGXL_ENABLE_TOOLS=OFF \
-      #      -DJPEGXL_ENABLE_VIEWERS=OFF \
-      #      -DJPEGXL_ENABLE_DOXYGEN=OFF \
-      #      -DJPEGXL_ENABLE_EXAMPLES=OFF \
-      #      -DJPEGXL_ENABLE_MANPAGES=OFF \
-      #      -DJPEGXL_ENABLE_JNI=OFF \
-      #      -DJPEGXL_ENABLE_PLUGINS=OFF \
-      #      -DJPEGXL_ENABLE_DEVTOOLS=OFF \
-      #      -DJPEGXL_ENABLE_BENCHMARK=OFF \
-      #      -DJPEGXL_ENABLE_SJPEG=OFF \
-      #      -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
-      #    cmake --build ./build -j3
-      #    cmake --install ./build
-      #    popd
-      #    rm -rf libjxl
+      - name: Install libjxl
+        run: |
+          git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
+          pushd libjxl
+          git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
+          cmake -B build -S . \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
+            -DBUILD_TESTING=OFF \
+            -DJPEGXL_EMSCRIPTEN=OFF \
+            -DJPEGXL_BUNDLE_LIBPNG=OFF \
+            -DJPEGXL_ENABLE_TOOLS=OFF \
+            -DJPEGXL_ENABLE_VIEWERS=OFF \
+            -DJPEGXL_ENABLE_DOXYGEN=OFF \
+            -DJPEGXL_ENABLE_EXAMPLES=OFF \
+            -DJPEGXL_ENABLE_MANPAGES=OFF \
+            -DJPEGXL_ENABLE_JNI=OFF \
+            -DJPEGXL_ENABLE_PLUGINS=OFF \
+            -DJPEGXL_ENABLE_DEVTOOLS=OFF \
+            -DJPEGXL_ENABLE_BENCHMARK=OFF \
+            -DJPEGXL_ENABLE_SJPEG=OFF \
+            -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+          cmake --build ./build -j3
+          cmake --install ./build
+          popd
+          rm -rf libjxl
 
       - name: Install libplacebo
         run: |    
