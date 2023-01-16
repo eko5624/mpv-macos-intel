@@ -20,7 +20,7 @@ jobs:
         run: |
           brew update
           brew install --overwrite python@3.11 meson
-          brew install --overwrite glslang little-cms2 luajit-openresty mujs uchardet vapoursynth
+          brew install --overwrite glslang libarchive little-cms2 luajit-openresty mujs uchardet
           brew install --overwrite libass --HEAD          
           ffmpeg_deps=(
             dav1d
