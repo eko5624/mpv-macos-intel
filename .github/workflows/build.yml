@@ -61,6 +61,10 @@ jobs:
               brew install --overwrite $dep;
           done
 
+      - name: check python3 version
+        run: |  
+          /usr/local/bin/python3 -V
+
       - name: Install libzvbi
         run: |
           git clone https://github.com/zapping-vbi/zvbi
