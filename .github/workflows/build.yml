@@ -20,7 +20,7 @@ jobs:
         run: |
           brew update
           brew install --overwrite python@3.11 meson
-          brew install --overwrite glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet
+          brew install --overwrite glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet vapoursynth
           brew install --overwrite libass --HEAD          
           ffmpeg_deps=(
             dav1d
@@ -251,7 +251,7 @@ jobs:
         run: |
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
           install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
-          TOOLS/osxbundle.py build/mpv
+          python3 TOOLS/osxbundle.py build/mpv
       - name: Get current timestamp
         id: timestamp
         run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
