@@ -256,8 +256,6 @@ jobs:
 
     - name: Bundle mpv
       run: |
-        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
-        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
         python3 TOOLS/osxbundle.py build/mpv
 
     - name: Get current timestamp
