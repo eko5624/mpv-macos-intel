@@ -60,7 +60,7 @@ jobs:
         for dep in "${ffmpeg_deps[@]}"; do
             brew install --overwrite $dep;
         done
-    - name: check python3 version
+    - name: Check python3 version
       run: |  
         /usr/local/bin/python3 -V
       
@@ -233,7 +233,7 @@ jobs:
         repository: "mpv-player/mpv"
         fetch-depth: 0
       
-    - name: fix bundle
+    - name: Fix bundle
       run: |
         echo "Applying fix-bundle.patch"
         patch -p1 < ../fix-bundle.patch
