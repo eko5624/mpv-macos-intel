@@ -239,6 +239,11 @@ jobs:
         echo "Applying fix-bundle.patch"
         patch -p1 < ./fix-bundle.patch
 
+        # Another workaround
+        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
+        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
+         
+
     - name: Get mpv-player/mpv last version
       id: version
       run: echo "version=$(sh version.sh)" >> $GITHUB_ENV
