@@ -235,8 +235,9 @@ jobs:
       
     - name: Fix bundle
       run: |
+        curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
         echo "Applying fix-bundle.patch"
-        patch -p1 < ../fix-bundle.patch
+        patch -p1 < ./fix-bundle.patch
 
     - name: Get mpv-player/mpv last version
       id: version
