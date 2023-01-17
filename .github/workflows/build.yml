@@ -60,11 +60,9 @@ jobs:
           for dep in "${ffmpeg_deps[@]}"; do
               brew install --overwrite $dep;
           done
-
       - name: check python3 version
         run: |  
           /usr/local/bin/python3 -V
-
       - name: Install libzvbi
         run: |
           git clone https://github.com/zapping-vbi/zvbi
@@ -86,7 +84,6 @@ jobs:
           make SUBDIRS=. install
           popd
           rm -rf zvbi
-
       - name: Install libmysofa
         run: |
           git clone https://github.com/hoene/libmysofa.git
@@ -132,7 +129,6 @@ jobs:
           cmake --install .
           popd
           rm -rf uavs3d
-
       - name: Install libjxl
         run: |
           git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
@@ -160,7 +156,6 @@ jobs:
           cmake --install ./build
           popd
           rm -rf libjxl
-
       - name: Install libplacebo
         run: |    
           git clone --recursive https://code.videolan.org/videolan/libplacebo
@@ -171,7 +166,6 @@ jobs:
           meson install -C build
           popd
           rm -rf libplacebo
-
       - name: Install ffmpeg
         run: | 
           git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1                  
@@ -234,6 +228,11 @@ jobs:
         with:
           repository: "mpv-player/mpv"
           fetch-depth: 0
+      
+      -name: fix bundle
+       run: |
+         echo "Applying fix-bundle.patch"
+         patch -p1 < ../fix-bundle.patch
 
       - name: Get mpv-player/mpv last version
         id: version
@@ -250,11 +249,10 @@ jobs:
           export PKG_CONFIG_PATH=`brew --prefix libarchive`/lib/pkgconfig/:$PKG_CONFIG_PATH
           meson setup build
           meson compile -C build
-
       - name: Bundle mpv
         run: |
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
-          install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
+          # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
+          # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
           python3 TOOLS/osxbundle.py build/mpv
       - name: Get current timestamp
         id: timestamp
