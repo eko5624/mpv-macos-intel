@@ -229,8 +229,8 @@ jobs:
           repository: "mpv-player/mpv"
           fetch-depth: 0
       
-      -name: fix bundle
-       run: |
+      - name: fix bundle
+        run: |
          echo "Applying fix-bundle.patch"
          patch -p1 < ../fix-bundle.patch
 
