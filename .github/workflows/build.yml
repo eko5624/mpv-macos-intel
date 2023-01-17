@@ -41,7 +41,7 @@ jobs:
           libvpx
           opencore-amr
           openjpeg
-          openssl@1.1
+          openssl@3
           opus
           rav1e
           rubberband
@@ -175,9 +175,9 @@ jobs:
         git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1                  
         pushd FFmpeg
         # Fix srt >= 1.3.0 not found when configure
-        export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
-        export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
-        export PKG_CONFIG_PATH=/usr/local/opt/openssl@1.1/lib/pkgconfig
+        export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
+        export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
+        export PKG_CONFIG_PATH=/usr/local/opt/openssl@3/lib/pkgconfig
         ./configure \
           --prefix=/usr/local \
           --enable-gpl \
