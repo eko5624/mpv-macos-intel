@@ -78,8 +78,8 @@ jobs:
         brew reinstall -s autoconf automake libtool gettext pkg-config asciidoc xmlto nasm yasm
         brew reinstall -s ca-certificates sqlite xz python@3.11
         brew link --overwrite python@3.11 
-        brew reinstall -s ninja meson
-        brew reinstall -s glslang jpeg-turbo 
+        brew reinstall -s meson ninja
+        brew reinstall -s brotli glslang jpeg-turbo 
         brew reinstall -s libb2 libarchive
         brew reinstall -s libtiff little-cms2 
         brew reinstall -s luajit-openresty 
@@ -87,7 +87,8 @@ jobs:
         brew reinstall -s uchardet 
         brew reinstall -s cython zimg vapoursynth
         brew reinstall -s freetype fribidi harfbuzz libunibreak
-        brew install -s libass --HEAD          
+        brew install -s libass --HEAD
+          
         brew install -s dav1d
         brew install -s fontconfig
         brew install -s frei0r
@@ -104,26 +105,20 @@ jobs:
         brew install -s libogg libvorbis
         brew install -s libvpx
         brew install -s opencore-amr
-        brew install -s libpng openjpeg
-          opus
-          rav1e
-          rubberband
-          sdl2
-          snappy
-          speex
-          srt
-          tesseract
-          theora
-          webp
-          xvid
-          #xz
-          zeromq
-          zimg            
-        )  
-        for dep in "${ffmpeg_deps[@]}"; do
-            brew reinstall -s $dep;
-        done
+        brew install -s doxygen libpng openjpeg
+        brew install -s opus
+        brew install -s rav1e
         sudo chown -R `whoami`:admin /usr/local/share/texinfo
+        brew install -s libsamplerate libsndfile rubberband
+        brew install -s sdl2
+        brew install -s snappy
+        brew install -s speex
+        brew install -s srt
+        brew install -s cairo icu4c leptonica pango tesseract
+        brew install -s theora
+        brew install -s giflib webp
+        brew install -s xvid
+        brew install -s libsodium zeromq           
         
     - name: Check python3 version
       run: |  
