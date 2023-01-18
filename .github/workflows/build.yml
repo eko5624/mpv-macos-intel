@@ -14,14 +14,30 @@ jobs:
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
       CC: clang
-      CXX: clang++ 
+      CXX: clang++
+      MACOSX_DEPLOYMENT_TARGET: 10.13
     steps:
     - name: Install dependencies
       run: |
-        brew update
-        brew install --overwrite python@3.11 meson
-        brew install --overwrite glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet vapoursynth
-        brew install --overwrite libass --HEAD          
+        # Force 10.13 deployment target for all homebrew formulas
+        brew update-reset
+        for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do 
+            sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
+        done
+        
+        for dep in luajit-openresty python@3.8 python@3.10; do 
+            sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
+        done
+
+        # Uninstal bottled dependencies
+        brew uninstall --ignore-dependencies --force openssl@1.1
+        brew uninstall --ignore-dependencies --force gnutls
+        brew cleanup
+
+        # Reinstall homebrew packages from source
+        brew reinstall -s python@3.11 meson
+        brew reinstall -s glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet vapoursynth
+        brew reinstall -s libass --HEAD          
         ffmpeg_deps=(
           dav1d
           fontconfig
@@ -41,7 +57,7 @@ jobs:
           libvpx
           opencore-amr
           openjpeg
-          openssl@3
+          openssl@1.1
           opus
           rav1e
           rubberband
@@ -58,7 +74,7 @@ jobs:
           zimg            
         )  
         for dep in "${ffmpeg_deps[@]}"; do
-            brew install --overwrite $dep;
+            brew reinstall -s $dep;
         done
     - name: Check python3 version
       run: |  
