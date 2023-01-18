@@ -58,19 +58,18 @@ jobs:
             sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
         done
         
-        for dep in luajit-openresty python@3.8 python@3.10; do 
+        for dep in luajit-openresty python@3.11; do 
             sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
         done
 
         # Uninstal bottled dependencies
         brew uninstall --ignore-dependencies --force openssl@1.1
-        brew uninstall --ignore-dependencies --force gnutls
         brew cleanup
+        brew reinstall -s openssl@1.1
 
         # Reinstall homebrew packages from source
-        brew unlink python
-        brew reinstall -s python@3.8 meson
-        export PKG_CONFIG_PATH="/usr/local/opt/python@3.8/lib/pkgconfig:$PKG_CONFIG_PATH"
+        brew reinstall -s python@3.11 meson
+        export PKG_CONFIG_PATH="/usr/local/opt/python@3.11/lib/pkgconfig:$PKG_CONFIG_PATH"
         brew reinstall -s glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet vapoursynth
         brew reinstall -s libass --HEAD          
         ffmpeg_deps=(
