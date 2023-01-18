@@ -72,32 +72,39 @@ jobs:
         brew unlink python && brew link --overwrite python
 
         # Reinstall homebrew packages from source
-        brew reinstall -s python@3.11
+        brew reinstall -s lz4
+        brew reinstall -s xz
+        brew reinstall -s zstd
+        brew reinstall -s autoconf automake libtool gettext pkg-config asciidoc xmlto nasm yasm
+        brew reinstall -s ca-certificates sqlite xz python@3.11
         brew link --overwrite python@3.11 
         brew reinstall -s ninja meson
-        export PKG_CONFIG_PATH="/usr/local/opt/python@3.11/lib/pkgconfig:$PKG_CONFIG_PATH"
-        brew reinstall -s glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet vapoursynth
-        brew reinstall -s libass --HEAD          
-        ffmpeg_deps=(
-          dav1d
-          fontconfig
-          freetype
-          frei0r
-          gnutls
-          lame
-          libbluray
-          libbs2b
-          libcaca
-          libmodplug
-          librist
-          libsoxr
-          libssh
-          libvidstab
-          libvorbis
-          libvpx
-          opencore-amr
-          openjpeg
-          openssl@1.1
+        brew reinstall -s glslang jpeg-turbo 
+        brew reinstall -s libb2 libarchive
+        brew reinstall -s libtiff little-cms2 
+        brew reinstall -s luajit-openresty 
+        brew reinstall -s mujs 
+        brew reinstall -s uchardet 
+        brew reinstall -s cython zimg vapoursynth
+        brew reinstall -s freetype fribidi harfbuzz libunibreak
+        brew install -s libass --HEAD          
+        brew install -s dav1d
+        brew install -s fontconfig
+        brew install -s frei0r
+        brew install -s gmp guile libidn2 libtasn1 libunistring nettle p11-kit unbound gnutls
+        brew install -s lame
+        brew install -s libbluray
+        brew install -s libbs2b
+        brew install -s imlib2 libcaca
+        brew install -s libmodplug
+        brew install -s cjson cmocka mbedtls librist
+        brew install -s libsoxr
+        brew install -s libssh
+        brew install -s libvidstab
+        brew install -s libogg libvorbis
+        brew install -s libvpx
+        brew install -s opencore-amr
+        brew install -s libpng openjpeg
           opus
           rav1e
           rubberband
@@ -109,7 +116,7 @@ jobs:
           theora
           webp
           xvid
-          xz
+          #xz
           zeromq
           zimg            
         )  
