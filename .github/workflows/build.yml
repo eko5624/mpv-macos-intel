@@ -68,7 +68,9 @@ jobs:
         brew cleanup
 
         # Reinstall homebrew packages from source
-        brew reinstall -s python@3.11 meson
+        brew unlink python
+        brew reinstall -s python@3.10 meson
+        brew link --overwrite python@3.10
         brew reinstall -s glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet vapoursynth
         brew reinstall -s libass --HEAD          
         ffmpeg_deps=(
