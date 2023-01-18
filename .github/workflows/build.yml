@@ -68,6 +68,7 @@ jobs:
         brew cleanup
 
         # Reinstall homebrew packages from source
+        sudo chown -R `whoami`:admin /usr/local/share/texinfo
         brew unlink python
         brew reinstall -s python@3.10 meson
         brew link --overwrite python@3.10
