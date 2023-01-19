@@ -78,7 +78,7 @@ jobs:
         brew reinstall -s autoconf automake libtool gettext pkg-config
         brew reinstall -s ca-certificates sqlite python@3.10 python@3.11
         # brew link --overwrite python@3.11 
-        brew reinstall -s meson ninja
+        brew reinstall -s ninja meson
         brew reinstall -s brotli glslang jpeg-turbo 
         brew reinstall -s libb2 libarchive
         brew reinstall -s libtiff little-cms2 
@@ -88,7 +88,7 @@ jobs:
         brew reinstall -s cython zimg vapoursynth
         brew reinstall -s libpng freetype 
         brew reinstall -s fribidi
-        brew reinstall -s gobject-introspection pygobject3 cairo glib graphite2 icu4c harfbuzz 
+        brew reinstall -s bison pcre2 glib libx11 libxrender gobject-introspection py3cairo pygobject3 cairo graphite2 icu4c harfbuzz 
         brew reinstall -s libunibreak
         brew install -s libass --HEAD
           
@@ -101,7 +101,8 @@ jobs:
         brew reinstall -s libbs2b
         brew reinstall -s imlib2 libcaca
         brew reinstall -s libmodplug
-        brew reinstall -s cjson cmocka mbedtls libinstall -s libsoxr
+        brew reinstall -s cjson cmocka mbedtls librist
+        brew reinstall -s libsoxr
         brew reinstall -s libssh
         brew reinstall -s libvidstab
         brew reinstall -s libogg libvorbis
