@@ -58,7 +58,7 @@ jobs:
             sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
         done
         
-        for dep in luajit-openresty python@3.11; do 
+        for dep in luajit python@3.11; do 
             sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
         done
 
@@ -82,7 +82,7 @@ jobs:
         brew reinstall -s brotli glslang jpeg-turbo 
         brew reinstall -s libb2 libarchive
         brew reinstall -s libtiff little-cms2 
-        brew reinstall -s luajit-openresty 
+        brew reinstall -s luajit
         brew reinstall -s mujs 
         brew reinstall -s uchardet 
         brew reinstall -s cython zimg vapoursynth
