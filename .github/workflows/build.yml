@@ -92,36 +92,35 @@ jobs:
         brew reinstall -s libunibreak
         brew install -s libass --HEAD
           
-        brew install -s dav1d
-        brew install -s fontconfig
-        brew install -s frei0r
-        brew install -s gmp guile libidn2 libtasn1 libunistring nettle p11-kit unbound gnutls
-        brew install -s lame
-        brew install -s libbluray
-        brew install -s libbs2b
-        brew install -s imlib2 libcaca
-        brew install -s libmodplug
-        brew install -s cjson cmocka mbedtls librist
-        brew install -s libsoxr
-        brew install -s libssh
-        brew install -s libvidstab
-        brew install -s libogg libvorbis
-        brew install -s libvpx
-        brew install -s opencore-amr
-        brew install -s doxygen openjpeg
-        brew install -s opus
-        brew install -s rav1e
+        brew reinstall -s dav1d
+        brew reinstall -s fontconfig
+        brew reinstall -s frei0r
+        brew reinstall -s gmp guile libidn2 libtasn1 libunistring nettle p11-kit unbound gnutls
+        brew reinstall -s lame
+        brew reinstall -s libbluray
+        brew reinstall -s libbs2b
+        brew reinstall -s imlib2 libcaca
+        brew reinstall -s libmodplug
+        brew reinstall -s cjson cmocka mbedtls libinstall -s libsoxr
+        brew reinstall -s libssh
+        brew reinstall -s libvidstab
+        brew reinstall -s libogg libvorbis
+        brew reinstall -s libvpx
+        brew reinstall -s opencore-amr
+        brew reinstall -s doxygen openjpeg
+        brew reinstall -s opus
+        brew reinstall -s rav1e
         sudo chown -R `whoami`:admin /usr/local/share/texinfo
-        brew install -s libsamplerate libsndfile rubberband
-        brew install -s sdl2
-        brew install -s snappy
-        brew install -s speex
-        brew install -s srt
-        brew install -s leptonica pango tesseract
-        brew install -s theora
-        brew install -s giflib webp
-        brew install -s xvid
-        brew install -s libsodium zeromq           
+        brew reinstall -s libsamplerate libsndfile rubberband
+        brew reinstall -s sdl2
+        brew reinstall -s snappy
+        brew reinstall -s speex
+        brew reinstall -s srt
+        brew reinstall -s leptonica pango tesseract
+        brew reinstall -s theora
+        brew reinstall -s giflib webp
+        brew reinstall -s xvid
+        brew reinstall -s libsodium zeromq           
         
     - name: Check python3 version
       run: |  
