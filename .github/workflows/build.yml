@@ -88,7 +88,7 @@ jobs:
         brew reinstall -s cython zimg vapoursynth
         brew reinstall -s libpng freetype 
         brew reinstall -s fribidi
-        brew reinstall -s bison pcre2 glib libx11 libxrender gobject-introspection py3cairo pygobject3 cairo graphite2 icu4c harfbuzz 
+        brew reinstall -s bison pcre2 glib util-macros xtrans libxcb xorgproto libx11 libxrender gobject-introspection py3cairo pygobject3 cairo graphite2 icu4c harfbuzz 
         brew reinstall -s libunibreak
         brew install -s libass --HEAD
           
