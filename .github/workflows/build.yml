@@ -76,7 +76,7 @@ jobs:
         brew reinstall -s xz
         brew reinstall -s zstd
         brew reinstall -s autoconf automake libtool gettext pkg-config
-        brew reinstall -s ca-certificates sqlite xz python@3.11
+        brew reinstall -s ca-certificates sqlite python@3.11
         brew link --overwrite python@3.11 
         brew reinstall -s meson ninja
         brew reinstall -s brotli glslang jpeg-turbo 
