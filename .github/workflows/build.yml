@@ -75,7 +75,7 @@ jobs:
         brew reinstall -s lz4
         brew reinstall -s xz
         brew reinstall -s zstd
-        brew reinstall -s autoconf automake libtool gettext pkg-config asciidoc xmlto nasm yasm
+        brew reinstall -s autoconf automake libtool gettext pkg-config
         brew reinstall -s ca-certificates sqlite xz python@3.11
         brew link --overwrite python@3.11 
         brew reinstall -s meson ninja
