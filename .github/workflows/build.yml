@@ -58,7 +58,7 @@ jobs:
             sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
         done
         
-        for dep in luajit python@3.11; do 
+        for dep in luajit python@3.10 python@3.11; do 
             sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
         done
 
@@ -76,8 +76,8 @@ jobs:
         brew reinstall -s xz
         brew reinstall -s zstd
         brew reinstall -s autoconf automake libtool gettext pkg-config
-        brew reinstall -s ca-certificates sqlite python@3.11
-        brew link --overwrite python@3.11 
+        brew reinstall -s ca-certificates sqlite python@3.10 python@3.11
+        # brew link --overwrite python@3.11 
         brew reinstall -s meson ninja
         brew reinstall -s brotli glslang jpeg-turbo 
         brew reinstall -s libb2 libarchive
