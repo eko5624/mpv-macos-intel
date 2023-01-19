@@ -86,7 +86,10 @@ jobs:
         brew reinstall -s mujs 
         brew reinstall -s uchardet 
         brew reinstall -s cython zimg vapoursynth
-        brew reinstall -s freetype fribidi harfbuzz libunibreak
+        brew reinstall -s libpng freetype 
+        brew reinstall -s fribidi
+        brew reinstall -s gobject-introspection pygobject3 cairo glib graphite2 icu4c harfbuzz 
+        brew reinstall -s libunibreak
         brew install -s libass --HEAD
           
         brew install -s dav1d
@@ -105,7 +108,7 @@ jobs:
         brew install -s libogg libvorbis
         brew install -s libvpx
         brew install -s opencore-amr
-        brew install -s doxygen libpng openjpeg
+        brew install -s doxygen openjpeg
         brew install -s opus
         brew install -s rav1e
         sudo chown -R `whoami`:admin /usr/local/share/texinfo
@@ -114,7 +117,7 @@ jobs:
         brew install -s snappy
         brew install -s speex
         brew install -s srt
-        brew install -s cairo icu4c leptonica pango tesseract
+        brew install -s leptonica pango tesseract
         brew install -s theora
         brew install -s giflib webp
         brew install -s xvid
