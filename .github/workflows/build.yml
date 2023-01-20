@@ -111,7 +111,6 @@ jobs:
         brew reinstall -s doxygen openjpeg
         brew reinstall -s opus
         brew reinstall -s rav1e
-        sudo chown -R `whoami`:admin /usr/local/share/texinfo
         brew reinstall -s libsamplerate libsndfile rubberband
         brew reinstall -s sdl2
         brew reinstall -s snappy
