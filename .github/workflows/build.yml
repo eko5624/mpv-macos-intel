@@ -63,7 +63,7 @@ jobs:
             sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
         done
         
-        echo "Insall packages from source.
+        echo "Insall packages from source."
         brew cleanup
         brew reinstall -s python@3.10
                
