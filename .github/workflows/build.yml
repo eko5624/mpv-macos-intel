@@ -74,7 +74,7 @@ jobs:
     - name: Install ninja meson
       run: |  
         pip3 install https://github.com/mesonbuild/meson/archive/refs/heads/master.zip
-        pip install ninja     
+        pip3 install ninja   
 
     - name: Checkout
       uses: actions/checkout@main
