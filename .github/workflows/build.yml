@@ -10,10 +10,6 @@ jobs:
   build:
     runs-on: macos-12
     env:
-      HOMEBREW_NO_ANALYTICS: 1
-      HOMEBREW_NO_INSTALL_CLEANUP: 1
-      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
-      HOMEBREW_SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       MACOSX_DEPLOYMENT_TARGET: 10.13
       SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       MACOS_SDK: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
@@ -48,284 +44,19 @@ jobs:
       run: |
         # Switch to Xcode 14.2
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer    
-    
-    - name: Install dependencies
-      run: |
-        # Force 10.13 deployment target for all homebrew formulas
-        brew update-reset
-        for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do 
-            sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
-        done
-        
-        for dep in luajit python@3.10 python@3.11; do 
-            sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
-        done
-
-        # Uninstall bottled dependencies
-        brew uninstall --ignore-dependencies --force openssl@1.1
-        brew cleanup
-        brew reinstall -s openssl@1.1
-
-        # Remove stray upstream python binary symlinks under /usr/local
-        find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
-        brew unlink python && brew link --overwrite python
-
-        # Reinstall homebrew packages from source
-        brew reinstall -s lz4
-        brew reinstall -s xz
-        brew reinstall -s zstd
-        brew reinstall -s autoconf automake libtool gettext pkg-config
-        brew reinstall -s ca-certificates sqlite python@3.10 python@3.11
-        # brew link --overwrite python@3.11 
-        brew reinstall -s ninja meson
-        brew reinstall -s brotli glslang jpeg-turbo 
-        brew reinstall -s libb2 libarchive
-        brew reinstall -s libtiff little-cms2 
-        brew reinstall -s luajit
-        brew reinstall -s mujs 
-        brew reinstall -s uchardet 
-        brew reinstall -s cython zimg vapoursynth
-        brew reinstall -s libpng freetype 
-        brew reinstall -s fribidi
-        brew reinstall -s bison pcre2 glib util-macros xtrans libxcb xorgproto libx11 libxrender gobject-introspection py3cairo pygobject3 cairo graphite2 icu4c harfbuzz 
-        brew reinstall -s libunibreak
-        brew install -s libass --HEAD
-          
-        brew reinstall -s dav1d
-        brew reinstall -s fontconfig
-        brew reinstall -s frei0r
-        brew reinstall -s gmp guile libidn2 libtasn1 libunistring nettle p11-kit unbound gnutls
-        brew reinstall -s lame
-        brew reinstall -s libbluray
-        brew reinstall -s libbs2b
-        brew reinstall -s imlib2 libcaca
-        brew reinstall -s libmodplug
-        brew reinstall -s cjson cmocka mbedtls librist
-        brew reinstall -s libsoxr
-        brew reinstall -s libssh
-        brew reinstall -s libvidstab
-        brew reinstall -s libogg libvorbis
-        brew reinstall -s libvpx
-        brew reinstall -s opencore-amr
-        brew reinstall -s doxygen openjpeg
-        brew reinstall -s opus
-        brew reinstall -s rav1e
-        brew reinstall -s libsamplerate libsndfile rubberband
-        brew reinstall -s sdl2
-        brew reinstall -s snappy
-        brew reinstall -s speex
-        brew reinstall -s srt
-        brew reinstall -s leptonica pango tesseract
-        brew reinstall -s theora
-        brew reinstall -s giflib webp
-        brew reinstall -s xvid
-        brew reinstall -s libsodium zeromq           
+        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer
         
     - name: Check python3 version
       run: |  
-        /usr/local/bin/python3 -V
-      
-    - name: Install libzvbi
-      run: |
-        git clone https://github.com/zapping-vbi/zvbi
-        pushd zvbi
-        curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
-        curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
-        curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
-        for patch in ./*.patch; do
-            echo "Applying $patch"
-            patch -p1 < "$patch"
-        done
-        ./autogen.sh
-        ./configure --prefix=/usr/local \
-          --disable-dependency-tracking \
-          --disable-silent-rules \
-          --without-x
-        make -C src
-        make -C src install
-        make SUBDIRS=. install
-        popd
-        rm -rf zvbi
-    - name: Install libmysofa
-      run: |
-        git clone https://github.com/hoene/libmysofa.git
-        pushd libmysofa
-        cmake -B build -S . \
-          -DCMAKE_INSTALL_PREFIX=/usr/local \
-          -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DBUILD_TESTS=OFF
-        make -C build all
-        make -C build install
-        popd
-        rm -rf libmysofa
-          
-    - name: Install davs2
-      run: |    
-        git clone https://github.com/pkuvcl/davs2.git --branch master --depth 1
-        pushd davs2/build/linux
-        ./configure \
-          --prefix=/usr/local \
-          --enable-shared \
-          --disable-static \
-          --disable-cli \
-          --enable-lto \
-          --enable-pic
-        make -j3
-        make install
-        popd 
-        rm -rf davs2
-          
-    - name: Install uavs3d
-      run: |    
-        git clone https://github.com/uavs3/uavs3d.git --branch master --depth 1
-        pushd uavs3d
-        mkdir -p build/linux && cd build/linux
-        cmake ../.. \
-          -DCMAKE_INSTALL_PREFIX=/usr/local \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-          -DBUILD_SHARED_LIBS=ON \
-          -DCOMPILE_10BIT=ON
-        cmake --build . -j3
-        cmake --install .
-        popd
-        rm -rf uavs3d
-      
-    - name: Install libjxl
-      run: |
-        git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
-        pushd libjxl
-        git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
-        cmake -B build -S . \
-          -DCMAKE_INSTALL_PREFIX=/usr/local \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
-          -DBUILD_TESTING=OFF \
-          -DJPEGXL_EMSCRIPTEN=OFF \
-          -DJPEGXL_BUNDLE_LIBPNG=OFF \
-          -DJPEGXL_ENABLE_TOOLS=OFF \
-          -DJPEGXL_ENABLE_VIEWERS=OFF \
-          -DJPEGXL_ENABLE_DOXYGEN=OFF \
-          -DJPEGXL_ENABLE_EXAMPLES=OFF \
-          -DJPEGXL_ENABLE_MANPAGES=OFF \
-          -DJPEGXL_ENABLE_JNI=OFF \
-          -DJPEGXL_ENABLE_PLUGINS=OFF \
-          -DJPEGXL_ENABLE_DEVTOOLS=OFF \
-          -DJPEGXL_ENABLE_BENCHMARK=OFF \
-          -DJPEGXL_ENABLE_SJPEG=OFF \
-          -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
-        cmake --build ./build -j3
-        cmake --install ./build
-        popd
-        rm -rf libjxl
+        /usr/local/bin/python3 -V        
 
-    - name: Install libplacebo
-      run: |    
-        git clone --recursive https://code.videolan.org/videolan/libplacebo
-        pushd libplacebo
-        meson setup build --prefix=/usr/local --buildtype=release \
-          -Dvulkan=disabled
-        meson compile -C build
-        meson install -C build
-        popd
-        rm -rf libplacebo
-    
-    - name: Install ffmpeg
-      run: | 
-        git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1                  
-        pushd FFmpeg
-        # Fix srt >= 1.3.0 not found when configure
-        export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
-        export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
-        export PKG_CONFIG_PATH=/usr/local/opt/openssl@3/lib/pkgconfig
-        ./configure \
-          --prefix=/usr/local \
-          --enable-gpl \
-          --enable-nonfree \
-          --enable-version3 \
-          --enable-pthreads \
-          --enable-shared \
-          --cc=clang \
-          --host-cflags= \
-          --host-ldflags= \
-          --enable-frei0r \
-          --enable-libbs2b \
-          --enable-libbluray \
-          --enable-libcaca \
-          --enable-libdav1d \
-          --enable-libdavs2 \
-          --enable-libfontconfig \
-          --enable-libfreetype \
-          --enable-libjxl \
-          --enable-libmodplug \
-          --enable-libmp3lame \
-          --enable-libmysofa \
-          --enable-libopus \
-          --enable-librubberband \
-          --enable-libsnappy \
-          --enable-libsoxr \
-          --enable-libspeex \
-          --enable-librist \
-          --enable-libsrt \
-          --enable-libssh \
-          --enable-libtheora \
-          --enable-libuavs3d \
-          --enable-libvorbis \
-          --enable-libvpx \
-          --enable-libwebp \
-          --enable-libxml2 \
-          --enable-libxvid \
-          --enable-libzimg \
-          --enable-libzvbi \
-          --enable-opencl \
-          --enable-openssl \
-          --enable-audiotoolbox \
-          --enable-videotoolbox \
-          --disable-htmlpages
-        make -j3
-        make install
-        popd
-        rm -rf FFmpeg
-              
-    - name: Checkout mpv-player/mpv
+    - name: Checkout
       uses: actions/checkout@main
-      with:
-        repository: "mpv-player/mpv"
-        fetch-depth: 0
-      
-    - name: Fix bundle
-      run: |
-        curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
-        echo "Applying fix-bundle.patch"
-        patch -p1 < ./fix-bundle.patch
 
-        # Another workaround
-        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
-        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
-         
-
-    - name: Get mpv-player/mpv last version
-      id: version
-      run: echo "version=$(sh version.sh)" >> $GITHUB_ENV
-        
-    - name: Get mpv-player/mpv last commit SHA      
-      run: echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV 
-      
-    - name: Build mpv
+    - name: build
       run: |
-        export PKG_CONFIG_PATH=`brew --prefix zlib`/lib/pkgconfig/:$PKG_CONFIG_PATH
-        export PKG_CONFIG_PATH=`brew --prefix luajit-openresty`/lib/pkgconfig/:$PKG_CONFIG_PATH
-        export PKG_CONFIG_PATH=`brew --prefix libarchive`/lib/pkgconfig/:$PKG_CONFIG_PATH
-        
-        python3 bootstrap.py
-        python3 waf configure
-        python3 waf
-
-    - name: Bundle mpv
-      run: |
-        python3 TOOLS/osxbundle.py build/mpv
+        chmod +x ./build.sh
+        ./build.sh
 
     - name: Get current timestamp
       run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
@@ -336,7 +67,7 @@ jobs:
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
-        mv build/mpv.app All-in-One
+        mv packages/mpv/build/mpv.app All-in-One
         zip -r All-in-One-${{ env.date }}.zip All-in-One/*
 
     - name: Create Release
