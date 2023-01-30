@@ -38,7 +38,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   CONFIGURE_OPTIONS=("--enable-videotoolbox")
   MACOS_LIBTOOL="$(which libtool)" # gnu libtool is installed in this script and need to avoid name conflict
 else
-  MJOBS=4
+  MJOBS=3
 fi
 
 make_dir() {
