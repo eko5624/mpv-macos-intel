@@ -15,6 +15,7 @@ EXTRALIBS="-ldl -lpthread -lm -lz"
 MACOS_M1=false
 CONFIGURE_OPTIONS=()
 LATEST=false
+CURL_RETRIES="--connect-timeout 60 --retry 5 --retry-delay 5"
 
 # Check for Apple Silicon
 if [[ ("$OSTYPE" == "darwin"*) ]]; then
@@ -70,14 +71,14 @@ download() {
 
   if [ ! -f "$DOWNLOAD_PATH/$DOWNLOAD_FILE" ]; then
     echo "Downloading $1 as $DOWNLOAD_FILE"
-    curl -L --silent -o "$DOWNLOAD_PATH/$DOWNLOAD_FILE" "$1"
+    curl $CURL_RETRIES -L --silent -o "$DOWNLOAD_PATH/$DOWNLOAD_FILE" "$1"
 
     EXITCODE=$?
     if [ $EXITCODE -ne 0 ]; then
       echo ""
       echo "Failed to download $1. Exitcode $EXITCODE. Retrying in 10 seconds"
       sleep 10
-      curl -L --silent -o "$DOWNLOAD_PATH/$DOWNLOAD_FILE" "$1"
+      curl $CURL_RETRIES -L --silent -o "$DOWNLOAD_PATH/$DOWNLOAD_FILE" "$1"
     fi
 
     EXITCODE=$?
@@ -210,7 +211,7 @@ if build "giflib" "5.2.1"; then
   download "https://netcologne.dl.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz"
     if [[ "$OSTYPE" == "darwin"* ]]; then
       # Upstream has stripped out the previous autotools-based build system and their
-      # Makefile doesn't work on macOS. See https://sourceforge.net/p/giflib/bugs/133/	
+      # Makefile doesn't work on macOS. See https://sourceforge.net/p/giflib/bugs/133/  
       download "https://sourceforge.net/p/giflib/bugs/_discuss/thread/4e811ad29b/c323/attachment/Makefile.patch"
       execute patch -p0 --forward "${PACKAGES}/giflib-5.2.1/Makefile" "${PACKAGES}/Makefile.patch" || true
     fi
@@ -592,7 +593,7 @@ if build "libxml2" "2.10.3"; then
   # Reported upstream:
   # https://bugzilla.gnome.org/show_bug.cgi?id=789714
   # https://gitlab.gnome.org/GNOME/libxml2/issues/12
-  execute curl -L --silent -o fix_crash.patch "https://bugzilla.opensuse.org/attachment.cgi?id=746044"
+  execute curl $CURL_RETRIES -L --silent -o fix_crash.patch "https://bugzilla.opensuse.org/attachment.cgi?id=746044"
   execute patch -p1 -i fix_crash.patch
   execute autoreconf -fvi
   execute ./configure \
@@ -683,7 +684,7 @@ if build "libcaca" "main"; then
   cd $PACKAGES
   git clone https://github.com/cacalabs/libcaca.git --branch main --depth 1
   cd libcaca
-  curl -OL https://github.com/cacalabs/libcaca/pull/70.patch
+  curl $CURL_RETRIES -OL https://github.com/cacalabs/libcaca/pull/70.patch
   patch -p1 -i 70.patch
   execute autoreconf -fvi
   execute ./configure \
@@ -755,7 +756,7 @@ if build "libmodplug" "master"; then
   git clone https://github.com/Konstanty/libmodplug.git --branch master --depth 1
   cd libmodplug
   # Fix -flat_namespace being used on Big Sur and later.
-  # curl -OL "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
+  # curl $CURL_RETRIES -OL "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
   # execute patch -p1 -i configure-big_sur.diff || true
   execute autoreconf -fvi
   execute ./configure \
@@ -829,7 +830,7 @@ if build "libtheora" "1.1.1"; then
   if ! $MACOS_M1; then
     ##BEGIN CONFIG.GUESS PATCH -- Updating config.guess file. Which allowed me to compile on aarch64 (ARMv8) [linux kernel 4.9 Ubuntu 20.04]
     rm config.guess
-    curl -L --silent -o "config.guess" "https://raw.githubusercontent.com/gcc-mirror/gcc/master/config.guess"
+    curl $CURL_RETRIES -L --silent -o "config.guess" "https://raw.githubusercontent.com/gcc-mirror/gcc/master/config.guess"
     chmod +x config.guess
     ##END OF CONFIG.GUESS PATCH
   fi
@@ -1054,9 +1055,9 @@ if build "zvbi" "main"; then
   cd $PACKAGES
   git clone https://github.com/zapping-vbi/zvbi.git --branch main --depth 1
   cd zvbi
-  curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
-  curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
-  curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
+  curl $CURL_RETRIES -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
+  curl $CURL_RETRIES -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
+  curl $CURL_RETRIES -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
   for patch in ./*.patch; do
       echo "Applying $patch"
       patch -p1 < "$patch"
