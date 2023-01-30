@@ -20,6 +20,7 @@ jobs:
       SWIFT_FLAGS: "-target x86_64-apple-macosx10.13"
       CC: clang
       CXX: clang++
+      CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
     - name: Install MacOSX 10.14 SDK
       id: macossdk
