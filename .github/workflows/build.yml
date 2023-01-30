@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: macos-12
     env:
+      HOMEBREW_NO_ANALYTICS: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
+      HOMEBREW_SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"    
       MACOSX_DEPLOYMENT_TARGET: 10.13
       SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       MACOS_SDK: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
@@ -47,9 +51,30 @@ jobs:
         sudo xcode-select --reset
         sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer
         
+    - name: Install dependencies
+      run: |
+        # Force 10.13 deployment target for all homebrew formulas
+        brew update-reset
+        for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do 
+            sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
+        done
+        
+        for dep in python@3.10 python@3.11; do 
+            sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
+        done
+        
+        echo "Insall packages from source.
+        brew cleanup
+        brew reinstall -s python@3.10
+               
     - name: Check python3 version
       run: |  
-        /usr/local/bin/python3 -V        
+        /usr/local/bin/python3 -V
+        
+    - name: Install ninja meson
+      run: |  
+        pip3 install https://github.com/mesonbuild/meson/archive/refs/heads/master.zip
+        pip install ninja     
 
     - name: Checkout
       uses: actions/checkout@main
