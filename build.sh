@@ -325,7 +325,7 @@ if build "lcms2" "master"; then
   build_done "lcms2" "master"
 fi
 
-if build "glslang" "master"; then
+if build "glslang" "main"; then
   cd $PACKAGES
   git clone https://github.com/KhronosGroup/glslang.git --branch main --depth 1
   cd glslang
