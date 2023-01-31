@@ -88,6 +88,27 @@ jobs:
         chmod +x ./build.sh
         ./build.sh
 
+    - name: Packaging binary
+      continue-on-error: true
+      run: |
+        mkdir -p binary/packages
+        mkdir -p binary/workspace
+        mv packages/*.done binary/packages
+        mv workspace/bin binary/workspace
+        mv workspace/include binary/workspace
+        mv workspace/lib binary/workspace
+        zip -r binary.zip binary/*
+
+    - name: Uploading binary packages
+      continue-on-error: true
+      uses: softprops/action-gh-release@master
+      with:
+        tag_name: ${{ env.date }}
+        name: ${{ env.date }}
+        files: binary.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Get current timestamp
       run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
