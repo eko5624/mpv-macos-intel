@@ -720,6 +720,29 @@ if build "brotli" "master"; then
   build_done "brotli" "master"
 fi
 
+if build "highway" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/google/highway.git --branch master --depth 1
+  cd highway
+  make_dir out
+  cd out || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_GNUtoMS=OFF \
+    -DHWY_CMAKE_ARM7=OFF \
+    -DHWY_ENABLE_CONTRIB=OFF \
+    -DHWY_ENABLE_EXAMPLES=OFF \
+    -DHWY_ENABLE_INSTALL=ON \
+    -DHWY_WARNINGS_ARE_ERRORS=OFF
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "highway" "master"
+fi
+
 if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
@@ -731,6 +754,7 @@ if build "libjxl" "main"; then
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
     -DJPEGXL_STATIC=OFF \
     -DBUILD_TESTING=OFF \
     -DJPEGXL_EMSCRIPTEN=OFF \
@@ -741,6 +765,7 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_EXAMPLES=OFF \
     -DJPEGXL_ENABLE_MANPAGES=OFF \
     -DJPEGXL_ENABLE_JNI=OFF \
+    -DJPEGXL_ENABLE_SKCMS=OFF \
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
