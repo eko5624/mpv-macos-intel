@@ -84,12 +84,13 @@ jobs:
       uses: actions/checkout@main
 
     - name: build
+      continue-on-error: true
       run: |
         chmod +x ./build.sh
         ./build.sh
 
-    - name: Packaging binary
-      continue-on-error: true
+    - name: Zip binary packages
+      if: ${{ failure() }}
       run: |
         mkdir -p binary/packages
         mkdir -p binary/workspace
@@ -98,9 +99,11 @@ jobs:
         mv workspace/include binary/workspace
         mv workspace/lib binary/workspace
         zip -r binary.zip binary/*
+        
+    - name: Get current timestamp
+      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV        
 
-    - name: Uploading binary packages
-      continue-on-error: true
+    - name: Upload binary packages
       uses: softprops/action-gh-release@master
       with:
         tag_name: ${{ env.date }}
@@ -109,10 +112,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get current timestamp
-      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
-
-    - name: Package
+    - name: Zip mpv.app
       run: |
         mkdir All-in-One
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
