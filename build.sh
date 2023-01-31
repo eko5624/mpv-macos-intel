@@ -747,7 +747,6 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
   make_dir build
   cd build || exit  
   execute cmake ../ \
