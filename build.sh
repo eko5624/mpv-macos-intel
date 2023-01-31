@@ -327,7 +327,7 @@ fi
 
 if build "glslang" "master"; then
   cd $PACKAGES
-  git clone https://github.com/KhronosGroup/glslang.git --branch master --depth 1
+  git clone https://github.com/KhronosGroup/glslang.git --branch main --depth 1
   cd glslang
   make_dir build
   cd build || exit  
@@ -340,7 +340,7 @@ if build "glslang" "master"; then
   execute make -j $MJOBS all
   execute make install
 
-  build_done "glslang" "master"
+  build_done "glslang" "main"
 fi
 
 if build "mujs" "master"; then
