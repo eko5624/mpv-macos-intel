@@ -84,7 +84,6 @@ jobs:
       uses: actions/checkout@main
 
     - name: build
-      continue-on-error: true
       run: |
         chmod +x ./build.sh
         ./build.sh
