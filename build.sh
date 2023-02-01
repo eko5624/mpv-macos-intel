@@ -1139,7 +1139,7 @@ if build "mpv" "master"; then
   cd $PACKAGES
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
-  export TOOLCHAINS=swift
+  export TOOLCHAINS=$(plutil -extract CFBundleIdentifier raw /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   execute meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
