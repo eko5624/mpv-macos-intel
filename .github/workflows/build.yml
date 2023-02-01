@@ -10,6 +10,8 @@ jobs:
   build:
     runs-on: macos-12
     env:
+      CC: clang
+      CXX: clang++    
       HOMEBREW_NO_ANALYTICS: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"    
@@ -20,8 +22,7 @@ jobs:
       EXTRA_CFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_CXXFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_LDFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      CC: clang
-      CXX: clang++
+      SWIFT_FLAGS: "-target x86_64-apple-darwin21.6.0"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
     - name: Install MacOSX 10.13 SDK
@@ -82,8 +83,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    -name: Install binary packages
-     run: |
+    - name: Install binary packages
+      continue-on-error: true
+      run: |
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary/binary.zip
        mkdir download
        unzip binary.zip      
