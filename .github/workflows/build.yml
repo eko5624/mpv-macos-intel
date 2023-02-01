@@ -28,12 +28,13 @@ jobs:
     - name: Install MacOSX 10.13 SDK
       id: macossdk
       run: |
-        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.13.sdk.tar.xz
-        tar -C $SDK_PATH -xf MacOSX10.13.sdk.tar.xz
+        # MacOSX10.14 SDK
+        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/10.15/MacOSX10.14.sdk.tar.xz
+        tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
           sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
           sudo mv $SDK_PATH/MacOSX.sdk $SDK_PATH/MacOSX13.1.sdk
-          sudo ln -s $SDK_PATH/MacOSX10.13.sdk $SDK_PATH/MacOSX.sdk
-          sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.13" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+          sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
+          sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
     - name: Install Swift 4.x toolchain
       id: swift4
