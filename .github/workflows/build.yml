@@ -22,7 +22,7 @@ jobs:
       EXTRA_CFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_CXXFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_LDFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SWIFT_FLAGS: "-target x86_64-apple-darwin21.6.0"
+      SWIFT_FLAGS: "-target x86_64-apple-macosx10.13"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
     - name: Install MacOSX 10.13 SDK
