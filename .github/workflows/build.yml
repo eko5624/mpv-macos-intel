@@ -20,7 +20,6 @@ jobs:
       EXTRA_CFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_CXXFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_LDFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SWIFT_FLAGS: "-target x86_64-apple-macosx10.13"
       CC: clang
       CXX: clang++
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
@@ -83,6 +82,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
+    -name: Install binary packages
+     run: |
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary/binary.zip
+       mkdir download
+       unzip binary.zip      
+
     - name: build
       run: |
         chmod +x ./build.sh
@@ -99,17 +104,18 @@ jobs:
         mv workspace/lib binary/workspace
         zip -r binary.zip binary/*
         
-    - name: Get current timestamp
-      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV        
-
     - name: Upload binary packages
+      if: ${{ failure() }}
       uses: softprops/action-gh-release@master
       with:
-        tag_name: ${{ env.date }}
-        name: ${{ env.date }}
+        tag_name: binary-package
+        name: binary-package
         files: binary.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get current timestamp
+      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV        
 
     - name: Zip mpv.app
       run: |
