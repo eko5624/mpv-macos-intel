@@ -86,8 +86,7 @@ jobs:
     - name: Install binary packages
       continue-on-error: true
       run: |
-       curl -OL https://github.com/${{ github.repository }}/releases/download/binary/binary.zip
-       mkdir download
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/binary.zip
        unzip binary.zip      
 
     - name: build
@@ -98,20 +97,20 @@ jobs:
     - name: Zip binary packages
       if: ${{ failure() }}
       run: |
-        mkdir -p binary/packages
-        mkdir -p binary/workspace
-        mv packages/*.done binary/packages
-        mv workspace/bin binary/workspace
-        mv workspace/include binary/workspace
-        mv workspace/lib binary/workspace
-        zip -r binary.zip binary/*
+        mkdir -p binary-packages/packages
+        mkdir -p binary-packages/workspace
+        mv packages/*.done binary-packages/packages
+        mv workspace/bin binary-packages/workspace
+        mv workspace/include binary-packages/workspace
+        mv workspace/lib binary-packages/workspace
+        zip -r binary.zip binary-packages/*
         
     - name: Upload binary packages
       if: ${{ failure() }}
       uses: softprops/action-gh-release@master
       with:
-        tag_name: binary-package
-        name: binary-package
+        tag_name: binary-packages
+        name: binary-packages
         files: binary.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
