@@ -352,13 +352,20 @@ if build "mujs" "master"; then
   build_done "mujs" "master"
 fi
 
-if build "libsdl" "2.26.1"; then
-  download "https://www.libsdl.org/release/SDL2-2.26.1.tar.gz"
-  execute ./configure --prefix="${WORKSPACE}"
+if build "libsdl" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/libsdl-org/SDL.git --branch SDL2 --depth 1
+  cd SDL
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release
   execute make -j $MJOBS
   execute make install
 
-  build_done "libsdl" "2.26.1"
+  build_done "libsdl" "main"
 fi
 
 if build "libplacebo" "master"; then
