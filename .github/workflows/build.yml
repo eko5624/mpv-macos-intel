@@ -28,7 +28,6 @@ jobs:
     - name: Install MacOSX 10.13 SDK
       id: macossdk
       run: |
-        # MacOSX10.14 SDK
         curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.13.sdk.tar.xz
         tar -C $SDK_PATH -xf MacOSX10.13.sdk.tar.xz
           sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
