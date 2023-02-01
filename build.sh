@@ -289,6 +289,17 @@ if build "libtool" "2.4.7"; then
   build_done "libtool" "2.4.7"
 fi
 
+if build "cmake" "3.25.1"; then
+  download "https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --parallel="${MJOBS}" -- \
+    -DCMAKE_USE_OPENSSL=OFF
+  execute make -j $MJOBS
+  execute make install
+  build_done "cmake" "3.25.1"
+fi
+
 if build "libtiff" "4.5.0"; then
   download "https://download.osgeo.org/libtiff/tiff-4.5.0.tar.xz"
   execute ./configure --prefix="${WORKSPACE}" --disable-dependency-tracking --disable-lzma --disable-webp --disable-zstd --without-x
@@ -426,17 +437,6 @@ if build "openssl" "1.1.1s"; then
   build_done "openssl" "1.1.1s"
 fi
 CONFIGURE_OPTIONS+=("--enable-openssl")
-
-if build "cmake" "3.25.1"; then
-  download "https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz"
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --parallel="${MJOBS}" -- \
-    -DCMAKE_USE_OPENSSL=OFF
-  execute make -j $MJOBS
-  execute make install
-  build_done "cmake" "3.25.1"
-fi
 
 ##
 ## video library
