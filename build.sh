@@ -527,6 +527,8 @@ if build "freetype" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/freetype/freetype.git --branch master --depth 1
   cd freetype
+  #Fix glibtoolize: command not found
+  sed -i "" 's/glibtoolize/libtoolize/g' autogen.sh  
   execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
