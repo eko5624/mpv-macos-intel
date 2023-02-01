@@ -85,8 +85,8 @@ jobs:
     - name: Install binary packages
       continue-on-error: true
       run: |
-       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/binary.zip
-       unzip binary.zip      
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
+       unzip my-zip.zip      
 
     - name: build
       run: |
@@ -102,7 +102,7 @@ jobs:
         mv workspace/bin binary-packages/workspace
         mv workspace/include binary-packages/workspace
         mv workspace/lib binary-packages/workspace
-        zip -r binary.zip binary-packages/*
+        zip -r my-zip.zip binary-packages/*
         
     - name: Upload binary packages
       if: ${{ failure() }}
@@ -110,7 +110,7 @@ jobs:
       with:
         tag_name: binary-packages
         name: binary-packages
-        files: binary.zip
+        files: my*.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
