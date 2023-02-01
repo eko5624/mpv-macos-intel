@@ -87,7 +87,7 @@ jobs:
       continue-on-error: true
       run: |
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
-       unzip my-zip.zip      
+       unzip my-zip.zip
 
     - name: build
       run: |
@@ -97,12 +97,14 @@ jobs:
     - name: Zip binary packages
       if: ${{ failure() }}
       run: |
+        rm -rf binary-packages
         mkdir -p binary-packages/packages
         mkdir -p binary-packages/workspace
         mv packages/*.done binary-packages/packages
         mv workspace/bin binary-packages/workspace
         mv workspace/include binary-packages/workspace
         mv workspace/lib binary-packages/workspace
+        rm my-zip.zip
         zip -r my-zip.zip binary-packages/*
         
     - name: Upload binary packages
