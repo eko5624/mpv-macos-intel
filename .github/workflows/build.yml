@@ -14,40 +14,40 @@ jobs:
       CXX: clang++    
       HOMEBREW_NO_ANALYTICS: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-      HOMEBREW_SDKROOT: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"    
+      HOMEBREW_SDKROOT: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"    
       MACOSX_DEPLOYMENT_TARGET: 10.15
-      SDKROOT: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      MACOS_SDK: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SDK_PATH: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
-      EXTRA_CFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_LDFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SDKROOT: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      MACOS_SDK: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SDK_PATH: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
+      EXTRA_CFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_LDFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SWIFT_FLAGS: "-target x86_64-apple-macosx10.15"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
-    #- name: Switch to MacOSX 10.15 SDK
-    #  id: macossdk
-    #  run: |
-    #    curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/10.15/MacOSX10.15.sdk.tar.xz
-    #    tar -C $SDK_PATH -xf MacOSX10.15.sdk.tar.xz
-    #    sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
-    #    sudo mv $SDK_PATH/MacOSX.sdk $SDK_PATH/MacOSX13.1.sdk
-    #    sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
-    #    sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+    - name: Switch to MacOSX 10.15 SDK
+      id: macossdk
+      run: |
+        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/10.15/MacOSX10.15.sdk.tar.xz
+        tar -C $SDK_PATH -xf MacOSX10.15.sdk.tar.xz
+        sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
+        sudo mv $SDK_PATH/MacOSX.sdk $SDK_PATH/MacOSX11.3.sdk
+        sudo ln -s $SDK_PATH/MacOSX10.15.sdk $SDK_PATH/MacOSX.sdk
+        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.15" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
-    #- name: Install Swift 4.x toolchain
-    #  id: swift4
-    #  run: |
-    #    # Swift 4.x toolchain
-    #    curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
-    #    sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
+    - name: Install Swift 4.x toolchain
+      id: swift4
+      run: |
+        # Swift 4.x toolchain
+        curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
+        sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
-    - name: Switch to Xcode 11.7
-      id: xcode117
+    - name: Switch to Xcode 12.5.1
+      id: xcode1251
       run: |
         # Switch to Xcode 11.7
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_11.7.app/Contents/Developer
+        sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
         
     - name: Remove stray upstream python binary symlinks under /usr/local
       run: |  
@@ -56,19 +56,19 @@ jobs:
         
     - name: Install dependencies
       run: |
-        # Force 10.13 deployment target for all homebrew formulas
+        # Force 10.15 deployment target for all homebrew formulas
         brew update-reset
         for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do 
-            sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;
+            sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.15"\\\n/' $dep;
         done
         
-        for dep in python@3.10 python@3.11; do 
-            sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
+        for dep in python@3.9; do 
+            sed -i "" $'s/MacOS.version/"10.15"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/$dep.rb;
         done
         
         echo "Insall packages from source."
         brew cleanup
-        brew reinstall -s python@3.10
+        brew reinstall -s python@3.9
                
     - name: Check python3 version
       run: |  
