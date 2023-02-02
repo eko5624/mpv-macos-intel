@@ -95,7 +95,6 @@ jobs:
         ./build.sh
 
     - name: Zip binary packages
-      if: ${{ failure() }}
       run: |
         rm -rf binary-packages
         mkdir -p binary-packages/packages
@@ -105,10 +104,9 @@ jobs:
         mv workspace/include binary-packages/workspace
         mv workspace/lib binary-packages/workspace
         rm my-zip.zip
-        zip -r my-zip.zip binary-packages/*
+        zip -r my-zip.zip binary-packages
         
     - name: Upload binary packages
-      if: ${{ failure() }}
       uses: softprops/action-gh-release@master
       with:
         tag_name: binary-packages
