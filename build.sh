@@ -1156,13 +1156,13 @@ if build "mpv" "master"; then
   cd mpv
   export TOOLCHAINS=$(plutil -extract CFBundleIdentifier raw /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   export PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin:"${PATH}"
-  execute meson setup build \
+  meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled
-  execute meson compile -C build
-  execute python3 TOOLS/osxbundle.py build/mpv
+  meson compile -C build
+  python3 TOOLS/osxbundle.py build/mpv
 
   build_done "mpv" "master"
 fi
