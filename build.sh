@@ -677,6 +677,9 @@ if build "libbs2b" "3.1.0"; then
   download "https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.gz" "libbs2b-3.1.0.tar.gz"
   # fix 'error: support for lzma-compressed distribution archives has been removed'
   execute sed -i "" 's/dist-lzma//g' configure.ac
+  # Build library only
+  curl -OL https://raw.githubusercontent.com/shinchiro/mpv-winbuild-cmake/master/packages/libbs2b-0001-build-library-only.patch
+  execute patch -p1 -i libbs2b-0001-build-library-only.patch  
   execute autoreconf -fvi
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -756,7 +759,7 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  execute patch -p1 -i ../../fix-exclude-libs.patch
+  execute patch -p1 -i ../../fix-libjxl-exclude-libs.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
