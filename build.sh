@@ -912,8 +912,8 @@ if build "libvpx" "main"; then
   #echo "Applying Darwin patch"
   #sed "s/,--version-script//g" build/make/Makefile >build/make/Makefile.patched
   #sed "s/-Wl,--no-undefined -Wl,-soname/-Wl,-undefined,error -Wl,-install_name/g" build/make/Makefile.patched >build/make/Makefile
-  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/test/fix-libvpx-ventura.patch
-  execute patch -p1 -i fix-libvpx-ventura.patch 
+  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/test/libvpx-fix-ventura.patch
+  execute patch -p1 -i libvpx-fix-ventura.patch 
   cd build
   execute ../configure \
     --prefix="${WORKSPACE}" \
