@@ -1138,6 +1138,7 @@ if build "ffmpeg" "master"; then
     --extra-ldflags="${LDFLAGS}" \
     --extra-libs="${EXTRALIBS}" \
     --pkgconfigdir="$WORKSPACE/lib/pkgconfig" \
+    --pkg-config-flags="--static" \
     --prefix="${WORKSPACE}" \
     --extra-version="${EXTRA_VERSION}"
   execute make -j $MJOBS
