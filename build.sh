@@ -1154,9 +1154,11 @@ if build "mpv" "master"; then
   cd $PACKAGES
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
+  export TOOLCHAINS=org.swift.42420190329a
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
+    --swift-flags=-target x86_64-apple-macosx10.15 \
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled
   meson compile -C build
