@@ -908,7 +908,11 @@ CONFIGURE_OPTIONS+=("--enable-libvorbis")
 if build "libvpx" "main"; then
   cd $PACKAGES
   git clone https://chromium.googlesource.com/webm/libvpx.git --branch main --depth 1 
-  cd libvpx/build
+  cd libvpx
+  echo "Applying Darwin patch"
+  sed "s/,--version-script//g" build/make/Makefile >build/make/Makefile.patched
+  sed "s/-Wl,--no-undefined -Wl,-soname/-Wl,-undefined,error -Wl,-install_name/g" build/make/Makefile.patched >build/make/Makefile
+  cd build
   execute ../configure \
     --prefix="${WORKSPACE}" \
     --disable-dependency-tracking \
@@ -1138,7 +1142,6 @@ if build "ffmpeg" "master"; then
     --extra-ldflags="${LDFLAGS}" \
     --extra-libs="${EXTRALIBS}" \
     --pkgconfigdir="$WORKSPACE/lib/pkgconfig" \
-    --pkg-config-flags="--static" \
     --prefix="${WORKSPACE}" \
     --extra-version="${EXTRA_VERSION}"
   execute make -j $MJOBS
