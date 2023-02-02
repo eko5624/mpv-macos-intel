@@ -902,25 +902,30 @@ if build "libvorbis" "1.3.7"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libvorbis")
 
-if build "libvpx" "1.12.0"; then
-  download "https://github.com/webmproject/libvpx/archive/refs/tags/v1.12.0.tar.gz" "libvpx-1.12.0.tar.gz"
-  
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "Applying Darwin patch"
-    sed "s/,--version-script//g" build/make/Makefile >build/make/Makefile.patched
-    sed "s/-Wl,--no-undefined -Wl,-soname/-Wl,-undefined,error -Wl,-install_name/g" build/make/Makefile.patched >build/make/Makefile
-  fi  
-  execute ./configure \
+if build "libvpx" "main"; then
+  cd $PACKAGES
+  git clone https://chromium.googlesource.com/webm/libvpx.git --branch main --depth 1
+  cd libvpx
+  #echo "Applying Darwin patch"
+  #sed "s/,--version-script//g" build/make/Makefile >build/make/Makefile.patched
+  #sed "s/-Wl,--no-undefined -Wl,-soname/-Wl,-undefined,error -Wl,-install_name/g" build/make/Makefile.patched >build/make/Makefile
+  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/test/fix-libvpx-ventura.patch
+  execute patch -p1 -i fix-libvpx-ventura.patch 
+  cd build
+  execute ../configure \
     --prefix="${WORKSPACE}" \
-    --disable-unit-tests \
-    --enable-shared \
+    --disable-dependency-tracking \
     --disable-examples \
-    --as=yasm \
-    --enable-vp9-highbitdepth
+    --disable-unit-tests \
+    --enable-pic \
+    --enable-shared \
+    --enable-vp9-highbitdepth \
+    --enable-runtime-cpu-detect \
+    --as=yasm
   execute make -j $MJOBS
   execute make install
 
-  build_done "libvpx" "1.12.0"
+  build_done "libvpx" "main"
 fi
 CONFIGURE_OPTIONS+=("--enable-libvpx")
 
