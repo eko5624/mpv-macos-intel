@@ -673,14 +673,14 @@ if build "libsndfile" "1.2.0"; then
   build_done "libsndfile" "1.2.0"
 fi
 
-if build "libbs2b" "3.1.0"; then
-  download "https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.gz" "libbs2b-3.1.0.tar.gz"
-  # fix 'error: support for lzma-compressed distribution archives has been removed'
-  execute sed -i "" 's/dist-lzma//g' configure.ac
+if build "libbs2b" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/alexmarsev/libbs2b.git --branch master --depth 1
+  cd libbs2b
   # Build library only
   curl -OL https://raw.githubusercontent.com/shinchiro/mpv-winbuild-cmake/master/packages/libbs2b-0001-build-library-only.patch
-  execute patch -p1 -i libbs2b-0001-build-library-only.patch  
-  execute autoreconf -fvi
+  execute patch -p1 -i libbs2b-0001-build-library-only.patch
+  execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-static \
@@ -688,7 +688,7 @@ if build "libbs2b" "3.1.0"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libbs2b" "3.1.0"
+  build_done "libbs2b" "master"
 fi 
 CONFIGURE_OPTIONS+=("--enable-libbs2b") 
 
