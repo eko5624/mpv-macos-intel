@@ -45,7 +45,6 @@ jobs:
     - name: Switch to Xcode 12.5.1
       id: xcode1251
       run: |
-        # Switch to Xcode 11.7
         sudo xcode-select --reset
         sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
         
