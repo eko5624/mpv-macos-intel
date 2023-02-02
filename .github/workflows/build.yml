@@ -88,6 +88,11 @@ jobs:
       run: |
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
        unzip my-zip.zip
+       mv binary-packages/packages packages
+       mv binary-packages/workspace workspace
+       rm packages/libvpx.done
+       rm packages/FFmpeg.done
+       rm packages/mpv.done
        
 
     - name: build
