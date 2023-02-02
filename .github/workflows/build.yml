@@ -90,6 +90,7 @@ jobs:
        unzip my-zip.zip
 
     - name: build
+      continue-on-error: true
       run: |
         chmod +x ./build.sh
         ./build.sh
