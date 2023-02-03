@@ -859,20 +859,12 @@ if build "libssh" "0.10.4"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libssh")
 
-if build "libtheora" "1.1.1"; then
-  download "https://ftp.osuosl.org/pub/xiph/releases/theora/libtheora-1.1.1.tar.gz"
-  sed "s/-fforce-addr//g" configure >configure.patched
-  chmod +x configure.patched
-  mv configure.patched configure
-  
-  if ! $MACOS_M1; then
-    ##BEGIN CONFIG.GUESS PATCH -- Updating config.guess file. Which allowed me to compile on aarch64 (ARMv8) [linux kernel 4.9 Ubuntu 20.04]
-    rm config.guess
-    curl $CURL_RETRIES -L --silent -o "config.guess" "https://raw.githubusercontent.com/gcc-mirror/gcc/master/config.guess"
-    chmod +x config.guess
-    ##END OF CONFIG.GUESS PATCH
-  fi
-  
+if build "libtheora" "master"; then
+  cd $PACKAGES
+  git clone https://gitlab.xiph.org/xiph/theora.git --branch master --depth 1
+  cd theora
+  cp "${WORKSPACE}"/share/libtool/*/config.{guess,sub} ./
+  execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --with-ogg-libraries="${WORKSPACE}"/lib \
@@ -887,7 +879,7 @@ if build "libtheora" "1.1.1"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libtheora" "1.1.1"
+  build_done "libtheora" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libtheora")
 
