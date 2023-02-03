@@ -1146,7 +1146,12 @@ if build "mpv" "master"; then
   cd $PACKAGES
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
-  export TOOLCHAINS=org.swift.42420190329a
+  
+  # fix for mpv incorrectly enabling features only available on 10.14
+  # https://trac.macports.org/ticket/62177#comment:16
+  sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
+    
+  export TOOLCHAINS=$(plutil -extract CFBundleIdentifier raw /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
