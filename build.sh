@@ -1149,7 +1149,7 @@ if build "mpv" "master"; then
   
   # fix for mpv incorrectly enabling features only available on 10.14
   # https://trac.macports.org/ticket/62177#comment:16
-  sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
+  execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
     
   export TOOLCHAINS=org.swift.42420190329a 
   meson setup build \
