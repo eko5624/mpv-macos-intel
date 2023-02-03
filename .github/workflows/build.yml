@@ -27,8 +27,8 @@ jobs:
       run: |
         curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
         tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
+        sudo rm $SDK_PATH/MacOSX.sdk
         sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
-        sudo mv $SDK_PATH/MacOSX.sdk $SDK_PATH/MacOSX11.3.sdk
         sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
         sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
