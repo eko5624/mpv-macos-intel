@@ -24,7 +24,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11.0
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=10.15
+    export MACOSX_DEPLOYMENT_TARGET=10.13
   fi
 fi
 
