@@ -12,7 +12,7 @@ jobs:
     env:
       CC: clang
       CXX: clang++        
-      MACOSX_DEPLOYMENT_TARGET: 11.7
+      MACOSX_DEPLOYMENT_TARGET: 10.14
       SDKROOT: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       MACOS_SDK: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SDK_PATH: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
