@@ -1146,15 +1146,16 @@ if build "mpv" "master"; then
   cd $PACKAGES
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
-  
+  CFLAGS+="$CFLAGS -mmacosx-version-min=10.14 -target x86_64-apple-macos10.14"
   # fix for mpv incorrectly enabling features only available on 10.14
   # https://trac.macports.org/ticket/62177#comment:16
   execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
     
-  #export TOOLCHAINS=org.swift.42420190329a 
+  export TOOLCHAINS=org.swift.42420190329a 
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
+    --swift-flags="-target x86_64-apple-macos10.14"
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled
   meson compile -C build
