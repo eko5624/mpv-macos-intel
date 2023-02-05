@@ -1155,7 +1155,7 @@ if build "mpv" "master"; then
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
-    --swift-flags="-target x86_64-apple-macos10.14"
+    --swift-flags="-target x86_64-apple-macos10.14" \
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled
   meson compile -C build
