@@ -1153,7 +1153,7 @@ if build "mpv" "master"; then
   
   export CFLAGS="$CFLAGS -mmacosx-version-min=10.14 -target x86_64-apple-macos10.14"
   export TOOLCHAINS=org.swift.42420190329a
-  export PATH=$PATH:~/Library/Python/3.9/bin 
+  #export PATH=$PATH:~/Library/Python/3.9/bin 
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
