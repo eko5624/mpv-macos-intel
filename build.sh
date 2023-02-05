@@ -21,7 +21,7 @@ CURL_RETRIES="--connect-timeout 60 --retry 5 --retry-delay 5"
 if [[ ("$OSTYPE" == "darwin"*) ]]; then
   if [[ ("$(uname -m)" == "arm64") ]]; then
     export ARCH=arm64
-    export MACOSX_DEPLOYMENT_TARGET=10.14
+    export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
     export MACOSX_DEPLOYMENT_TARGET=10.14
