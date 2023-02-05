@@ -33,12 +33,12 @@ jobs:
         sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
         sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
-    #- name: Install Swift 4.x toolchain
-    #  id: swift4
-    #  run: |
-    #    # Swift 4.x toolchain
-    #    curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
-    #    sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
+    - name: Install Swift 4.x toolchain
+      id: swift4
+      run: |
+        # Swift 4.x toolchain
+        curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
+        sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
     - name: Switch to Xcode 12.5.1
       id: xcode1251
