@@ -77,6 +77,7 @@ jobs:
         rm -rf binary-packages
         mkdir -p binary-packages/packages
         mkdir -p binary-packages/workspace
+        mv packages/mpv binary-packages/packages
         mv packages/*.done binary-packages/packages
         mv workspace/bin binary-packages/workspace
         mv workspace/include binary-packages/workspace
