@@ -64,6 +64,7 @@ jobs:
        #rm packages/libvpx.done
        #rm packages/FFmpeg.done
        rm packages/mpv.done
+       rm -rf packages/mpv
        
 
     - name: build
