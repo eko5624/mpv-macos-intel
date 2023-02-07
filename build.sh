@@ -761,7 +761,7 @@ if build "libjxl" "main"; then
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
-  execute cmake ../ \
+  execute cmake -G Ninja ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
