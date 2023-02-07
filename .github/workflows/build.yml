@@ -30,7 +30,7 @@ jobs:
     #    sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
     #    sudo rm -rf $SDK_PATH/MacOSX.sdk
     #    sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
-        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+    #    sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
     - name: Install Swift 4.x toolchain
       id: swift4
