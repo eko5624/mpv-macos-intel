@@ -781,8 +781,8 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
     -DJPEGXL_ENABLE_SJPEG=OFF
-  execute make -j $MJOBS
-  execute make install
+  execute ninja -j $MJOBS
+  execute ninja install
 
   build_done "libjxl" "main"
 fi  
