@@ -208,6 +208,19 @@ fi
 ## build tools
 ##
 
+if command_exists "python3"; then
+  if command_exists "pip3"; then
+    # meson and ninja can be installed via pip3
+    execute pip3 install pip setuptools --quiet --upgrade --no-cache-dir --disable-pip-version-check
+    for r in meson ninja; do
+      if ! command_exists ${r}; then
+        execute pip3 install ${r} --quiet --upgrade --no-cache-dir --disable-pip-version-check
+      fi
+    export PATH=$PATH:~/Library/Python/3.9/bin
+    done
+  fi
+fi
+
 if build "giflib" "5.2.1"; then
   download "https://netcologne.dl.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz"
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -443,41 +456,26 @@ CONFIGURE_OPTIONS+=("--enable-openssl")
 ## video library
 ##
 
-if command_exists "python3"; then
-  # dav1d needs meson and ninja along with nasm to be built
-  if command_exists "pip3"; then
-    # meson and ninja can be installed via pip3
-    execute pip3 install pip setuptools --quiet --upgrade --no-cache-dir --disable-pip-version-check
-    for r in meson ninja; do
-      if ! command_exists ${r}; then
-        execute pip3 install ${r} --quiet --upgrade --no-cache-dir --disable-pip-version-check
-      fi
-    export PATH=$PATH:~/Library/Python/3.9/bin
-    done
+if build "dav1d" "1.0.0"; then
+  download "https://code.videolan.org/videolan/dav1d/-/archive/1.0.0/dav1d-1.0.0.tar.gz"
+  make_dir build
+      
+  CFLAGSBACKUP=$CFLAGS
+  if $MACOS_M1; then
+    export CFLAGS="-arch arm64"
   fi
-  if command_exists "meson"; then
-    if build "dav1d" "1.0.0"; then
-      download "https://code.videolan.org/videolan/dav1d/-/archive/1.0.0/dav1d-1.0.0.tar.gz"
-      make_dir build
       
-      CFLAGSBACKUP=$CFLAGS
-      if $MACOS_M1; then
-        export CFLAGS="-arch arm64"
-      fi
+  execute meson build --prefix="${WORKSPACE}" --buildtype=release --libdir="${WORKSPACE}"/lib
+  execute ninja -C build
+  execute ninja -C build install
       
-      execute meson build --prefix="${WORKSPACE}" --buildtype=release --libdir="${WORKSPACE}"/lib
-      execute ninja -C build
-      execute ninja -C build install
-      
-      if $MACOS_M1; then
-        export CFLAGS=$CFLAGSBACKUP
-      fi
-      
-      build_done "dav1d" "1.0.0"
-    fi
-    CONFIGURE_OPTIONS+=("--enable-libdav1d")
+  if $MACOS_M1; then
+    export CFLAGS=$CFLAGSBACKUP
   fi
+      
+  build_done "dav1d" "1.0.0"
 fi
+CONFIGURE_OPTIONS+=("--enable-libdav1d")
 
 if build "davs2" "master"; then
   cd $PACKAGES
