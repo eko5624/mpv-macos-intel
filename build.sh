@@ -179,7 +179,6 @@ mkdir -p "$PACKAGES"
 mkdir -p "$WORKSPACE"
 
 export PATH="${WORKSPACE}/bin:$PATH"
-export PATH=$PATH:~/Library/Python/3.9/bin
 
 if ! command_exists "make"; then
   echo "make not installed."
@@ -761,12 +760,10 @@ if build "libjxl" "main"; then
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
-  execute cmake -G Ninja ../ \
+  execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-    -DJPEGXL_STATIC=OFF \
     -DBUILD_TESTING=OFF \
     -DJPEGXL_EMSCRIPTEN=OFF \
     -DJPEGXL_BUNDLE_LIBPNG=OFF \
@@ -781,8 +778,8 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
     -DJPEGXL_ENABLE_SJPEG=OFF
-  execute ninja -j $MJOBS
-  execute ninja install
+  execute make -j $MJOBS
+  execute make install
 
   build_done "libjxl" "main"
 fi  
