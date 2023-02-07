@@ -179,6 +179,7 @@ mkdir -p "$PACKAGES"
 mkdir -p "$WORKSPACE"
 
 export PATH="${WORKSPACE}/bin:$PATH"
+export PATH=$PATH:~/Library/Python/3.9/bin
 
 if ! command_exists "make"; then
   echo "make not installed."
