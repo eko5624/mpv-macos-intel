@@ -16,9 +16,9 @@ jobs:
       SDKROOT: "/Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       MACOS_SDK: "/Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SDK_PATH: "/Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
-      #EXTRA_CFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      #EXTRA_CXXFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      #EXTRA_LDFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_CFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_LDFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       #SWIFT_FLAGS: "-target x86_64-apple-macosx10.14"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
