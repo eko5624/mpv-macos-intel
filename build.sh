@@ -1148,11 +1148,10 @@ if build "mpv" "master"; then
   execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
   
   export CFLAGS="$CFLAGS -mmacosx-version-min=10.14 -target x86_64-apple-macos10.14"
-  export TOOLCHAINS=org.swift.42420190329a 
+  #export TOOLCHAINS=org.swift.42420190329a 
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
-    -Dswift-flags="-target x86_64-apple-macos10.14" \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled
