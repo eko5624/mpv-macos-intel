@@ -24,7 +24,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=10.14
+    export MACOSX_DEPLOYMENT_TARGET=10.15
   fi
 fi
 
@@ -1147,7 +1147,7 @@ if build "mpv" "master"; then
   # https://trac.macports.org/ticket/62177#comment:16
   execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
   
-  export CFLAGS="$CFLAGS -mmacosx-version-min=10.14 -target x86_64-apple-macos10.14"
+  export CFLAGS="$CFLAGS -mmacosx-version-min=10.14 -target x86_64-apple-macos10.15"
   #export TOOLCHAINS=org.swift.42420190329a 
   meson setup build \
     --buildtype=release \
