@@ -1,4 +1,4 @@
-#!/bin/bash
+.#!/bin/bash
 
 # HOMEPAGE: https://github.com/markus-perl/ffmpeg-build-script
 # LICENSE: https://github.com/markus-perl/ffmpeg-build-script/blob/master/LICENSE
@@ -24,7 +24,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=11
+    export MACOSX_DEPLOYMENT_TARGET=11.7
   fi
 fi
 
