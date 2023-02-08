@@ -10,20 +10,23 @@ jobs:
   build:
     runs-on: macos-11
     env:
-      CC: "/Applications/Xcode_11.7.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
-      CXX: "/Applications/Xcode_11.7.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++"
-      SDKROOT: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      MACOS_SDK: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SDK_PATH: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
-      EXTRA_CFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_LDFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      #CC: clang
+      #CXX: clang++
+      #SDKROOT: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      #MACOS_SDK: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      #SDK_PATH: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
+      #EXTRA_CFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      #EXTRA_CXXFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      #EXTRA_LDFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       #SWIFT_FLAGS: "-target x86_64-apple-macosx10.15"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
-    #- name: Switch to MacOSX 10.14 SDK
-    #  id: macossdk
-    #  run: |
+    - name: Switch to MacOSX 10.15 SDK
+      id: macossdk
+      run: |
+      sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk
+      sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+      sudo ln -s /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
     #    curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
     #    tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
     #    sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
@@ -38,12 +41,17 @@ jobs:
     #    curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
     #    sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
-    - name: Switch to Xcode 11.7
-      id: xcode117
+    #- name: Switch to Xcode 11.7
+    #  id: xcode117
+    #  run: |
+    #    sudo xcode-select --reset
+    #    sudo xcode-select -s /Applications/Xcode_11.7.app/Contents/Developer   
+
+    - name: Switch to CLTs
       run: |
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_11.7.app/Contents/Developer   
-
+        sudo xcode-select --switch /Library/Developer/CommandLineTools/  
+   
     - name: Checkout
       uses: actions/checkout@main
 
