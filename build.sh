@@ -757,8 +757,6 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  export CXXFLAGS="$CXXFLAGS -Wa,-muse-unaligned-vector-move"
-  export CFLAGS="$CFLAGS -Wa,-muse-unaligned-vector-move"
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
@@ -1147,7 +1145,7 @@ if build "mpv" "master"; then
   
   # fix for mpv incorrectly enabling features only available on 10.14
   # https://trac.macports.org/ticket/62177#comment:16
-  execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
+  #execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
   
   export CFLAGS="$CFLAGS -mmacosx-version-min=10.14 -target x86_64-apple-macos10.14"
   #export TOOLCHAINS=org.swift.42420190329a 
