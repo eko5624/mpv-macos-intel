@@ -1145,7 +1145,7 @@ if build "mpv" "master"; then
   
   # fix for mpv incorrectly enabling features only available on 10.14
   # https://trac.macports.org/ticket/62177#comment:16
-  execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/' osdep/macos/swift_compat.swift
+  execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/g' osdep/macos/swift_compat.swift
   
   export CFLAGS="$CFLAGS -mmacosx-version-min=10.15 -target x86_64-apple-macos10.15"
   #export TOOLCHAINS=org.swift.42420190329a 
