@@ -12,7 +12,7 @@ jobs:
     env:
       CC: "/Applications/Xcode_12.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
       CXX: "/Applications/Xcode_12.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++"
-      #MACOSX_DEPLOYMENT_TARGET: 10.14
+      MACOSX_DEPLOYMENT_TARGET: 10.14
       SDKROOT: "/Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       MACOS_SDK: "/Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SDK_PATH: "/Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
@@ -32,23 +32,18 @@ jobs:
         # sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
         sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
-    - name: Install Swift 4.x toolchain
-      id: swift4
-      run: |
-        # Swift 4.x toolchain
-        curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
-        sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
+    #- name: Install Swift 4.x toolchain
+    #  id: swift4
+    #  run: |
+    #    # Swift 4.x toolchain
+    #    curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
+    #    sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
     - name: Switch to Xcode 10.3
       id: xcode103
       run: |
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
-        
-    #- name: Install ninja meson
-    #  run: |  
-    #    pip3 install https://github.com/mesonbuild/meson/archive/refs/heads/master.zip
-    #    pip3 install ninja   
+        sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer   
 
     - name: Checkout
       uses: actions/checkout@main
