@@ -24,9 +24,9 @@ jobs:
     - name: Switch to MacOSX 10.15 SDK
       id: macossdk
       run: |
-      sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk
-      sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-      sudo ln -s /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+        sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk
+        sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+        sudo ln -s /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
     #    curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
     #    tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
     #    sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
