@@ -1,4 +1,4 @@
-.#!/bin/bash
+#!/bin/bash
 
 # HOMEPAGE: https://github.com/markus-perl/ffmpeg-build-script
 # LICENSE: https://github.com/markus-perl/ffmpeg-build-script/blob/master/LICENSE
