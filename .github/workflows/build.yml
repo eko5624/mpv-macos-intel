@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: macos-11
     env:
-      CC: "/Library/Developer/CommandLineTools/usr/bin/clang"
-      CXX: "/Library/Developer/CommandLineTools/usr/bin/clang++"
+      CC: clang
+      CXX: clang++
       SDKROOT: "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
       MACOS_SDK: "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
       #SDK_PATH: "/Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
