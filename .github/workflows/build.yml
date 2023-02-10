@@ -61,7 +61,7 @@ jobs:
         # Uninstall bottled dependencies
         brew uninstall --ignore-dependencies --force openssl
         brew uninstall --ignore-dependencies --force gnutls
-        #brew uninstall --ignore-dependencies --force python3
+        brew uninstall --ignore-dependencies --force python@3.10
         brew cleanup
         
         echo "Insall packages from source. ATTN: order matters"
