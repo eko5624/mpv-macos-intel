@@ -179,8 +179,8 @@ mkdir -p "$PACKAGES"
 mkdir -p "$WORKSPACE"
 
 export PATH="${WORKSPACE}/bin:$PATH"
-export PATH=$PATH:/usr/local/opt/python@3.8/libexec/bin
-export PKG_CONFIG_PATH="/usr/local/opt/python@3.8/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PATH=$PATH:/usr/local/opt/python@3.10/libexec/bin
+export PKG_CONFIG_PATH="/usr/local/opt/python@3.10/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 if ! command_exists "make"; then
   echo "make not installed."
