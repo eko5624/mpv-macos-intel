@@ -44,7 +44,28 @@ jobs:
       id: xcode1251
       run: |
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer   
+        sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer  
+        
+    - name: Install dependencies
+      id: mpvffmpegdeps
+      run: |
+        echo "Force brew install for 10.14"
+        export MACOSX_DEPLOYMENT_TARGET="10.14"
+        brew update-reset
+        for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.14"\\\n/' $dep;done
+        for dep in luajit python@3.8 python@3.10; do sed -i "" $'s/MacOS.version/"10.14"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula//$dep.rb;done
+          
+        # Uninstall bottled dependencies
+        brew uninstall --ignore-dependencies --force openssl
+        brew uninstall --ignore-dependencies --force gnutls
+        #brew uninstall --ignore-dependencies --force python3
+        brew cleanup
+        
+        echo "Insall packages from source. ATTN: order matters"
+        brew reinstall -s python@3.8
+        PKG_CONFIG_PATH="/usr/local/opt/python@3.8/lib/pkgconfig:$PKG_CONFIG_PATH"
+        /usr/local/opt/python@3.8/libexec/bin/pip3 install ninja meson
+        
 
     #- name: Switch to CLTs
     #  run: |
