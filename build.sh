@@ -216,7 +216,6 @@ if command_exists "python3"; then
       if ! command_exists ${r}; then
         execute pip3 install ${r} --quiet --upgrade --no-cache-dir --disable-pip-version-check
       fi
-    export PATH=$PATH:~/Library/Python/3.9/bin
     done
   fi
 fi
@@ -1163,7 +1162,7 @@ if build "mpv" "master"; then
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavdevice.dylib"
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavfilter.dylib"
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavformat.dylib"
-  python3 TOOLS/osxbundle.py build/mpv
+  /Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 TOOLS/osxbundle.py build/mpv
 
   build_done "mpv" "master"
 fi
