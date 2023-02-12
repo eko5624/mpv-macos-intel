@@ -208,6 +208,49 @@ fi
 ## build tools
 ##
 
+if build "gdbm" "1.23"; then
+  download "https://ftp.gnu.org/gnu/gdbm/gdbm-1.23.tar.gz"
+  # Fix -flat_namespace being used on Big Sur and later.
+  curl -OL https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff
+  execute patch -p1 -i configure-big_sur.diff
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --enable-libgdbm-compat \
+    --without-readline
+  execute make -j $MJOBS
+  execute make install
+  # Avoid conflicting with macOS SDK's ndbm.h.  Renaming to gdbm-ndbm.h
+  # matches Debian's convention for gdbm's ndbm.h (libgdbm-compat-dev).
+  mv "${WORKSPACE}"/include/ndbm.h "${WORKSPACE}"/include/gdbm-ndbm.h
+  
+  build_done "gdbm" "1.23"
+fi
+
+if build "xz" "5.4.1"; then
+  download "https://downloads.sourceforge.net/project/lzmautils/xz-5.4.1.tar.gz"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "xz" "5.4.1"
+fi
+
+if build "tcl-tk" "8.6.13"; then
+  download "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.13/tcl8.6.13-src.tar.gz"
+  cd unix
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --without-x \
+    --enable-threads \
+    --enable-64bit
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "tcl-tk" "8.6.13"
+fi
+
 if command_exists "python3"; then
   if command_exists "pip3"; then
     # meson and ninja can be installed via pip3
