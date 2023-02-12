@@ -1216,7 +1216,7 @@ if build "mpv" "master"; then
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavdevice.dylib"
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavfilter.dylib"
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavformat.dylib"
-  /Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 TOOLS/osxbundle.py build/mpv
+  TOOLS/osxbundle.py build/mpv
 
   build_done "mpv" "master"
 fi
