@@ -1154,6 +1154,7 @@ if build "mpv" "master"; then
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled \
+    -Dmacos-10-14-features=enabled \
     -Dswift-flags="-target x86_64-apple-macos10.14"
   meson compile -C build
   
