@@ -179,7 +179,6 @@ mkdir -p "$PACKAGES"
 mkdir -p "$WORKSPACE"
 
 export PATH="${WORKSPACE}/bin:$PATH"
-export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.8/bin
 
 if ! command_exists "make"; then
   echo "make not installed."
@@ -329,9 +328,9 @@ if build "libtool" "2.4.7"; then
   build_done "libtool" "2.4.7"
 fi
 
-if build "python" "3.8"; then
+if build "python" "3.10"; then
   cd $PACKAGES
-  git clone https://github.com/python/cpython --branch 3.8
+  git clone https://github.com/python/cpython --branch 3.10
   cd cpython
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -340,7 +339,7 @@ if build "python" "3.8"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "python" "3.8"
+  build_done "python" "3.10"
 fi
 
 if command_exists "python3"; then
@@ -1216,7 +1215,7 @@ if build "mpv" "master"; then
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavdevice.dylib"
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavfilter.dylib"
   install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavformat.dylib"
-  TOOLS/osxbundle.py build/mpv
+  python3 TOOLS/osxbundle.py build/mpv
 
   build_done "mpv" "master"
 fi
