@@ -102,7 +102,7 @@ jobs:
        mv binary-packages/workspace workspace
        #rm packages/libvpx.done
        #rm packages/FFmpeg.done
-       rm packages/cpython.done
+       rm packages/python.done
        rm packages/mpv.done
        rm -rf packages/cpython
        rm -rf packages/mpv
