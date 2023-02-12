@@ -200,10 +200,6 @@ if ! command_exists "cargo"; then
   echo "cargo not installed. rav1e encoder will not be available."
 fi
 
-if ! command_exists "python3"; then
-  echo "python3 command not found. Lv2 filter and dav1d decoder will not be available."
-fi
-
 ##
 ## build tools
 ##
@@ -249,18 +245,6 @@ if build "tcl-tk" "8.6.13"; then
   execute make install
 
   build_done "tcl-tk" "8.6.13"
-fi
-
-if command_exists "python3"; then
-  if command_exists "pip3"; then
-    # meson and ninja can be installed via pip3
-    execute pip3 install pip setuptools --quiet --upgrade --no-cache-dir --disable-pip-version-check
-    for r in meson ninja; do
-      if ! command_exists ${r}; then
-        execute pip3 install ${r} --quiet --upgrade --no-cache-dir --disable-pip-version-check
-      fi
-    done
-  fi
 fi
 
 if build "giflib" "5.2.1"; then
@@ -343,6 +327,32 @@ if build "libtool" "2.4.7"; then
   execute make -j $MJOBS
   execute make install
   build_done "libtool" "2.4.7"
+fi
+
+if build "python" "3.8"; then
+  cd $PACKAGES
+  git clone https://github.com/python/cpython --branch 3.8
+  cd cpython
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --with-pydebug \
+    --with-openssl="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "python" "3.8"
+fi
+
+if command_exists "python3"; then
+  if command_exists "pip3"; then
+    # meson and ninja can be installed via pip3
+    execute pip3 install pip setuptools --quiet --upgrade --no-cache-dir --disable-pip-version-check
+    for r in meson ninja; do
+      if ! command_exists ${r}; then
+        execute pip3 install ${r} --quiet --upgrade --no-cache-dir --disable-pip-version-check
+      fi
+    done
+  fi
 fi
 
 if build "cmake" "3.25.1"; then
