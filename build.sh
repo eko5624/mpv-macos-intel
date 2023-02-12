@@ -246,6 +246,33 @@ if build "tcl-tk" "8.6.13"; then
   build_done "tcl-tk" "8.6.13"
 fi
 
+if build "zlib" "1.2.13"; then
+  download "https://zlib.net/fossils/zlib-1.2.13.tar.gz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "zlib" "1.2.13"
+fi
+
+if build "openssl" "1.1.1s"; then
+  download "https://www.openssl.org/source/openssl-1.1.1s.tar.gz"
+  if $MACOS_M1; then
+    sed -n 's/\(##### GNU Hurd\)/"darwin64-arm64-cc" => { \n    inherit_from     => [ "darwin-common", asm("aarch64_asm") ],\n    CFLAGS           => add("-Wall"),\n    cflags           => add("-arch arm64 "),\n    lib_cppflags     => add("-DL_ENDIAN"),\n    bn_ops           => "SIXTY_FOUR_BIT_LONG", \n    perlasm_scheme   => "macosx", \n}, \n\1/g' Configurations/10-main.conf
+    execute ./Configure --prefix="${WORKSPACE}" no-shared no-asm darwin64-arm64-cc
+  else
+    execute ./config \
+      --prefix="${WORKSPACE}" \
+      --openssldir="${WORKSPACE}" \
+      --with-zlib-include="${WORKSPACE}"/include/ \
+      --with-zlib-lib="${WORKSPACE}"/lib \
+      zlib
+  fi
+  execute make -j $MJOBS
+  execute make install_sw
+  build_done "openssl" "1.1.1s"
+fi
+CONFIGURE_OPTIONS+=("--enable-openssl")
+
 if build "giflib" "5.2.1"; then
   download "https://netcologne.dl.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz"
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -286,14 +313,6 @@ if build "nasm" "2.16.01"; then
   execute make -j $MJOBS
   execute make install
   build_done "nasm" "2.16.01"
-fi
-
-if build "zlib" "1.2.13"; then
-  download "https://zlib.net/fossils/zlib-1.2.13.tar.gz"
-  execute ./configure --prefix="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
-  build_done "zlib" "1.2.13"
 fi
 
 if build "m4" "1.4.19"; then
@@ -483,25 +502,6 @@ if build "uchardet" "master"; then
 
   build_done "uchardet" "master"
 fi
-
-if build "openssl" "1.1.1s"; then
-  download "https://www.openssl.org/source/openssl-1.1.1s.tar.gz"
-  if $MACOS_M1; then
-    sed -n 's/\(##### GNU Hurd\)/"darwin64-arm64-cc" => { \n    inherit_from     => [ "darwin-common", asm("aarch64_asm") ],\n    CFLAGS           => add("-Wall"),\n    cflags           => add("-arch arm64 "),\n    lib_cppflags     => add("-DL_ENDIAN"),\n    bn_ops           => "SIXTY_FOUR_BIT_LONG", \n    perlasm_scheme   => "macosx", \n}, \n\1/g' Configurations/10-main.conf
-    execute ./Configure --prefix="${WORKSPACE}" no-shared no-asm darwin64-arm64-cc
-  else
-    execute ./config \
-      --prefix="${WORKSPACE}" \
-      --openssldir="${WORKSPACE}" \
-      --with-zlib-include="${WORKSPACE}"/include/ \
-      --with-zlib-lib="${WORKSPACE}"/lib \
-      zlib
-  fi
-  execute make -j $MJOBS
-  execute make install_sw
-  build_done "openssl" "1.1.1s"
-fi
-CONFIGURE_OPTIONS+=("--enable-openssl")
 
 ##
 ## video library
