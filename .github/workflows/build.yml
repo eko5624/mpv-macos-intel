@@ -69,9 +69,7 @@ jobs:
         brew reinstall -s pkg-config
         brew reinstall -s tcl-tk
         brew reinstall -s gdbm
-        #brew reinstall -s python@3.8
-        export PKG_CONFIG_PATH="/usr/local/opt/python@3.8/lib/pkgconfig:$PKG_CONFIG_PATH"
-       
+        
     - name: Install python3.8
       run: |
         git clone https://github.com/python/cpython --branch 3.8
