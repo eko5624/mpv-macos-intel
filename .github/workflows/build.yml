@@ -126,7 +126,6 @@ jobs:
         pushd workspace/lib
         find . ! -lname "*.dylib" -print0 | xargs -0 -I {} mv {} ../../binary-packages/workspace/lib
         popd
-        mv workspace/lib binary-packages/workspace
         mv workspace/share binary-packages/workspace
         rm my-zip.zip || true
         zip -r my-zip.zip binary-packages/*
