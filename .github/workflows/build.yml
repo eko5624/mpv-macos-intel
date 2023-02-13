@@ -118,11 +118,14 @@ jobs:
       run: |
         rm -rf binary-packages || true
         mkdir -p binary-packages/packages
-        mkdir -p binary-packages/workspace
+        mkdir -p binary-packages/workspace/lib
         mv packages/mpv binary-packages/packages || true
         mv packages/*.done binary-packages/packages
         mv workspace/bin binary-packages/workspace
         mv workspace/include binary-packages/workspace
+        pushd workspace/lib
+        find . ! -lname "*.dylib" -print0 | xargs -0 -I {} mv {} ../../binary-packages/workspace/lib
+        popd
         mv workspace/lib binary-packages/workspace
         mv workspace/share binary-packages/workspace
         rm my-zip.zip || true
