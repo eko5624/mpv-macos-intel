@@ -96,37 +96,39 @@ jobs:
     - name: Install binary packages
       continue-on-error: true
       run: |
-       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/workspace.zip
-       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages.zip
-       unzip *.zip
-       rm packages/mpv.done || true
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
+       unzip my-zip.zip
+       mv binary-packages/packages packages
+       mv binary-packages/workspace workspace
+       rm packages/mpv.done
        rm -rf packages/mpv
+       rm -rf binary-packages
        
-
     - name: build
       continue-on-error: true
       run: |
         chmod +x ./build.sh
         ./build.sh
-
     - name: Zip binary packages
       run: |
-        mkdir packages2
-        zip -r workspace.zip workspace/*
-        mv packages/mpv packages2 || true
-        mv packages/*.done packages2
-        rm -rf packages
-        mv packages2 packages
-        zip -r packages.zip packages/*
+        mkdir -p binary-packages/packages
+        mkdir -p binary-packages/workspace
+        mv packages/mpv binary-packages/packages || true
+        mv packages/*.done binary-packages/packages
+        mv workspace/bin binary-packages/workspace
+        mv workspace/include binary-packages/workspace
+        find workspace/lib \( -name "*.dylib" ! -lname "*.dylib" \) -print0 | xargs -0 -I {} mv {} binary-packages/workspace/lib
+        mv workspace/lib binary-packages/workspace
+        mv workspace/share binary-packages/workspace
+        rm my-zip.zip || true
+        zip -r my-zip.zip binary-packages/*
         
     - name: Upload binary packages
       uses: softprops/action-gh-release@master
       with:
         tag_name: binary-packages
         name: binary-packages
-        files: |
-          workspace.zip
-          packages.zip
+        files: my*.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
