@@ -117,7 +117,7 @@ jobs:
         mv packages/*.done binary-packages/packages
         mv workspace/bin binary-packages/workspace
         mv workspace/include binary-packages/workspace
-        find workspace/lib \( -name "*.dylib" ! -lname "*.dylib" \) -print0 | xargs -0 -I {} mv {} binary-packages/workspace/lib
+        find workspace/lib -type l -delete
         mv workspace/lib binary-packages/workspace
         mv workspace/share binary-packages/workspace
         rm my-zip.zip || true
