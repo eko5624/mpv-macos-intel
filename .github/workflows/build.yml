@@ -96,15 +96,10 @@ jobs:
     - name: Install binary packages
       continue-on-error: true
       run: |
-       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
-       unzip my-zip.zip
-       mv binary-packages/packages packages
-       mv binary-packages/workspace workspace
-       #rm packages/libvpx.done
-       #rm packages/FFmpeg.done
-       rm packages/python.done
-       rm packages/mpv.done
-       rm -rf packages/cpython
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/workspace.zip
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages.zip
+       unzip *.zip
+       rm packages/mpv.done || true
        rm -rf packages/mpv
        
 
@@ -116,26 +111,22 @@ jobs:
 
     - name: Zip binary packages
       run: |
-        rm -rf binary-packages || true
-        mkdir -p binary-packages/packages
-        mkdir -p binary-packages/workspace/lib
-        mv packages/mpv binary-packages/packages || true
-        mv packages/*.done binary-packages/packages
-        mv workspace/bin binary-packages/workspace
-        mv workspace/include binary-packages/workspace
-        pushd workspace/lib
-        find . \( ! -name ".*" ! -lname "*.dylib" \) -print0 | xargs -0 -I {} mv {} ../../binary-packages/workspace/lib
-        popd
-        mv workspace/share binary-packages/workspace
-        rm my-zip.zip || true
-        zip -r my-zip.zip binary-packages/*
+        mkdir packages2
+        zip -r workspace.zip workspace/*
+        mv packages/mpv packages2 || true
+        mv packages/*.done packages2
+        rm -rf packages
+        mv packages2 packages
+        zip -r packages.zip packages/*
         
     - name: Upload binary packages
       uses: softprops/action-gh-release@master
       with:
         tag_name: binary-packages
         name: binary-packages
-        files: my*.zip
+        files: |
+          workspace.zip
+          packages.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
