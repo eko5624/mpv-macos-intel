@@ -104,6 +104,7 @@ jobs:
        rm packages/mpv.done
        rm -rf packages/mpv
        rm -rf binary-packages
+       rm my-zip.zip
        
     - name: build
       continue-on-error: true
@@ -138,7 +139,6 @@ jobs:
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib binary-packages/workspace/lib
         mv workspace/lib binary-packages/workspace 
         mv workspace/share binary-packages/workspace
-        rm my-zip.zip || true
         zip -r my-zip.zip binary-packages/*
         
     - name: Upload binary packages
