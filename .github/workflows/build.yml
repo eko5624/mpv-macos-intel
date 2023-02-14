@@ -118,8 +118,6 @@ jobs:
         mv packages/*.done binary-packages/packages
         mv workspace/bin binary-packages/workspace
         mv workspace/include binary-packages/workspace
-        find workspace/lib -type l -delete
-        mv workspace/lib binary-packages/workspace
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib binary-packages/workspace/lib
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib binary-packages/workspace/lib
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib binary-packages/workspace/lib
