@@ -702,26 +702,26 @@ if build "libogg" "1.3.5"; then
   build_done "libogg" "1.3.5"
 fi
 
-if build "flac" "1.4.2"; then
-  download "https://downloads.xiph.org/releases/flac/flac-1.4.2.tar.xz"
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --disable-debug \
-    --enable-static
-  execute make -j $MJOBS
-  execute make install
-  build_done "flac" "1.4.2"
-fi
+#if build "flac" "1.4.2"; then
+#  download "https://downloads.xiph.org/releases/flac/flac-1.4.2.tar.xz"
+#  execute ./configure \
+#    --prefix="${WORKSPACE}" \
+#    --disable-debug \
+#    --enable-static
+#  execute make -j $MJOBS
+#  execute make install
+#  build_done "flac" "1.4.2"
+#fi
 
-if build "libsndfile" "1.2.0"; then
-  download "https://github.com/libsndfile/libsndfile/releases/download/1.2.0/libsndfile-1.2.0.tar.xz" "libsndfile-1.2.0.tar.xz"
-  execute autoreconf -fvi
-  execute ./configure --prefix="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
+#if build "libsndfile" "1.2.0"; then
+#  download "https://github.com/libsndfile/libsndfile/releases/download/1.2.0/libsndfile-1.2.0.tar.xz" "libsndfile-1.2.0.tar.xz"
+#  execute autoreconf -fvi
+#  execute ./configure --prefix="${WORKSPACE}"
+#  execute make -j $MJOBS
+#  execute make install
 
-  build_done "libsndfile" "1.2.0"
-fi
+#  build_done "libsndfile" "1.2.0"
+#fi
 
 if build "libbs2b" "master"; then
   cd $PACKAGES
@@ -1197,9 +1197,8 @@ if build "mpv" "master"; then
   
   # fix for mpv incorrectly enabling features only available on 10.14
   # https://trac.macports.org/ticket/62177#comment:16
-  execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/g' osdep/macos/swift_compat.swift
- 
-  export TOOLCHAINS=org.swift.42420190329a
+  execute sed -i "" 's/!HAVE_MACOS_10_14_FEATURES/false/g' osdep/macos/swift_compat.swift 
+  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
