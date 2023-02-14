@@ -1210,11 +1210,11 @@ if build "mpv" "master"; then
     -Dswift-flags="-target x86_64-apple-macos10.14"
   meson compile -C build
   
-  # fix can't find libvpx.7.dylib 
-  install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavcodec.dylib"
-  install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavdevice.dylib"
-  install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavfilter.dylib"
-  install_name_tool -change "libvpx.7.dylib" "$WORKSPACE/lib/libvpx.7.dylib" "$WORKSPACE/lib/libavformat.dylib"
+  # fix can't find libvpx.8.dylib 
+  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
+  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
+  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
+  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
   python3 TOOLS/osxbundle.py build/mpv
 
   build_done "mpv" "master"
