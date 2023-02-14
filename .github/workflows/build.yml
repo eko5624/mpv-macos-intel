@@ -20,6 +20,7 @@ jobs:
       EXTRA_CXXFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_LDFLAGS: "-mmacosx-version-min=10.14 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SWIFT_FLAGS: "-target x86_64-apple-macosx10.14"
+      SWIFT_PATH: "/Library/Developer/Toolchains/swift-latest.xctoolchain"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
     - name: Switch to MacOSX 10.14 SDK
@@ -119,6 +120,25 @@ jobs:
         mv workspace/include binary-packages/workspace
         find workspace/lib -type l -delete
         mv workspace/lib binary-packages/workspace
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreAudio.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreData.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreFoundation.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreGraphics.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreImage.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreMedia.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDarwin.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDispatch.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftFoundation.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftIOKit.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftMetal.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib binary-packages/workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib binary-packages/workspace/lib
+        mv workspace/lib binary-packages/workspace 
         mv workspace/share binary-packages/workspace
         rm my-zip.zip || true
         zip -r my-zip.zip binary-packages/*
