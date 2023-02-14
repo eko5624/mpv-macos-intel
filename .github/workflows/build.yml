@@ -111,10 +111,31 @@ jobs:
       run: |
         chmod +x ./build.sh
         ./build.sh
+
+    - name: Zip workspace
+      continue-on-error: true
+      run: |
+        zip -r wsp.zip workspace
+    - name: Upload workspace packages
+      continue-on-error: true
+      uses: softprops/action-gh-release@master
+      with:
+        tag_name: binary-packages
+        name: binary-packages
+        files: wsp.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Zip binary packages
       run: |
         mkdir -p binary-packages/packages
         mkdir -p binary-packages/workspace
+        mv packages/mpv binary-packages/packages || true
+        mv packages/*.done binary-packages/packages
+        mv workspace/bin binary-packages/workspace
+        mv workspace/include binary-packages/workspace        
+        mv workspace/lib binary-packages/workspace 
+        mv workspace/share binary-packages/workspace
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib binary-packages/workspace/lib
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib binary-packages/workspace/lib
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib binary-packages/workspace/lib
@@ -133,12 +154,6 @@ jobs:
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib binary-packages/workspace/lib
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib binary-packages/workspace/lib
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib binary-packages/workspace/lib
-        mv packages/mpv binary-packages/packages || true
-        mv packages/*.done binary-packages/packages
-        mv workspace/bin binary-packages/workspace
-        mv workspace/include binary-packages/workspace        
-        mv workspace/lib binary-packages/workspace 
-        mv workspace/share binary-packages/workspace
         zip -r my-zip.zip binary-packages/*
         
     - name: Upload binary packages
@@ -146,7 +161,7 @@ jobs:
       with:
         tag_name: binary-packages
         name: binary-packages
-        files: my*.zip
+        files: my-zip.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
