@@ -115,14 +115,27 @@ jobs:
     - name: Zip workspace
       continue-on-error: true
       run: |
-        zip -r wsp.zip workspace
+        rm -rf workspace/doc
+        rm -rf workspace/etc
+        rm -rf workspace/man
+        rm -rf workspace/var
+        zip -r -y wsp.zip workspace/
+        mkdir packages2
+        mv packages/mpv packages2 || true
+        mv packages/*.done packages2
+        rm -rf packages
+        mv packages2 packages
+        zip -r pakgs.zip packages/
+        
     - name: Upload workspace packages
       continue-on-error: true
       uses: softprops/action-gh-release@master
       with:
         tag_name: binary-packages
         name: binary-packages
-        files: wsp.zip
+        files: |
+          wsp.zip
+          pakgs.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
