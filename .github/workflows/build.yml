@@ -23,11 +23,14 @@ jobs:
       SWIFT_PATH: "/Library/Developer/Toolchains/swift-latest.xctoolchain"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:
+    
+    - name: Checkout
+      uses: actions/checkout@main
+      
     - name: Switch to MacOSX 10.14 SDK
       id: macossdk1014
       run: |
         # MacOSX10.14 SDK
-        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
         tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
         sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
         sudo rm -rf $SDK_PATH/MacOSX.sdk
@@ -89,10 +92,7 @@ jobs:
     #- name: Switch to CLTs
     #  run: |
     #    sudo xcode-select --reset
-    #    sudo xcode-select --switch /Library/Developer/CommandLineTools/  
-   
-    - name: Checkout
-      uses: actions/checkout@main
+    #    sudo xcode-select --switch /Library/Developer/CommandLineTools/
 
     - name: Install binary packages
       continue-on-error: true
@@ -119,13 +119,13 @@ jobs:
         rm -rf workspace/etc
         rm -rf workspace/man
         rm -rf workspace/var
-        zip -r -y wsp.zip workspace/
+        zip -r -y workspace-dir.zip workspace/
         mkdir packages2
         mv packages/mpv packages2 || true
         mv packages/*.done packages2
         rm -rf packages
         mv packages2 packages
-        zip -r pakgs.zip packages/
+        zip -r packages-dir.zip packages/
         
     - name: Upload workspace packages
       continue-on-error: true
@@ -134,8 +134,8 @@ jobs:
         tag_name: binary-packages
         name: binary-packages
         files: |
-          wsp.zip
-          pakgs.zip
+          workspace-dir.zip
+          packages-dir.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
