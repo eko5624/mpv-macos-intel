@@ -190,6 +190,10 @@ if ! command_exists "g++"; then
   exit 1
 fi
 
+if ! command_exists "gettext"; then
+  echo "gettext need to be installed."
+fi
+
 if ! command_exists "curl"; then
   echo "curl not installed."
   exit 1
