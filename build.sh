@@ -1211,8 +1211,7 @@ if build "mpv" "master"; then
     -Dmacos-media-player=disabled \
     -Dmanpage-build=disabled \
     -Dmacos-10-11-features=enabled \
-    -Dmacos-10-12-2-features=enabled \    
-    -Dmacos-10-14-features=enabled \
+    -Dmacos-10-12-2-features=enabled \
     -Dswift-flags="-target x86_64-apple-macos10.13"
   meson compile -C build
   
