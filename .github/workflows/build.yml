@@ -85,7 +85,7 @@ jobs:
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/workspace-dir.zip
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
        unzip workspace-dir.zip
-       upzip packages-dir.zip
+       unzip packages-dir.zip
        rm packages/mpv.done
        rm -rf packages/mpv
        rm workspace-dir.zip packages-dir.zip
