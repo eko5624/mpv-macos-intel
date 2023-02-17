@@ -57,11 +57,11 @@ jobs:
 
     #- name: Install dependencies
     #  run: |
-    #    #echo "Force brew install for 10.14"
-    #    export MACOSX_DEPLOYMENT_TARGET="10.14"
+    #    #echo "Force brew install for 10.13"
+    #    export MACOSX_DEPLOYMENT_TARGET="10.13"
     #    brew update-reset
-    #    for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.14"\\\n/' $dep;done
-    #    for dep in python@3.8 python@3.10; do sed -i "" $'s/MacOS.version/"10.14"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula//$dep.rb;done
+    #    for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;done
+    #    for dep in python@3.8 python@3.10; do sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula//$dep.rb;done
           
         # Uninstall bottled dependencies
     #    brew uninstall --ignore-dependencies openssl
@@ -72,22 +72,7 @@ jobs:
     #    brew reinstall -s zstd
     #    brew reinstall -s pkg-config
     #    brew reinstall -s tcl-tk
-    #    brew reinstall -s gdbm
-        
-    #- name: Install python3.8
-    #  run: |
-    #    git clone https://github.com/python/cpython --branch 3.8
-    #    cd cpython
-    #    CFLAGS="-I$(brew --prefix gdbm)/include -I$(brew --prefix xz)/include" \
-    #    LDFLAGS="-L$(brew --prefix gdbm)/lib -L$(brew --prefix xz)/lib" \
-    #    PKG_CONFIG_PATH="$(brew --prefix tcl-tk)/lib/pkgconfig" \
-    #    ./configure \
-    #      --with-pydebug \
-    #      --with-openssl=$(brew --prefix openssl@1.1) \
-    #      --with-tcltk-libs="$(pkg-config --libs tcl tk)" \
-    #      --with-tcltk-includes="$(pkg-config --cflags tcl tk)"
-
-    #    /Library/Frameworks/Python.framework/Versions/3.8/bin/pip3 install ninja meson        
+    #    brew reinstall -s gdbm              
 
     #- name: Switch to CLTs
     #  run: |
@@ -98,13 +83,11 @@ jobs:
       continue-on-error: true
       run: |
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
-       unzip my-zip.zip
-       mv binary-packages/packages packages
-       mv binary-packages/workspace workspace
+       unzip workspace-dir.zip
+       upzip packages-dir.zip
        rm packages/mpv.done
        rm -rf packages/mpv
-       rm -rf binary-packages
-       rm my-zip.zip
+       rm workspace-dir.zip packages-dir.zip
        
     - name: build
       continue-on-error: true
@@ -112,13 +95,32 @@ jobs:
         chmod +x ./build.sh
         ./build.sh
 
-    - name: Zip workspace
+    - name: Zip binary packages 
       continue-on-error: true
       run: |
+
         rm -rf workspace/doc
         rm -rf workspace/etc
         rm -rf workspace/man
         rm -rf workspace/var
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreAudio.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreData.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreFoundation.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreGraphics.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreImage.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreMedia.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDarwin.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDispatch.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftFoundation.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftIOKit.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftMetal.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib
         zip -r -y workspace-dir.zip workspace/
         mkdir packages2
         mv packages/mpv packages2 || true
