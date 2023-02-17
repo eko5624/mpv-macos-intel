@@ -24,10 +24,9 @@ jobs:
        rm workspace-dir.zip packages-dir.zip
        
     - name: build
-      continue-on-error: true
       run: |
         cd packages/mpv
-        python3 TOOLS/osxbundle.py build/mpv
+        workspace/bin/python3 TOOLS/osxbundle.py build/mpv
 
     - name: Get current timestamp
       run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV        
