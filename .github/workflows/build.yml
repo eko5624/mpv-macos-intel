@@ -82,7 +82,8 @@ jobs:
     - name: Install binary packages
       continue-on-error: true
       run: |
-       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/my-zip.zip
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/workspace-dir.zip
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
        unzip workspace-dir.zip
        upzip packages-dir.zip
        rm packages/mpv.done
@@ -103,24 +104,24 @@ jobs:
         rm -rf workspace/etc
         rm -rf workspace/man
         rm -rf workspace/var
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreAudio.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreData.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreFoundation.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreGraphics.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreImage.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreMedia.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDarwin.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDispatch.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftFoundation.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftIOKit.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftMetal.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreAudio.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreData.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreFoundation.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreGraphics.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreImage.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreMedia.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDarwin.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDispatch.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftFoundation.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftIOKit.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftMetal.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib || true
         zip -r -y workspace-dir.zip workspace/
         mkdir packages2
         mv packages/mpv packages2 || true
@@ -129,7 +130,7 @@ jobs:
         mv packages2 packages
         zip -r packages-dir.zip packages/
         
-    - name: Upload workspace packages
+    - name: Upload binary packages
       continue-on-error: true
       uses: softprops/action-gh-release@master
       with:
@@ -138,45 +139,6 @@ jobs:
         files: |
           workspace-dir.zip
           packages-dir.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Zip binary packages
-      run: |
-        mkdir -p binary-packages/packages
-        mkdir -p binary-packages/workspace
-        mv packages/mpv binary-packages/packages || true
-        mv packages/*.done binary-packages/packages
-        mv workspace/bin binary-packages/workspace
-        mv workspace/include binary-packages/workspace        
-        mv workspace/lib binary-packages/workspace 
-        mv workspace/share binary-packages/workspace
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreAudio.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreData.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreFoundation.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreGraphics.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreImage.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreMedia.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDarwin.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDispatch.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftFoundation.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftIOKit.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftMetal.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib binary-packages/workspace/lib
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib binary-packages/workspace/lib
-        zip -r my-zip.zip binary-packages/*
-        
-    - name: Upload binary packages
-      uses: softprops/action-gh-release@master
-      with:
-        tag_name: binary-packages
-        name: binary-packages
-        files: my-zip.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
