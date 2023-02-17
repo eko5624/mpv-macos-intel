@@ -1,0 +1,51 @@
+name: release
+
+on:
+  #schedule:
+  #  - cron: '10 0 * * MON'
+    
+  workflow_dispatch:   
+
+jobs:
+  release:
+    runs-on: macos-11
+    steps:    
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Install binary packages
+      run: |
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/workspace-dir.zip
+       curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
+       unzip workspace-dir.zip
+       unzip packages-dir.zip
+       rm packages/mpv.done
+       rm -rf packages/mpv/build/mpv.app
+       rm workspace-dir.zip packages-dir.zip
+       
+    - name: build
+      continue-on-error: true
+      run: |
+        cd packages/mpv
+        python3 TOOLS/osxbundle.py build/mpv
+
+    - name: Get current timestamp
+      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV        
+
+    - name: Zip mpv.app
+      run: |
+        mkdir All-in-One
+        curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
+        unzip main.zip
+        mv mpv-config-main/macos_config All-in-One
+        mv packages/mpv/build/mpv.app All-in-One
+        zip -r All-in-One-${{ env.date }}.zip All-in-One/*
+    - name: Create Release
+      uses: softprops/action-gh-release@master
+      with:
+        tag_name: ${{ env.date }}
+        name: ${{ env.date }}
+        body: Bump to mpv-player/mpv@${{ env.sha }}
+        files: All*.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
