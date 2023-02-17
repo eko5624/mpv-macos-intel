@@ -192,6 +192,7 @@ fi
 
 if ! command_exists "gettext"; then
   echo "gettext need to be installed."
+  exit 1
 fi
 
 if ! command_exists "curl"; then
