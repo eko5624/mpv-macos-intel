@@ -19,6 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         brew update
+        brew cleanup
         brew install --overwrite python@3.11 meson
         brew install --overwrite glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet
         brew install --overwrite libass --HEAD          
