@@ -24,7 +24,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=10.13
+    export MACOSX_DEPLOYMENT_TARGET=10.11
   fi
 fi
 
@@ -1211,9 +1211,7 @@ if build "mpv" "master"; then
     -Dprefix="${WORKSPACE}" \
     -Dmacos-media-player=disabled \
     -Dmanpage-build=disabled \
-    -Dmacos-10-11-features=enabled \
-    -Dmacos-10-12-2-features=enabled \
-    -Dswift-flags="-target x86_64-apple-macos10.13"
+    -Dswift-flags="-target x86_64-apple-macos10.11"
   meson compile -C build
   
   # fix can't find libvpx.8.dylib 
