@@ -75,14 +75,12 @@ jobs:
     - name: build
       continue-on-error: true
       run: |
-        brew install gnu-sed
         chmod +x ./build.sh
         ./build.sh
 
     - name: Zip binary packages 
       continue-on-error: true
       run: |
-
         rm -rf workspace/doc
         rm -rf workspace/etc
         rm -rf workspace/man
