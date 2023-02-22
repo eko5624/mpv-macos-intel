@@ -472,6 +472,7 @@ if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://code.videolan.org/videolan/libplacebo
   cd libplacebo
+  execute sed -i "" '/time.h/i #define _POSIX_C_SOURCE 199309L demos/utils.c
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
