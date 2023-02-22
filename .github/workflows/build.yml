@@ -56,25 +56,6 @@ jobs:
         find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
         brew unlink python
 
-    #- name: Install dependencies
-    #  run: |
-    #    #echo "Force brew install for 10.13"
-    #    export MACOSX_DEPLOYMENT_TARGET="10.13"
-    #    brew update-reset
-    #    for dep in $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula/*.rb; do sed -i "" $'s/def install/def install\\\n    ENV["MACOSX_DEPLOYMENT_TARGET"] = "10.13"\\\n/' $dep;done
-    #    for dep in python@3.8 python@3.10; do sed -i "" $'s/MacOS.version/"10.13"/' $(brew --repository)/Library/Taps/homebrew/homebrew-core/Formula//$dep.rb;done
-          
-        # Uninstall bottled dependencies
-    #    brew uninstall --ignore-dependencies openssl
-    #    brew cleanup
-    #    brew reinstall -s openssl@1.1
-    #    brew reinstall -s lz4
-    #    brew reinstall -s xz
-    #    brew reinstall -s zstd
-    #    brew reinstall -s pkg-config
-    #    brew reinstall -s tcl-tk
-    #    brew reinstall -s gdbm              
-
     #- name: Switch to CLTs
     #  run: |
     #    sudo xcode-select --reset
@@ -87,8 +68,8 @@ jobs:
        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
        unzip workspace-dir.zip
        unzip packages-dir.zip
-       rm packages/mpv.done
-       rm -rf packages/mpv
+       rm packages/mpv.done || true
+       rm -rf packages/mpv || true
        rm workspace-dir.zip packages-dir.zip
        
     - name: build
@@ -122,6 +103,7 @@ jobs:
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib workspace/lib || true
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib workspace/lib || true
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib workspace/lib || true
+        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftos.dylib workspace/lib || true        
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib || true
         zip -r -y workspace-dir.zip workspace/
         mkdir packages2
