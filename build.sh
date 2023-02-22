@@ -472,6 +472,7 @@ if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://code.videolan.org/videolan/libplacebo
   cd libplacebo
+  execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=disabled \
