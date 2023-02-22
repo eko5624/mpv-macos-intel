@@ -75,6 +75,7 @@ jobs:
     - name: build
       continue-on-error: true
       run: |
+        brew install gnu-sed
         chmod +x ./build.sh
         ./build.sh
 
