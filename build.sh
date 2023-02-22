@@ -475,7 +475,7 @@ if build "libplacebo" "master"; then
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=disabled \
-    -Ddemos=disabled
+    -Ddemos=false
   execute meson compile -C build
   execute meson install -C build
 
