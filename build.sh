@@ -378,19 +378,18 @@ if command_exists "python3"; then
   fi
 fi
 
-if build "cmake" "3.25.1"; then
-  download "https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz"
-  curl -OL https://gitlab.kitware.com/cmake/cmake/commit/96329d5dffdd5a22c5b4428119b5d3762a8857a7.diff
-  curl -OL https://gitlab.kitware.com/cmake/cmake/commit/f1a4ecdc0c62b46c90df5e8d20e6f61d06063894.diff
-  execute patch -p1 -i 96329d5dffdd5a22c5b4428119b5d3762a8857a7.diff
-  execute patch -p1 -i f1a4ecdc0c62b46c90df5e8d20e6f61d06063894.diff  
+if build "cmake" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/Kitware/CMake.git --branch master --depth 1
+  cd CMake
+  execute ./bootstrap
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --parallel="${MJOBS}" -- \
     -DCMAKE_USE_OPENSSL=OFF
   execute make -j $MJOBS
   execute make install
-  build_done "cmake" "3.25.1"
+  build_done "cmake" "master"
 fi
 
 if build "libtiff" "4.5.0"; then
