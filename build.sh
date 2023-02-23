@@ -901,8 +901,10 @@ if build "librist" "0.2.7"; then
 fi 
 CONFIGURE_OPTIONS+=("--enable-librist")
 
-if build "libssh" "0.10.4"; then
-  download "https://www.libssh.org/files/0.10/libssh-0.10.4.tar.xz" "libssh-0.10.4.tar.xz"
+if build "libssh" "master"; then
+  cd $PACKAGES
+  git clone https://git.libssh.org/projects/libssh.git --branch master --depth 1
+  cd libssh
   export OPENSSL_ROOT_DIR="${WORKSPACE}"
   export ZLIB_ROOT_DIR="${WORKSPACE}"
   make_dir build
@@ -915,7 +917,7 @@ if build "libssh" "0.10.4"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libssh" "0.10.4"
+  build_done "libssh" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libssh")
 
