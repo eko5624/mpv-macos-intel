@@ -24,7 +24,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=10.11
+    export MACOSX_DEPLOYMENT_TARGET=10.12
   fi
 fi
 
@@ -779,6 +779,7 @@ if build "brotli" "master"; then
   cd $PACKAGES
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
+  #fix 'utimensat' is only available on macOS 10.13 or newer.
   curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/brotli/pull/2.patch
   execute patch -p1 -i 2.patch
   make_dir out
@@ -841,7 +842,7 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
     -DJPEGXL_ENABLE_SJPEG=OFF
-  execute make CXXFLAGS='-O2 -fno-sized-deallocation' -j $MJOBS
+  execute make -j $MJOBS
   
   execute make install
 
@@ -1218,7 +1219,7 @@ if build "mpv" "master"; then
     -Dprefix="${WORKSPACE}" \
     -Dmacos-media-player=disabled \
     -Dmanpage-build=disabled \
-    -Dswift-flags="-target x86_64-apple-macos10.11"
+    -Dswift-flags="-target x86_64-apple-macos10.12"
   meson compile -C build
   
   # fix can't find libvpx.8.dylib 
