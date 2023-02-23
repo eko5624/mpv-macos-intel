@@ -779,6 +779,8 @@ if build "brotli" "master"; then
   cd $PACKAGES
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
+  curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/brotli/pull/1.patch
+  execute patch -p1 -i 1.patch
   make_dir out
   cd out || exit  
   execute cmake ../ \
