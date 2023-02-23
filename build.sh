@@ -380,6 +380,10 @@ fi
 
 if build "cmake" "3.25.1"; then
   download "https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz"
+  curl -OL https://gitlab.kitware.com/cmake/cmake/commit/96329d5dffdd5a22c5b4428119b5d3762a8857a7.diff
+  curl -OL https://gitlab.kitware.com/cmake/cmake/commit/f1a4ecdc0c62b46c90df5e8d20e6f61d06063894.diff
+  execute patch -p1 -i 96329d5dffdd5a22c5b4428119b5d3762a8857a7.diff
+  execute patch -p1 -i f1a4ecdc0c62b46c90df5e8d20e6f61d06063894.diff  
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --parallel="${MJOBS}" -- \
