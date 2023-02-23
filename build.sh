@@ -779,9 +779,8 @@ if build "brotli" "master"; then
   cd $PACKAGES
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
-  #fix 'utimensat' is only available on macOS 10.13 or newer.
-  curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/brotli/pull/2.patch
-  execute patch -p1 -i 2.patch
+  #fix utimensat is only available on macOS 10.13 or newer.
+  execute patch -p1 -i ../../fix-utimensat.patch
   make_dir out
   cd out || exit  
   execute cmake ../ \
