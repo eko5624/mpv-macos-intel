@@ -70,7 +70,8 @@ jobs:
        unzip packages-dir.zip
        rm packages/mpv.done || true
        rm -rf packages/mpv || true
-       rm workspace-dir.zip packages-dir.zip
+       rm workspace-dir.zip || true
+       rm packages-dir.zip || true
        
     - name: build
       continue-on-error: true
@@ -81,6 +82,8 @@ jobs:
     - name: Zip binary packages 
       continue-on-error: true
       run: |
+        rm workspace-dir.zip || true
+        rm packages-dir.zip || true
         rm -rf workspace/doc
         rm -rf workspace/etc
         rm -rf workspace/man
