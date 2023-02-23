@@ -30,12 +30,12 @@ jobs:
     - name: Switch to MacOSX 10.11 SDK
       id: macossdk1011
       run: |
-        # MacOSX10.11 SDK
-        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.11.sdk.tar.xz
-        tar -C $SDK_PATH -xf MacOSX10.11.sdk.tar.xz
+        # MacOSX10.12 SDK
+        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
+        tar -C $SDK_PATH -xf MacOSX10.12.sdk.tar.xz
         sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
         sudo rm -rf $SDK_PATH/MacOSX.sdk
-        sudo ln -s $SDK_PATH/MacOSX10.11.sdk $SDK_PATH/MacOSX.sdk
+        sudo ln -s $SDK_PATH/MacOSX10.12.sdk $SDK_PATH/MacOSX.sdk
         sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.11" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
     - name: Install Swift 4.x toolchain
