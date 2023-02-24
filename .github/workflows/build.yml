@@ -109,7 +109,7 @@ jobs:
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib || true
         zip -r -y workspace-dir.zip workspace/
         rm -rf packages2 && mkdir packages2
-        mv packages/mpv packages2 
+        mv packages/mpv packages2 || true        
         mv packages/*.done packages2
         rm -rf packages
         mv packages2 packages
