@@ -820,6 +820,8 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
+  #fix 'operator delete' is unavailable: introduced in macOS 10.12.
+  #fix exclude-libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
