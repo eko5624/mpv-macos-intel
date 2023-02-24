@@ -108,7 +108,7 @@ jobs:
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftos.dylib workspace/lib || true        
         sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib || true
         zip -r -y workspace-dir.zip workspace/
-        mkdir packages2
+        rm -rf packages2 && mkdir packages2
         mv packages/mpv packages2
         mv packages/*.done packages2
         rm -rf packages
