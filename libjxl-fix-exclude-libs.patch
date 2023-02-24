@@ -44,7 +44,7 @@ Subject: [PATCH 2/2] fix operator delete unavailable on macos 10.11
 
 ---
  lib/CMakeLists.txt | 1 -
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 1 file changed, 1 deletion(-)
 
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index 1668c98455..b6ea922ab9 100644
