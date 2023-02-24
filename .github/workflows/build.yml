@@ -30,7 +30,7 @@ jobs:
     - name: Switch to MacOSX 10.11 SDK
       id: macossdk1011
       run: |
-        # MacOSX10.12 SDK
+        # MacOSX10.11 SDK
         curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.11.sdk.tar.xz
         tar -C $SDK_PATH -xf MacOSX10.11.sdk.tar.xz
         sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
