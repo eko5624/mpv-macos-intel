@@ -816,9 +816,6 @@ fi
 if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
-  # Fix AVX2 related crash due to unaligned stack memory
-  export CXXFLAGS="-Wa,-muse-unaligned-vector-move"
-  export CFLAGS="$CFLAGS -Wa,-muse-unaligned-vector-move"
   cd libjxl
   #fix 'operator delete' is unavailable: introduced in macOS 10.12.
   #fix exclude-libs
@@ -842,7 +839,8 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF
+    -DJPEGXL_ENABLE_SJPEG=OFF \
+    -DJPEGXL_ENABLE_TCMALLOC=OFF
   execute make -j $MJOBS  
   execute make install
 
