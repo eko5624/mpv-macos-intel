@@ -804,13 +804,9 @@ if build "highway" "master"; then
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DBUILD_SHARED_LIBS=ON \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_GNUtoMS=OFF \
-    -DHWY_CMAKE_ARM7=OFF \
-    -DHWY_ENABLE_CONTRIB=OFF \
+    -DHWY_ENABLE_TESTS=OFF \
     -DHWY_ENABLE_EXAMPLES=OFF \
-    -DHWY_ENABLE_INSTALL=ON \
-    -DHWY_WARNINGS_ARE_ERRORS=OFF
+    -DHWY_ENABLE_INSTALL=ON
   execute make -j $MJOBS
   execute make install
 
