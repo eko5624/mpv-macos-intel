@@ -804,7 +804,7 @@ if build "highway" "master"; then
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DBUILD_SHARED_LIBS=ON \
-    -DHWY_ENABLE_TESTS=OFF \
+    -DBUILD_TESTING=OFF \
     -DCMAKE_GNUtoMS=OFF \
     -DHWY_CMAKE_ARM7=OFF \
     -DHWY_ENABLE_CONTRIB=OFF \
