@@ -821,7 +821,10 @@ if build "libjxl" "main"; then
   #fix exclude-libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
-  cd build || exit  
+  cd build || exit
+  # Fix AVX2 related crash due to unaligned stack memory
+  export CXXFLAGS="$CXXFLAGS -Wa,-muse-unaligned-vector-move"
+  export CFLAGS="$CFLAGS -Wa,-muse-unaligned-vector-move"
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -839,10 +842,8 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF \
-    -DWARNINGS_AS_ERRORS_DEFAULT=OFF
-  execute make -j $MJOBS
-  
+    -DJPEGXL_ENABLE_SJPEG=OFF
+  execute make -j $MJOBS  
   execute make install
 
   build_done "libjxl" "main"
