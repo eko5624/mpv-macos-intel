@@ -808,7 +808,7 @@ if build "highway" "master"; then
     -DCMAKE_GNUtoMS=OFF \
     -DHWY_CMAKE_ARM7=OFF \
     -DHWY_ENABLE_EXAMPLES=OFF \
-    -DHWY_WARNINGS_ARE_ERRORS=OFF
+    -DHWY_ENABLE_CONTRIB=OFF
   execute make -j $MJOBS
   execute make install
 
