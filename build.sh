@@ -842,7 +842,9 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF
+    -DJPEGXL_ENABLE_SJPEG=OFF \
+    -DCMAKE_CXX_FLAGS='${CMAKE_CXX_FLAGS} -Wa,-muse-unaligned-vector-move' \
+    -DCMAKE_C_FLAGS='${CMAKE_C_FLAGS} -Wa,-muse-unaligned-vector-move'
   execute make -j $MJOBS  
   execute make install
 
