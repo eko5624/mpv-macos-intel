@@ -805,7 +805,8 @@ if build "highway" "master"; then
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DBUILD_SHARED_LIBS=ON \
     -DHWY_ENABLE_TESTS=OFF \
-    -DHWY_ENABLE_EXAMPLES=OFF
+    -DHWY_ENABLE_EXAMPLES=OFF \
+    -DHWY_WARNINGS_ARE_ERRORS=OFF
   execute make -j $MJOBS
   execute make install
 
@@ -838,7 +839,8 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF
+    -DJPEGXL_ENABLE_SJPEG=OFF \
+    -DWARNINGS_AS_ERRORS_DEFAULT=OFF
   execute make -j $MJOBS
   
   execute make install
