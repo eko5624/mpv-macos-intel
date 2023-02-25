@@ -816,15 +816,15 @@ fi
 if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
+  # Fix AVX2 related crash due to unaligned stack memory
+  export CXXFLAGS="$CXXFLAGS -Wa,-muse-unaligned-vector-move"
+  export CFLAGS="$CFLAGS -Wa,-muse-unaligned-vector-move"
   cd libjxl
   #fix 'operator delete' is unavailable: introduced in macOS 10.12.
   #fix exclude-libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit
-  # Fix AVX2 related crash due to unaligned stack memory
-  export CXXFLAGS="$CXXFLAGS -Wa,-muse-unaligned-vector-move"
-  export CFLAGS="$CFLAGS -Wa,-muse-unaligned-vector-move"
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -842,9 +842,7 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF \
-    -DCMAKE_CXX_FLAGS='${CMAKE_CXX_FLAGS} -Wa,-muse-unaligned-vector-move' \
-    -DCMAKE_C_FLAGS='${CMAKE_C_FLAGS} -Wa,-muse-unaligned-vector-move'
+    -DJPEGXL_ENABLE_SJPEG=OFF
   execute make -j $MJOBS  
   execute make install
 
