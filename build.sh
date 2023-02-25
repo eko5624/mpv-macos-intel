@@ -805,6 +805,7 @@ if build "highway" "master"; then
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DBUILD_TESTING=OFF \
     -DHWY_ENABLE_TESTS=OFF \
+    -DCMAKE_GNUtoMS=OFF \
     -DHWY_ENABLE_EXAMPLES=OFF \
     -DHWY_ENABLE_INSTALL=ON
   execute make -j $MJOBS
