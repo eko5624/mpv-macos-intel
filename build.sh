@@ -806,6 +806,7 @@ if build "highway" "master"; then
     -DBUILD_TESTING=OFF \
     -DHWY_ENABLE_TESTS=OFF \
     -DCMAKE_GNUtoMS=OFF \
+    -DHWY_CMAKE_ARM7=OFF \
     -DHWY_ENABLE_EXAMPLES=OFF \
     -DHWY_ENABLE_INSTALL=ON
   execute make -j $MJOBS
