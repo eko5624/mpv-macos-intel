@@ -27,15 +27,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
       
-    - name: Switch to MacOSX 10.14 SDK
-      id: macossdk1014
+    - name: Switch to MacOSX 10.12 SDK
       run: |
-        # MacOSX10.14 SDK
-        tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
+        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
+        tar -C $SDK_PATH -xf MacOSX10.12.sdk.tar.xz
         sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
         sudo rm -rf $SDK_PATH/MacOSX.sdk
-        sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
-        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.11" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+        sudo ln -s $SDK_PATH/MacOSX10.12.sdk $SDK_PATH/MacOSX.sdk
+        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.12" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
     - name: Install Swift 4.x toolchain
       id: swift4
