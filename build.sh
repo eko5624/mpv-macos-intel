@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# HOMEPAGE: https://github.com/markus-perl/ffmpeg-build-script
-# LICENSE: https://github.com/markus-perl/ffmpeg-build-script/blob/master/LICENSE
-
 PROGNAME=$(basename "$0")
 FFMPEG_VERSION=5.1.2
 SCRIPT_VERSION=1.43
@@ -352,6 +349,125 @@ if build "libtool" "2.4.7"; then
   build_done "libtool" "2.4.7"
 fi
 
+if build "ncurses" "6.4"; then
+  download "https://ftpmirror.gnu.org/ncurses/ncurses-6.4.tar.gz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "ncurses" "6.4"
+fi  
+
+if build "libxml2" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/GNOME/libxml2.git --branch master --depth 1
+  cd libxml2
+  # Fix crash when using Python 3 using Fedora's patch.
+  # Reported upstream:
+  # https://bugzilla.gnome.org/show_bug.cgi?id=789714
+  # https://gitlab.gnome.org/GNOME/libxml2/issues/12
+  #execute curl $CURL_RETRIES -L --silent -o fix_crash.patch "https://bugzilla.opensuse.org/attachment.cgi?id=746044"
+  #execute patch -p1 -i fix_crash.patch
+  execute autoreconf -fvi
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --without-python \
+    --without-lzma
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libxml2" "master"
+fi  
+CONFIGURE_OPTIONS+=("--enable-libxml2")
+
+if build "gettext" "0.21.1"; then
+  download "https://ftpmirror.gnu.org/gettext/gettext-0.21.1.tar.gz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "gettext" "0.21.1"
+fi
+
+if build "util-macros" "1.20.0"; then
+  download "https://www.x.org/archive/individual/util/util-macros-1.20.0.tar.xz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "util-macros" "1.20.0"
+fi
+
+if build "xorgproto" "2022.2"; then
+  download "https://xorg.freedesktop.org/archive/individual/proto/xorgproto-2022.2.tar.gz"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --sysconfdir=$WORKSPACE/etc \
+    --localstatedir=$WORKSPACE/var \
+    --disable-dependency-tracking \
+    --disable-silent-rules
+  execute make -j $MJOBS
+  execute make install
+  build_done "xorgproto" "2022.2"
+fi
+
+if build "libXau" "1.0.11"; then
+  download "https://www.x.org/archive/individual/lib/libXau-1.0.11.tar.xz"
+  export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libXau" "1.0.11"
+fi
+
+if build "libXdmcp" "1.1.4"; then
+  download "https://www.x.org/archive/individual/lib/libXdmcp-1.1.4.tar.xz"
+  export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libXdmcp" "1.1.4"
+fi
+
+if build "xcb-proto" "1.15.2"; then
+  download "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.15.2.tar.xz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "xcb-proto" "1.15.2"
+fi
+
+if build "libpthread-stubs" "0.4"; then
+  download "https://xcb.freedesktop.org/dist/libpthread-stubs-0.4.tar.bz2"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libpthread-stubs" "0.4"
+fi
+
+if build "libxcb" "1.15"; then
+  download "https://xcb.freedesktop.org/dist/libxcb-1.15.tar.gz"
+  export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libxcb" "1.15"
+fi
+
+if build "xtrans" "1.4.0"; then
+  download "https://www.x.org/archive/individual/lib/xtrans-1.4.0.tar.bz2"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "xtrans" "1.4.0"
+fi
+
+if build "libX11" "1.8.4"; then
+  download "https://www.x.org/archive/individual/lib/libX11-1.8.4.tar.gz"
+  export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libX11" "1.8.4"
+fi
+
 if build "python" "3.10"; then
   cd $PACKAGES
   git clone https://github.com/python/cpython --branch 3.10
@@ -370,7 +486,7 @@ if command_exists "python3"; then
   if command_exists "pip3"; then
     # meson and ninja can be installed via pip3
     execute pip3 install pip setuptools --quiet --upgrade --no-cache-dir --disable-pip-version-check
-    for r in meson ninja; do
+    for r in meson ninja jsonschema Jinja2; do
       if ! command_exists ${r}; then
         execute pip3 install ${r} --quiet --upgrade --no-cache-dir --disable-pip-version-check
       fi
@@ -378,18 +494,15 @@ if command_exists "python3"; then
   fi
 fi
 
-if build "cmake" "master"; then
-  cd $PACKAGES
-  git clone https://github.com/Kitware/CMake.git --branch master --depth 1
-  cd CMake
-  execute ./bootstrap
+if build "cmake" "3.25.1"; then
+  download "https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --parallel="${MJOBS}" -- \
     -DCMAKE_USE_OPENSSL=OFF
   execute make -j $MJOBS
   execute make install
-  build_done "cmake" "master"
+  build_done "cmake" "3.25.1"
 fi
 
 if build "libtiff" "4.5.0"; then
@@ -473,13 +586,12 @@ fi
 
 if build "libplacebo" "master"; then
   cd $PACKAGES
-  git clone --recursive https://code.videolan.org/videolan/libplacebo
+  git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
-    -Dvulkan=disabled \
-    -Ddemos=false
+    -Dvulkan=disabled
   execute meson compile -C build
   execute meson install -C build
 
@@ -516,8 +628,10 @@ fi
 ## video library
 ##
 
-if build "dav1d" "1.0.0"; then
-  download "https://code.videolan.org/videolan/dav1d/-/archive/1.0.0/dav1d-1.0.0.tar.gz"
+if build "dav1d" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/videolan/dav1d.git --branch master --depth 1
+  cd dav1d
   make_dir build
       
   CFLAGSBACKUP=$CFLAGS
@@ -533,7 +647,7 @@ if build "dav1d" "1.0.0"; then
     export CFLAGS=$CFLAGSBACKUP
   fi
       
-  build_done "dav1d" "1.0.0"
+  build_done "dav1d" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libdav1d")
 
@@ -555,8 +669,10 @@ if build "davs2" "master"; then
 fi  
 CONFIGURE_OPTIONS+=("--enable-libdavs2")
 
-if build "frei0r" "1.8.0"; then
-  download "https://files.dyne.org/frei0r/releases/frei0r-plugins-1.8.0.tar.gz" "frei0r-1.8.0.tar.gz"
+if build "frei0r" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/dyne/frei0r.git --branch master --depth 1
+  cd frei0r
   # Disable opportunistic linking against Cairo
   execute sed -i "" '/find_package (Cairo)/d' CMakeLists.txt
   make_dir build
@@ -568,18 +684,20 @@ if build "frei0r" "1.8.0"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "frei0r" "1.8.0"
+  build_done "frei0r" "master"
 fi  
 CONFIGURE_OPTIONS+=("--enable-frei0r")
 
-if build "libpng" "1.6.39"; then
-  download "https://gigenet.dl.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.tar.gz" "libpng-1.6.39.tar.gz"
+if build "libpng" "libpng16"; then
+  cd $PACKAGES
+  git clone --recursive https://github.com/glennrp/libpng.git --branch libpng16 --depth 1
+  cd libpng
   export LDFLAGS="${LDFLAGS}"
   export CPPFLAGS="${CFLAGS}"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libpng" "1.6.39"
+  build_done "libpng" "libpng16"
 fi
 
 if build "freetype" "master"; then
@@ -599,16 +717,27 @@ if build "freetype" "master"; then
 fi  
 CONFIGURE_OPTIONS+=("--enable-libfreetype")
 
-if build "fribidi" "1.0.12"; then
-  download "https://github.com/fribidi/fribidi/releases/download/v1.0.12/fribidi-1.0.12.tar.xz" "fribidi-1.0.12.tar.xz"
-  execute ./configure --prefix="${WORKSPACE}" --disable-debug
-  execute make -j $MJOBS
-  execute make install
-  build_done "friBidi" "1.0.12"
+if build "fribidi" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/fribidi/fribidi.git --branch master --depth 1
+  cd fribidi
+  execute meson setup build \
+    --prefix="${WORKSPACE}" \
+    --buildtype=release \
+    -Ddocs=false \
+    -Dbin=false \
+    -Dtests=false \
+    --libdir="${WORKSPACE}"/lib
+  execute meson compile -C build
+  execute meson install -C build
+
+  build_done "friBidi" "master"
 fi
 
-if build "harfbuzz" "6.0.0"; then
-  download "https://github.com/harfbuzz/harfbuzz/archive/6.0.0.tar.gz" "harfbuzz-6.0.0.tar.xz"
+if build "harfbuzz" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/harfbuzz/harfbuzz.git --branch main --depth 1
+  cd harfbuzz
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
@@ -617,16 +746,19 @@ if build "harfbuzz" "6.0.0"; then
   execute meson compile -C build
   execute meson install -C build
   
-  build_done "harfbuzz" "6.0.0"
+  build_done "harfbuzz" "main"
 fi
 
-if build "libunibreak" "5.1"; then
-  download "https://github.com/adah1972/libunibreak/releases/download/libunibreak_5_1/libunibreak-5.1.tar.gz" "libunibreak-5.1.tar.gz"
-  execute execute ./configure --prefix="${WORKSPACE}"
+if build "libunibreak" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/adah1972/libunibreak.git --branch master --depth 1
+  cd libunibreak
+  execute ./autogen.sh
+  execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
 
-  build_done "libunibreak" "0.15.2"   
+  build_done "libunibreak" "master"   
 fi
 
 if build "libass" "master"; then
@@ -638,12 +770,15 @@ if build "libass" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libass" "0.15.2"   
+  build_done "libass" "master"   
 fi
 CONFIGURE_OPTIONS+=("--enable-libass")
 
-if build "fontconfig" "2.14.1"; then
-  download "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.1.tar.xz" "fontconfig-2.14.1.tar.xz"
+if build "fontconfig" "main"; then
+  cd $PACKAGES
+  git clone https://gitlab.freedesktop.org/fontconfig/fontconfig.git --branch main --depth 1
+  cd fontconfig
+  execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-docs \
@@ -651,33 +786,13 @@ if build "fontconfig" "2.14.1"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "fontconfig" "2.14.1"
+  build_done "fontconfig" "main"
 fi  
 CONFIGURE_OPTIONS+=("--enable-libfontconfig")
 
-if build "libxml2" "2.10.3"; then
-  download "https://github.com/GNOME/libxml2/archive/refs/tags/v2.10.3.tar.gz" "libxml2-2.10.3.tar.xz"
-  # Fix crash when using Python 3 using Fedora's patch.
-  # Reported upstream:
-  # https://bugzilla.gnome.org/show_bug.cgi?id=789714
-  # https://gitlab.gnome.org/GNOME/libxml2/issues/12
-  execute curl $CURL_RETRIES -L --silent -o fix_crash.patch "https://bugzilla.opensuse.org/attachment.cgi?id=746044"
-  execute patch -p1 -i fix_crash.patch
-  execute autoreconf -fvi
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --without-python \
-    --without-lzma
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "libxml2" "2.10.3"
-fi  
-CONFIGURE_OPTIONS+=("--enable-libxml2")
-
 if build "libbluray" "master"; then
   cd $PACKAGES
-  git clone --recursive https://code.videolan.org/videolan/libbluray
+  git clone --recursive https://code.videolan.org/videolan/libbluray.git
   cd libbluray
   execute ./bootstrap
   execute ./configure \
@@ -703,34 +818,16 @@ if build "lame" "3.100"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libmp3lame")
 
-if build "libogg" "1.3.5"; then
-  download "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.tar.xz"
+if build "libogg" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/xiph/ogg.git --branch master --depth 1
+  cd ogg
+  execute ./autogen.sh
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libogg" "1.3.5"
+  build_done "libogg" "master"
 fi
-
-#if build "flac" "1.4.2"; then
-#  download "https://downloads.xiph.org/releases/flac/flac-1.4.2.tar.xz"
-#  execute ./configure \
-#    --prefix="${WORKSPACE}" \
-#    --disable-debug \
-#    --enable-static
-#  execute make -j $MJOBS
-#  execute make install
-#  build_done "flac" "1.4.2"
-#fi
-
-#if build "libsndfile" "1.2.0"; then
-#  download "https://github.com/libsndfile/libsndfile/releases/download/1.2.0/libsndfile-1.2.0.tar.xz" "libsndfile-1.2.0.tar.xz"
-#  execute autoreconf -fvi
-#  execute ./configure --prefix="${WORKSPACE}"
-#  execute make -j $MJOBS
-#  execute make install
-
-#  build_done "libsndfile" "1.2.0"
-#fi
 
 if build "libbs2b" "master"; then
   cd $PACKAGES
@@ -780,7 +877,8 @@ if build "brotli" "master"; then
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
   #fix utimensat is only available on macOS 10.13 or newer.
-  execute patch -p1 -i ../../fix-utimensat.patch
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/fix-utimensat.patch
+  execute patch -p1 -i fix-utimensat.patch
   make_dir out
   cd out || exit  
   execute cmake ../ \
@@ -820,11 +918,10 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  #fix 'operator delete' is unavailable: introduced in macOS 10.12.
-  #fix exclude-libs
-  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
+  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/libjxl-fix-exclude-libs.patch
+  execute patch -p1 -i libjxl-fix-exclude-libs.patch
   make_dir build
-  cd build || exit
+  cd build || exit  
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -843,7 +940,7 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
     -DJPEGXL_ENABLE_SJPEG=OFF
-  execute make -j $MJOBS  
+  execute make -j $MJOBS
   execute make install
 
   build_done "libjxl" "main"
@@ -889,8 +986,52 @@ if build "libmysofa" "main"; then
 fi 
 CONFIGURE_OPTIONS+=("--enable-libmysofa")
 
-if build "librist" "0.2.7"; then
-  download "https://code.videolan.org/rist/librist/-/archive/v0.2.7/librist-v0.2.7.tar.gz" "librist-v0.2.7.tar.gz"
+if build "cjson" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/DaveGamble/cJSON.git --branch main --depth 1
+  cd cJSON
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_CJSON_UTILS=On \
+    -DENABLE_CJSON_TEST=Off
+  execute make -j $MJOBS all
+  execute make install
+
+  build_done "cjson" "master"
+fi
+
+if build "mbedtls" "development"; then
+  cd $PACKAGES
+  git clone https://github.com/Mbed-TLS/mbedtls --branch development --depth 1
+  cd mbedtls
+  # enable pthread mutexes
+  sed -i "" 's|//#define MBEDTLS_THREADING_PTHREAD|#define MBEDTLS_THREADING_PTHREAD|g' include/mbedtls/mbedtls_config.h
+  # allow use of mutexes within mbed TLS
+  sed -i "" 's|//#define MBEDTLS_THREADING_C|#define MBEDTLS_THREADING_C|g' include/mbedtls/mbedtls_config.h
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DUSE_SHARED_MBEDTLS_LIBRARY=On \
+    -DPython3_EXECUTABLE="${WORKSPACE}"/bin/python3 \
+    -DENABLE_TESTING=OFF \
+    -DGEN_FILES=ON
+  execute make -j $MJOBS all
+  execute make install
+
+  build_done "mbedtls" "development"
+fi
+
+if build "librist" "master"; then
+  cd $PACKAGES
+  git clone https://code.videolan.org/rist/librist.git --branch master --depth 1
+  cd librist
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
@@ -898,14 +1039,14 @@ if build "librist" "0.2.7"; then
   execute meson compile -C build
   execute meson install -C build
 
-  build_done "librist" "0.2.7"
+  build_done "librist" "master"
 fi 
 CONFIGURE_OPTIONS+=("--enable-librist")
 
 if build "libssh" "master"; then
   cd $PACKAGES
-  git clone https://git.libssh.org/projects/libssh.git --branch master --depth 1
-  cd libssh
+  git clone https://gitlab.com/libssh/libssh-mirror.git --branch master --depth 1
+  cd libssh-mirror
   export OPENSSL_ROOT_DIR="${WORKSPACE}"
   export ZLIB_ROOT_DIR="${WORKSPACE}"
   make_dir build
@@ -946,8 +1087,12 @@ if build "libtheora" "master"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libtheora")
 
-if build "libvorbis" "1.3.7"; then
-  download "https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.7.tar.gz"
+if build "libvorbis" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/AO-Yumi/vorbis_aotuv.git --branch master --depth 1
+  cd vorbis_aotuv
+  execute chmod +x ./autogen.sh
+  execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --with-ogg-libraries="${WORKSPACE}"/lib \
@@ -956,7 +1101,7 @@ if build "libvorbis" "1.3.7"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libvorbis" "1.3.7"
+  build_done "libvorbis" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libvorbis")
 
@@ -985,8 +1130,11 @@ if build "libvpx" "main"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libvpx")
 
-if build "libwebp" "1.3.0"; then
-  download "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.3.0.tar.gz" "libwebp-1.3.0.tar.gz"
+if build "libwebp" "main"; then
+  cd $PACKAGES
+  git clone https://chromium.googlesource.com/webm/libwebp.git --branch main --depth 1
+  cd libwebp
+  execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-dependency-tracking \
@@ -995,7 +1143,7 @@ if build "libwebp" "1.3.0"; then
     --with-zlib-lib="${WORKSPACE}"/lib
   execute make -j $MJOBS
   execute make install
-  build_done "libwebp" "1.3.0"
+  build_done "libwebp" "main"
 fi
 CONFIGURE_OPTIONS+=("--enable-libwebp")
 
@@ -1009,8 +1157,11 @@ if build "opencore" "0.1.6"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libopencore_amrnb" "--enable-libopencore_amrwb")
 
-if build "opus" "1.3.1"; then
-  download "https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz" "opus-1.3.1.tar.gz"
+if build "opus" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/xiph/opus.git --branch master --depth 1
+  cd opus
+  execute ./autogen.sh
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
@@ -1019,8 +1170,10 @@ if build "opus" "1.3.1"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libopus")
 
-if build "rubberband" "3.1.2"; then
-  download "https://breakfastquay.com/files/releases/rubberband-3.1.2.tar.bz2" "rubberband-3.1.2.tar.bz2"
+if build "rubberband" "default"; then
+  cd $PACKAGES
+  git clone https://github.com/breakfastquay/rubberband.git --branch default --depth 1
+  cd rubberband
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
@@ -1028,12 +1181,14 @@ if build "rubberband" "3.1.2"; then
   execute meson compile -C build
   execute meson install -C build
 
-  build_done "rubberband" "3.1.2"
+  build_done "rubberband" "default"
 fi 
 CONFIGURE_OPTIONS+=("--enable-librubberband")
 
-if build "snappy" "1.1.9"; then
-  download "https://github.com/google/snappy/archive/1.1.9.tar.gz" "snappy-1.1.9.tar.gz"
+if build "snappy" "main"; then
+  cd $PACKAGES
+  git clone --recursive https://github.com/google/snappy.git --branch main --depth 1
+  cd snappy
   make_dir build
   cd build || exit  
   execute cmake ../ \
@@ -1046,7 +1201,7 @@ if build "snappy" "1.1.9"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "snappy" "1.1.9"
+  build_done "snappy" "main"
 fi
 CONFIGURE_OPTIONS+=("--enable-libsnappy")
 
@@ -1072,18 +1227,23 @@ if build "soxr" "master"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libsoxr")
 
-if build "speex" "1.2.1"; then
-  download "https://downloads.xiph.org/releases/speex/speex-1.2.1.tar.gz" "speex-1.2.1.tar.gz"
+if build "speex" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/xiph/speex.git --branch master --depth 1
+  cd speex
+  execute ./autogen.sh
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
 
-  build_done "speex" "1.2.1"
+  build_done "speex" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libspeex")
 
-if build "srt" "1.5.1"; then  
-  download "https://github.com/Haivision/srt/archive/v1.5.1.tar.gz" "srt-1.5.1.tar.gz"
+if build "srt" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/Haivision/srt.git
+  cd srt 
   export OPENSSL_ROOT_DIR="${WORKSPACE}"
   export OPENSSL_LIB_DIR="${WORKSPACE}"/lib
   export OPENSSL_INCLUDE_DIR="${WORKSPACE}"/include/
@@ -1097,7 +1257,7 @@ if build "srt" "1.5.1"; then
     -DCMAKE_INSTALL_INCLUDEDIR=include
   execute make install
 
-  build_done "srt" "1.5.1"
+  build_done "srt" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libsrt")
 
@@ -1137,13 +1297,15 @@ build_done "xvidcore" "1.3.7"
 fi
 CONFIGURE_OPTIONS+=("--enable-libxvid")
 
-if build "zimg" "3.0.4"; then
-  download "https://github.com/sekrit-twc/zimg/archive/release-3.0.4.tar.gz" "zimg-3.0.4.tar.gz"
+if build "zimg" "master"; then
+  cd $PACKAGES
+  git clone --recursive https://github.com/sekrit-twc/zimg.git --branch master --depth 1
+  cd zimg
   execute ./autogen.sh
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "zimg" "3.0.4"
+  build_done "zimg" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libzimg")
 
@@ -1176,11 +1338,6 @@ CONFIGURE_OPTIONS+=("--enable-libzvbi")
 ## FFmpeg
 ##
 
-EXTRA_VERSION=""
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  EXTRA_VERSION="${FFMPEG_VERSION}"
-fi
-
 if build "ffmpeg" "master"; then
   cd $PACKAGES
   git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
@@ -1197,8 +1354,7 @@ if build "ffmpeg" "master"; then
     --extra-ldflags="${LDFLAGS}" \
     --extra-libs="${EXTRALIBS}" \
     --pkgconfigdir="$WORKSPACE/lib/pkgconfig" \
-    --prefix="${WORKSPACE}" \
-    --extra-version="${EXTRA_VERSION}"
+    --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
 
