@@ -463,6 +463,8 @@ fi
 
 if build "libX11" "1.8.4"; then
   download "https://www.x.org/archive/individual/lib/libX11-1.8.4.tar.gz"
+  export LC_ALL=""
+  export LC_CTYPE="C"
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
