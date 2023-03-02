@@ -803,7 +803,7 @@ fi
 CONFIGURE_OPTIONS+=("--enable-libbluray")
 
 if build "lame" "3.100"; then
-  download "https://sourceforge.net/projects/lame/files/lame/3.100/lame-3.100.tar.gz/download?use_mirror=gigenet" "lame-3.100.tar.gz"
+  download "http://downloads.sourceforge.net/lame/lame-3.100.tar.gz" "lame-3.100.tar.gz"
   sed -i "" '/lame_init_old/d' include/libmp3lame.sym
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
