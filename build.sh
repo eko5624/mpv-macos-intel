@@ -983,7 +983,7 @@ CONFIGURE_OPTIONS+=("--enable-libmysofa")
 
 if build "cjson" "master"; then
   cd $PACKAGES
-  git clone https://github.com/DaveGamble/cJSON.git --branch main --depth 1
+  git clone https://github.com/DaveGamble/cJSON.git --branch master --depth 1
   cd cJSON
   make_dir build
   cd build || exit  
