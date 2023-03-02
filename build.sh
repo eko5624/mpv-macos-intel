@@ -244,15 +244,15 @@ if build "tcl-tk" "8.6.13"; then
 fi
 
 if build "zlib" "1.2.13"; then
-  download "https://zlib.net/fossils/zlib-1.2.13.tar.gz"
+  download "https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
   build_done "zlib" "1.2.13"
 fi
 
-if build "openssl" "1.1.1s"; then
-  download "https://www.openssl.org/source/openssl-1.1.1s.tar.gz"
+if build "openssl" "1.1.1t"; then
+  download "https://www.openssl.org/source/openssl-1.1.1t.tar.gz"
   if $MACOS_M1; then
     sed -n 's/\(##### GNU Hurd\)/"darwin64-arm64-cc" => { \n    inherit_from     => [ "darwin-common", asm("aarch64_asm") ],\n    CFLAGS           => add("-Wall"),\n    cflags           => add("-arch arm64 "),\n    lib_cppflags     => add("-DL_ENDIAN"),\n    bn_ops           => "SIXTY_FOUR_BIT_LONG", \n    perlasm_scheme   => "macosx", \n}, \n\1/g' Configurations/10-main.conf
     execute ./Configure --prefix="${WORKSPACE}" no-shared no-asm darwin64-arm64-cc
@@ -266,7 +266,7 @@ if build "openssl" "1.1.1s"; then
   fi
   execute make -j $MJOBS
   execute make install_sw
-  build_done "openssl" "1.1.1s"
+  build_done "openssl" "1.1.1t"
 fi
 CONFIGURE_OPTIONS+=("--enable-openssl")
 
