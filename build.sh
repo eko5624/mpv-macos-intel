@@ -376,7 +376,14 @@ CONFIGURE_OPTIONS+=("--enable-libxml2")
 
 if build "gettext" "0.21.1"; then
   download "https://ftpmirror.gnu.org/gettext/gettext-0.21.1.tar.gz"
-  execute ./configure --prefix="${WORKSPACE}"
+  execute ./configure \
+    --prefix="${WORKSPACE}"
+    --disable-java \
+    --disable-csharp \
+    --without-git \
+    --without-cvs \
+    --without-xz \
+    --with-included-gettext
   execute make -j $MJOBS
   execute make install
   build_done "gettext" "0.21.1"
