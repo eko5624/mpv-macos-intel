@@ -1410,8 +1410,10 @@ CONFIGURE_OPTIONS+=("--enable-libzvbi")
 ## FFmpeg
 ##
 
-if build "ffmpeg" "5.1.2"; then
-  download "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.gz"
+if build "ffmpeg" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
+  cd FFmpeg
   execute ./configure "${CONFIGURE_OPTIONS[@]}" \
     --disable-metal \
     --disable-debug \
@@ -1430,7 +1432,7 @@ if build "ffmpeg" "5.1.2"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "ffmpeg" "5.1.2"
+  build_done "FFmpeg" "master"
 fi
 
 if build "mpv" "master"; then
