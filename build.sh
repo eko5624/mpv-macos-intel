@@ -1033,6 +1033,7 @@ if build "mbedtls" "development"; then
 
   build_done "mbedtls" "development"
 fi
+CONFIGURE_OPTIONS+=("--enable-mbedtls")
 
 if build "librist" "master"; then
   cd $PACKAGES
@@ -1344,8 +1345,8 @@ CONFIGURE_OPTIONS+=("--enable-libzvbi")
 ## FFmpeg
 ##
 
-if build "ffmpeg" "6.0"; then
-  download "https://ffmpeg.org/releases/ffmpeg-6.0.tar.gz"
+if build "ffmpeg" "5.1.2"; then
+  download "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.gz"
   execute ./configure "${CONFIGURE_OPTIONS[@]}" \
     --disable-debug \
     --disable-doc \
@@ -1362,7 +1363,7 @@ if build "ffmpeg" "6.0"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "FFmpeg" "6.0"
+  build_done "ffmpeg" "5.1.2"
 fi
 
 if build "mpv" "master"; then
