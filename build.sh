@@ -1172,9 +1172,74 @@ if build "opus" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "opus" "1.3.1"
+  build_done "opus" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libopus")
+
+if build "libsamplerate" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/libsndfile/libsamplerate.git --branch master --depth 1
+  cd libsamplerate
+  execute ./autogen.sh
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libsamplerate" "master"
+fi
+
+if build "mpg123" "1.31.2"; then
+  download "https://www.mpg123.de/download/mpg123-1.31.2.tar.bz2"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --disable-dependency-tracking \
+    --enable-static \
+    --with-default-audio=coreaudio \
+    --with-cpu=x86-64
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "mpg123" "1.31.2"
+fi
+
+if build "flac" "master"; then
+  cd $PACKAGES
+  git clone https://gitlab.xiph.org/xiph/flac.git --branch master --depth 1
+  cd flac
+  execute ./autogen.sh
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --disable-dependency-tracking \
+    --enable-static
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "flac" "master"
+fi
+
+if build "libsndfile" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/libsndfile/libsndfile.git --branch master --depth 1
+  cd libsndfile
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_PROGRAMS=ON \
+    -DENABLE_PACKAGE_CONFIG=ON \
+    -DINSTALL_PKGCONFIG_MODULE=ON \
+    -DBUILD_EXAMPLES=OFF \
+    -DPYTHON_EXECUTABLE="${WORKSPACE}"/bin/python3
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libsndfile" "master"
+fi
 
 if build "rubberband" "default"; then
   cd $PACKAGES
@@ -1183,7 +1248,8 @@ if build "rubberband" "default"; then
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
-    --libdir="${WORKSPACE}"/lib
+    --libdir="${WORKSPACE}"/lib \
+    -Dresampler=libsamplerate
   execute meson compile -C build
   execute meson install -C build
 
