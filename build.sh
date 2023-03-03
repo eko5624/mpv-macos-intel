@@ -1347,6 +1347,7 @@ CONFIGURE_OPTIONS+=("--enable-libzvbi")
 if build "ffmpeg" "5.1.2"; then
   download "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.gz"
   execute ./configure "${CONFIGURE_OPTIONS[@]}" \
+    --disable-metal \
     --disable-debug \
     --disable-doc \
     --enable-gpl \
