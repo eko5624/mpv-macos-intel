@@ -1033,7 +1033,6 @@ if build "mbedtls" "development"; then
 
   build_done "mbedtls" "development"
 fi
-CONFIGURE_OPTIONS+=("--enable-mbedtls")
 
 if build "librist" "master"; then
   cd $PACKAGES
