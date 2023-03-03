@@ -1188,19 +1188,20 @@ if build "libsamplerate" "master"; then
   build_done "libsamplerate" "master"
 fi
 
-if build "mpg123" "1.31.2"; then
-  download "https://www.mpg123.de/download/mpg123-1.31.2.tar.bz2"
+if build "mpg123" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/madebr/mpg123.git
+  cd mpg123
+  execute autoreconf -ivf
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-debug \
-    --disable-dependency-tracking \
-    --enable-static \
     --with-default-audio=coreaudio \
     --with-cpu=x86-64
   execute make -j $MJOBS
   execute make install
 
-  build_done "mpg123" "1.31.2"
+  build_done "mpg123" "master"
 fi
 
 if build "flac" "master"; then
