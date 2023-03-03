@@ -1353,6 +1353,7 @@ if build "ffmpeg" "5.1.2"; then
     --enable-nonfree \
     --enable-shared \
     --enable-pthreads \
+    --cc=clang \
     --enable-version3 \
     --extra-cflags="${CFLAGS}" \
     --extra-ldflags="${LDFLAGS}" \
