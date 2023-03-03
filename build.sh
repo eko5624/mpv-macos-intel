@@ -1344,10 +1344,8 @@ CONFIGURE_OPTIONS+=("--enable-libzvbi")
 ## FFmpeg
 ##
 
-if build "ffmpeg" "master"; then
-  cd $PACKAGES
-  git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
-  cd FFmpeg
+if build "ffmpeg" "6.0"; then
+  download "https://ffmpeg.org/releases/ffmpeg-6.0.tar.gz"
   execute ./configure "${CONFIGURE_OPTIONS[@]}" \
     --disable-debug \
     --disable-doc \
@@ -1364,7 +1362,7 @@ if build "ffmpeg" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "FFmpeg" "master"
+  build_done "FFmpeg" "6.0"
 fi
 
 if build "mpv" "master"; then
