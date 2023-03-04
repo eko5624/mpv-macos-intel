@@ -573,22 +573,6 @@ if build "mujs" "master"; then
   build_done "mujs" "master"
 fi
 
-if build "libsdl" "main"; then
-  cd $PACKAGES
-  git clone https://github.com/libsdl-org/SDL.git --branch SDL2 --depth 1
-  cd SDL
-  make_dir build
-  cd build || exit  
-  execute cmake ../ \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "libsdl" "main"
-fi
-
 if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git
@@ -1188,6 +1172,34 @@ if build "libsamplerate" "master"; then
   build_done "libsamplerate" "master"
 fi
 
+if build "mpg123" "1.31.2"; then
+  download "https://www.mpg123.de/download/mpg123-1.31.2.tar.bz2"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --disable-dependency-tracking
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "mpg123" "1.31.2"
+fi
+
+if build "flac" "master"; then
+  cd $PACKAGES
+  git clone https://gitlab.xiph.org/xiph/flac.git --branch master --depth 1
+  cd flac
+  execute ./autogen.sh
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --disable-dependency-tracking \
+    --enable-static
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "flac" "master"
+fi
+
 if build "libsndfile" "master"; then
   cd $PACKAGES
   git clone https://github.com/libsndfile/libsndfile.git --branch master --depth 1
@@ -1225,6 +1237,22 @@ if build "rubberband" "default"; then
   build_done "rubberband" "default"
 fi 
 CONFIGURE_OPTIONS+=("--enable-librubberband")
+
+if build "libsdl" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/libsdl-org/SDL.git --branch main --depth 1
+  cd SDL
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libsdl" "main"
+fi
 
 if build "snappy" "main"; then
   cd $PACKAGES
