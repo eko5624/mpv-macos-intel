@@ -1177,7 +1177,12 @@ if build "mpg123" "1.31.2"; then
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-debug \
-    --disable-dependency-tracking
+    --disable-dependency-tracking \
+    --enable-static \
+    --with-default-audio=coreaudio \
+    --with-cpu=x86-64
+    
+    
   execute make -j $MJOBS
   execute make install
 
