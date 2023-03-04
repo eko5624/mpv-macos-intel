@@ -64,6 +64,8 @@ jobs:
         curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
         unzip workspace-dir.zip
         unzip packages-dir.zip
+        rm packages/libsdl.done || true
+        rm -rf packages/SDL || true        
         rm packages/rubberband.done || true
         rm -rf packages/rubberband || true        
         rm packages/FFmpeg.done || true
