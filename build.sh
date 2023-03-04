@@ -1188,38 +1188,6 @@ if build "libsamplerate" "master"; then
   build_done "libsamplerate" "master"
 fi
 
-if build "mpg123" "master"; then
-  cd $PACKAGES
-  git clone https://github.com/madebr/mpg123.git
-  cd mpg123
-  execute autoreconf -ivf
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --disable-debug \
-    --with-default-audio=coreaudio \
-    --with-cpu=x86-64
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "mpg123" "master"
-fi
-
-if build "flac" "master"; then
-  cd $PACKAGES
-  git clone https://gitlab.xiph.org/xiph/flac.git --branch master --depth 1
-  cd flac
-  execute ./autogen.sh
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --disable-debug \
-    --disable-dependency-tracking \
-    --enable-static
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "flac" "master"
-fi
-
 if build "libsndfile" "master"; then
   cd $PACKAGES
   git clone https://github.com/libsndfile/libsndfile.git --branch master --depth 1
