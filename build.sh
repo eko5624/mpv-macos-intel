@@ -1232,21 +1232,21 @@ if build "libsndfile" "master"; then
   build_done "libsndfile" "master"
 fi
 
-if build "rubberband" "default"; then
-  cd $PACKAGES
-  git clone https://github.com/breakfastquay/rubberband.git --branch default --depth 1
-  cd rubberband
-  execute meson setup build \
-    --prefix="${WORKSPACE}" \
-    --buildtype=release \
-    --libdir="${WORKSPACE}"/lib \
-    -Dresampler=libsamplerate
-  execute meson compile -C build
-  execute meson install -C build
-
-  build_done "rubberband" "default"
-fi 
-CONFIGURE_OPTIONS+=("--enable-librubberband")
+#if build "rubberband" "default"; then
+#  cd $PACKAGES
+#  git clone https://github.com/breakfastquay/rubberband.git --branch default --depth 1
+#  cd rubberband
+#  execute meson setup build \
+#    --prefix="${WORKSPACE}" \
+#    --buildtype=release \
+#    --libdir="${WORKSPACE}"/lib \
+#    -Dresampler=libsamplerate
+#  execute meson compile -C build
+#  execute meson install -C build
+#
+#  build_done "rubberband" "default"
+#fi 
+#CONFIGURE_OPTIONS+=("--enable-librubberband")
 
 if build "libsdl" "main"; then
   cd $PACKAGES
