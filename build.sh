@@ -799,8 +799,13 @@ CONFIGURE_OPTIONS+=("--enable-libbluray")
 
 if build "lame" "3.100"; then
   download "http://downloads.sourceforge.net/lame/lame-3.100.tar.gz" "lame-3.100.tar.gz"
+  # Fix undefined symbol error _lame_init_old
+  # https://sourceforge.net/p/lame/mailman/message/36081038/
   sed -i "" '/lame_init_old/d' include/libmp3lame.sym
-  execute ./configure --prefix="${WORKSPACE}"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --enable-nasm
   execute make -j $MJOBS
   execute make install
 
