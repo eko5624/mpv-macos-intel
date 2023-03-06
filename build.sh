@@ -575,10 +575,9 @@ fi
 
 if build "libdovi" "main"; then
   cd $PACKAGES
-  export PATH="$WORKSPACE/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
-  if ! command_exists "rustup"; then
-    export RUSTUP_HOME="${WORKSPACE}"
-    export CARGO_HOME="${WORKSPACE}"
+  if ! command_exists "$WORKSPACE/.cargo/bin/rustup"; then
+    export RUSTUP_HOME="${WORKSPACE}"/.rustup
+    export CARGO_HOME="${WORKSPACE}"/.cargo
     curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none --no-modify-path  
     rustup toolchain install stable-x86_64-apple-darwin --profile minimal 
     curl -OL https://github.com/lu-zero/cargo-c/releases/download/v0.9.16/cargo-c-macos.zip
@@ -587,8 +586,9 @@ if build "libdovi" "main"; then
   git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
   cd dovi_tool/dolby_vision
   mkdir build
+  export PATH="$WORKSPACE/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
   export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-  cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
+  execute cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
   build_done "libdovi" "main"
 fi
 
