@@ -1,6 +1,5 @@
 #!/bin/bash
 
-PROGNAME=$(basename "$0")
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PACKAGES="$DIR/packages"
 WORKSPACE="$DIR/workspace"
@@ -568,7 +567,6 @@ if build "mujs" "master"; then
   cd $PACKAGES
   git clone https://github.com/ccxvii/mujs.git --branch master --depth 1
   cd mujs
-  execute make -j $MJOBS release
   execute make prefix="${WORKSPACE}" install
   build_done "mujs" "master"
 fi
