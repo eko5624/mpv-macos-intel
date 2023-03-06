@@ -8,17 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-11
     env:
       CC: clang
       CXX: clang++
       MACOSX_DEPLOYMENT_TARGET: 10.13
-      SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      MACOS_SDK: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SDK_PATH: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
-      EXTRA_CFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_LDFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SDKROOT: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      MACOS_SDK: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SDK_PATH: "/Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
+      EXTRA_CFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_LDFLAGS: "-mmacosx-version-min=10.13 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SWIFT_FLAGS: "-target x86_64-apple-macosx10.13"
       SWIFT_PATH: "/Library/Developer/Toolchains/swift-latest.xctoolchain"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
@@ -34,18 +34,18 @@ jobs:
         sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
         sudo rm -rf $SDK_PATH/MacOSX.sdk
         sudo ln -s $SDK_PATH/MacOSX10.13.sdk $SDK_PATH/MacOSX.sdk
-        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.13" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.13" /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
     - name: Install Swift 4.x toolchain
       run: |
         curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
         sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
-    - name: Switch to Xcode 14.2
+    - name: Switch to Xcode 12.5.1
       id: xcode1251
       run: |
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer  
+        sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer  
  
     - name: Remove stray upstream python binary symlinks under /usr/local
       run: |
