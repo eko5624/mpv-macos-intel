@@ -1,8 +1,6 @@
 #!/bin/bash
 
 PROGNAME=$(basename "$0")
-FFMPEG_VERSION=5.1.2
-SCRIPT_VERSION=1.43
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PACKAGES="$DIR/packages"
 WORKSPACE="$DIR/workspace"
@@ -266,7 +264,7 @@ if build "openssl" "1.1.1t"; then
   fi
   execute make -j $MJOBS
   execute make install_sw
-  build_done "openssl" "1.1.1t"
+  build_done "openssl" "1.1.1s"
 fi
 CONFIGURE_OPTIONS+=("--enable-openssl")
 
@@ -377,7 +375,7 @@ CONFIGURE_OPTIONS+=("--enable-libxml2")
 if build "gettext" "0.21.1"; then
   download "https://ftpmirror.gnu.org/gettext/gettext-0.21.1.tar.gz"
   execute ./configure \
-    --prefix="${WORKSPACE}" \
+    --prefix="${WORKSPACE}"
     --disable-java \
     --disable-csharp \
     --without-git \
@@ -467,7 +465,7 @@ fi
 if build "libX11" "1.8.4"; then
   download "https://www.x.org/archive/individual/lib/libX11-1.8.4.tar.gz"
   export LC_ALL=""
-  export LC_CTYPE="C"
+  export LC_CTYPE="C"  
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
@@ -575,20 +573,23 @@ if build "mujs" "master"; then
   build_done "mujs" "master"
 fi
 
-if build "libsdl" "main"; then
+if build "libdovi" "main"; then
   cd $PACKAGES
-  git clone https://github.com/libsdl-org/SDL.git --branch SDL2 --depth 1
-  cd SDL
-  make_dir build
-  cd build || exit  
-  execute cmake ../ \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "libsdl" "main"
+  export PATH="$WORKSPACE/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
+  if ! command_exists "rustup"; then
+    export RUSTUP_HOME="${WORKSPACE}"
+    export CARGO_HOME="${WORKSPACE}"
+    curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none --no-modify-path  
+    rustup toolchain install stable-x86_64-apple-darwin --profile minimal 
+    curl -OL https://github.com/lu-zero/cargo-c/releases/download/v0.9.16/cargo-c-macos.zip
+    unzip cargo-c-macos.zip -d "${WORKSPACE}"/toolchains/stable-x86_64-apple-darwin/bin
+  fi  
+  git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
+  cd dovi_tool/dolby_vision
+  mkdir build
+  export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+  cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
+  build_done "libdovi" "main"
 fi
 
 if build "libplacebo" "master"; then
@@ -599,7 +600,8 @@ if build "libplacebo" "master"; then
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=disabled \
-    -Ddemos=false
+    -Dlibdovi=enabled \
+    -Ddemos=false 
   execute meson compile -C build
   execute meson install -C build
 
@@ -817,8 +819,13 @@ CONFIGURE_OPTIONS+=("--enable-libbluray")
 
 if build "lame" "3.100"; then
   download "http://downloads.sourceforge.net/lame/lame-3.100.tar.gz" "lame-3.100.tar.gz"
+  # Fix undefined symbol error _lame_init_old
+  # https://sourceforge.net/p/lame/mailman/message/36081038/
   sed -i "" '/lame_init_old/d' include/libmp3lame.sym
-  execute ./configure --prefix="${WORKSPACE}"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --enable-nasm
   execute make -j $MJOBS
   execute make install
 
@@ -884,9 +891,6 @@ if build "brotli" "master"; then
   cd $PACKAGES
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
-  #fix utimensat is only available on macOS 10.13 or newer.
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/fix-utimensat.patch
-  execute patch -p1 -i fix-utimensat.patch
   make_dir out
   cd out || exit  
   execute cmake ../ \
@@ -926,8 +930,6 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/libjxl-fix-exclude-libs.patch
-  execute patch -p1 -i libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
@@ -1174,9 +1176,74 @@ if build "opus" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "opus" "1.3.1"
+  build_done "opus" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libopus")
+
+if build "libsamplerate" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/libsndfile/libsamplerate.git --branch master --depth 1
+  cd libsamplerate
+  execute ./autogen.sh
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libsamplerate" "master"
+fi
+
+if build "mpg123" "1.31.2"; then
+  download "https://www.mpg123.de/download/mpg123-1.31.2.tar.bz2"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --disable-dependency-tracking \
+    --enable-static \
+    --with-default-audio=coreaudio \
+    --with-cpu=x86-64    
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "mpg123" "1.31.2"
+fi
+
+if build "flac" "master"; then
+  cd $PACKAGES
+  git clone https://gitlab.xiph.org/xiph/flac.git --branch master --depth 1
+  cd flac
+  execute ./autogen.sh
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --disable-debug \
+    --disable-dependency-tracking \
+    --enable-static
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "flac" "master"
+fi
+
+if build "libsndfile" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/libsndfile/libsndfile.git --branch master --depth 1
+  cd libsndfile
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_PROGRAMS=ON \
+    -DENABLE_PACKAGE_CONFIG=ON \
+    -DINSTALL_PKGCONFIG_MODULE=ON \
+    -DBUILD_EXAMPLES=OFF \
+    -DPYTHON_EXECUTABLE="${WORKSPACE}"/bin/python3
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libsndfile" "master"
+fi
 
 if build "rubberband" "default"; then
   cd $PACKAGES
@@ -1185,13 +1252,30 @@ if build "rubberband" "default"; then
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
-    --libdir="${WORKSPACE}"/lib
+    --libdir="${WORKSPACE}"/lib \
+    -Dresampler=libsamplerate
   execute meson compile -C build
   execute meson install -C build
 
   build_done "rubberband" "default"
 fi 
 CONFIGURE_OPTIONS+=("--enable-librubberband")
+
+if build "libsdl" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/libsdl-org/SDL.git --branch main --depth 1
+  cd SDL
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "libsdl" "main"
+fi
 
 if build "snappy" "main"; then
   cd $PACKAGES
