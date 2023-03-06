@@ -573,6 +573,25 @@ if build "mujs" "master"; then
   build_done "mujs" "master"
 fi
 
+if build "libdovi" "main"; then
+  cd $PACKAGES
+  export PATH="$WORKSPACE/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
+  if ! command_exists "rustup"; then
+    export RUSTUP_HOME="${WORKSPACE}"
+    export CARGO_HOME="${WORKSPACE}"
+    curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none --no-modify-path  
+    rustup toolchain install stable-x86_64-apple-darwin --profile minimal 
+    curl -OL https://github.com/lu-zero/cargo-c/releases/download/v0.9.16/cargo-c-macos.zip
+    unzip cargo-c-macos.zip -d "${WORKSPACE}"/toolchains/stable-x86_64-apple-darwin/bin
+  fi  
+  git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
+  cd dovi_tool/dolby_vision
+  mkdir build
+  export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+  cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
+  build_done "libdovi" "main"
+fi
+
 if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git
@@ -581,6 +600,7 @@ if build "libplacebo" "master"; then
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=disabled \
+    -Dlibdovi=enabled \
     -Ddemos=false
   execute meson compile -C build
   execute meson install -C build
