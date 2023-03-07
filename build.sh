@@ -568,7 +568,6 @@ if build "mujs" "master"; then
   git clone https://github.com/ccxvii/mujs.git --branch master --depth 1
   cd mujs
   execute make release
-  execute make prefix="${WORKSPACE}" install
   execute make prefix="${WORKSPACE}" install-shared
   build_done "mujs" "master"
 fi
