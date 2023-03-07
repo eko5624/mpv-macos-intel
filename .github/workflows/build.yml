@@ -31,7 +31,7 @@ jobs:
       run: |
         #curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
         tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
-        sudo rm -rf $SDK_PATH/MacOSX11.3.sdk
+        sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
         sudo rm -rf $SDK_PATH/MacOSX.sdk
         sudo ln -s $SDK_PATH/MacOSX10.14.sdk $SDK_PATH/MacOSX.sdk
         sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.14" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
@@ -42,7 +42,6 @@ jobs:
         sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
     - name: Switch to Xcode 14.2
-      id: xcode1251
       run: |
         sudo xcode-select --reset
         sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer  
