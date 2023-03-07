@@ -892,8 +892,8 @@ if build "brotli" "master"; then
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
   #fix utimensat is only available on macOS 10.13 or newer.
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/fix-utimensat.patch
-  execute patch -p1 -i fix-utimensat.patch
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/brotli-fix-utimensat.patch
+  execute patch -p1 -i brotli-fix-utimensat.patch
   make_dir out
   cd out || exit  
   execute cmake ../ \
@@ -1480,13 +1480,6 @@ if build "mpv" "master"; then
     -Dmanpage-build=disabled \
     -Dswift-flags="-target x86_64-apple-macos10.11"
   meson compile -C build
-  
-  # fix can't find libvpx.8.dylib 
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
-  python3 TOOLS/osxbundle.py build/mpv
 
   build_done "mpv" "master"
 fi
