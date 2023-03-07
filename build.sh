@@ -1478,7 +1478,7 @@ if build "mpv" "master"; then
   install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
   install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
   install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
-  python3 TOOLS/osxbundle.py build/mpv
-
+  install_name_tool -change "/usr/local/opt/little-cms2/lib/liblcms2.2.dylib" "$WORKSPACE/lib/liblcms2.2.dylib" "$WORKSPACE/lib/libjxl.dylib"
+  
   build_done "mpv" "master"
 fi
