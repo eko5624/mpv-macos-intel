@@ -1467,7 +1467,6 @@ if build "mpv" "master"; then
     --libdir="${WORKSPACE}"/lib \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
-    -Dmacos-media-player=disabled \
     -Dmanpage-build=disabled \
     -Dswift-flags="-target x86_64-apple-macos10.13"
   meson compile -C build
