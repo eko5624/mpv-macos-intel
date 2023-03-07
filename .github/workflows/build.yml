@@ -41,7 +41,7 @@ jobs:
         curl -ksJLO https://download.swift.org/swift-4.2.4-release/xcode/swift-4.2.4-RELEASE/swift-4.2.4-RELEASE-osx.pkg
         sudo installer -pkg swift-4.2.4-RELEASE-osx.pkg -target /
 
-    - name: Switch to Xcode 12.5.1
+    - name: Switch to Xcode 14.2
       id: xcode1251
       run: |
         sudo xcode-select --reset
@@ -69,11 +69,17 @@ jobs:
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
        
-    - name: build
+    - name: build mpv
       continue-on-error: true
       run: |
         chmod +x ./build.sh
         ./build.sh
+        
+    - name: bundle mpv
+      continue-on-error: true
+      run: |
+        chmod +x ./build.sh
+        ./bundle.sh        
 
     - name: Zip binary packages 
       continue-on-error: true
