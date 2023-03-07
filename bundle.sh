@@ -12,7 +12,7 @@ cp $PACKAGES/mpv/build/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS
 ln -s $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv-bundle
 
 mpv_otool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
-
+#echo "${mpv_otool[@]}" > $PACKAGES/mpv/build/mpv_otool
 
 mpv_dylibs_otool=()
 for dylib in "${mpv_otool[@]}"; do
@@ -20,6 +20,7 @@ for dylib in "${mpv_otool[@]}"; do
 	mpv_dylibs_otool+=("${mpv_dylib_otool[@]}")
 done
 mpv_dylibs_otool=($(echo "${mpv_dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+#echo "${mpv_dylibs_otool[@]}" > $PACKAGES/mpv/build/mpv_dylibs_otool
 
 dylibs_otool=()
 for dylib in "${mpv_dylibs_otool[@]}"; do
@@ -27,9 +28,11 @@ for dylib in "${mpv_dylibs_otool[@]}"; do
 	dylibs_otool+=("${dylib_otool[@]}")
 done	
 dylibs_otool=($(echo "${dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+#echo "${dylibs_otool[@]}" > $PACKAGES/mpv/build/dylibs_otool
 
 all_dylibs=(${mpv_otool[@]} ${mpv_dylibs_otool[@]} ${dylibs_otool[@]})
 all_dylibs=($(echo "${all_dylibs[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+#echo "${all_dylibs[@]}" > $PACKAGES/mpv/build/all_dylibs
 
 for f in "${all_dylibs[@]}"; do
   find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
@@ -40,7 +43,6 @@ install_name_tool -delete_rpath $RUNNER_WORKSPACE/lib $PACKAGES/mpv/build/mpv.ap
 
 #add rpath
 install_name_tool -add_rpath @executable_path/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
-
 
 for dylib in "${mpv_otool[@]}"; do
 	install_name_tool -change $RUNNER_WORKSPACE/lib/$dylib @executable_path/lib/$dylib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv;
@@ -54,7 +56,7 @@ for dylib in "${all_dylibs[@]}"; do
   done 
 done
 
-#fix can't find libvpx.8.dylib 
+#fix libvpx.8.dylib liblcms2.2
 install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
 install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
 install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
