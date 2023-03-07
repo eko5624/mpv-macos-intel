@@ -29,7 +29,7 @@ jobs:
       
     - name: Switch to MacOSX 10.14 SDK
       run: |
-        #curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
+        curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.14.sdk.tar.xz
         tar -C $SDK_PATH -xf MacOSX10.14.sdk.tar.xz
         sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
         sudo rm -rf $SDK_PATH/MacOSX.sdk
