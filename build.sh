@@ -1281,8 +1281,9 @@ if build "snappy" "main"; then
   cd $PACKAGES
   git clone --recursive https://github.com/google/snappy.git --branch main --depth 1
   cd snappy
-  curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/128.patch
-  execute patch -p1 -i 128.patch
+  #Fixed comparison between signed and unsigned integer
+  curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/34.patch
+  execute patch -p1 -i 34.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
