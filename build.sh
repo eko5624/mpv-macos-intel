@@ -569,21 +569,20 @@ if build "mujs" "master"; then
   git clone https://github.com/ccxvii/mujs.git --branch master --depth 1
   cd mujs
   execute make -j $MJOBS release
-  execute make prefix="${WORKSPACE}" install
+  execute make prefix="${WORKSPACE}" install-shared
   build_done "mujs" "master"
 fi
 
 if build "libdovi" "main"; then
   cd $PACKAGES
-  export PATH="$WORKSPACE/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
-  if ! command_exists "rustup"; then
-    export RUSTUP_HOME="${WORKSPACE}"
-    export CARGO_HOME="${WORKSPACE}"
-    curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none --no-modify-path  
-    rustup toolchain install stable-x86_64-apple-darwin --profile minimal 
+  if [ ! -d "$WORKSPACE/.cargo" ]; then
+    export RUSTUP_HOME="${WORKSPACE}"/.rustup
+    export CARGO_HOME="${WORKSPACE}"/.cargo
+    curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain stable --target x86_64-apple-darwin --no-modify-path
     curl -OL https://github.com/lu-zero/cargo-c/releases/download/v0.9.16/cargo-c-macos.zip
-    unzip cargo-c-macos.zip -d "${WORKSPACE}"/toolchains/stable-x86_64-apple-darwin/bin
-  fi  
+    unzip cargo-c-macos.zip -d "$WORKSPACE/.rustup/toolchains/stable-x86_64-apple-darwin/bin"
+  fi
+  $WORKSPACE/.cargo/bin/rustup default stable-x86_64-apple-darwin 
   git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
   cd dovi_tool/dolby_vision
   mkdir build
