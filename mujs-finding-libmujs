@@ -1,0 +1,21 @@
+From 1340957be0ab45ed8c37df22d17a9a1bd23cf474 Mon Sep 17 00:00:00 2001
+From: eko5624 <562433403@qq.com>
+Date: Wed, 8 Mar 2023 17:51:53 +0800
+Subject: [PATCH] finding libmujs.a
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 24049d3..ba31b88 100644
+--- a/Makefile
++++ b/Makefile
+@@ -99,7 +99,7 @@ build/release/libmujs.o: one.c $(SRCS) $(HDRS)
+ build/release/libmujs.a: build/release/libmujs.o
+ 	$(AR) cr $@ $^
+ build/release/mujs: main.c build/release/libmujs.o
+-	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm -DHAVE_READLINE -lreadline
++	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm
+ build/release/mujs-pp: pp.c build/release/libmujs.o
+ 	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm
