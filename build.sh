@@ -567,6 +567,8 @@ if build "mujs" "master"; then
   cd $PACKAGES
   git clone https://github.com/ccxvii/mujs.git --branch master --depth 1
   cd mujs
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/mujs-finding-libmujs.patch
+  execute patch -p1 -i mujs-finding-libmujs.patch
   execute make release
   execute make prefix="${WORKSPACE}" install-shared
   build_done "mujs" "master"
