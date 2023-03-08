@@ -566,6 +566,7 @@ fi
 if build "mujs" "master"; then
   cd $PACKAGES
   git clone https://github.com/ccxvii/mujs.git
+  #workaround can't find libmujs.a
   git checkout -b master d592c785c0b2f9fea982ac3fe7b88fdd7c4817fc
   cd mujs
   execute make release
