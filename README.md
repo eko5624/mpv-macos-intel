@@ -10,7 +10,7 @@ This repository provides unofficial git desktop builds of [mpv-player/mpv](https
 | :------------- | -------------: | :-------------: |
 | Ventura | 13.0 | 🟢 |
 | Monterey | 12.0 | 🟢 |
-| Big Sur | 11.0 | ❓ |
+| Big Sur | 11.0 | 🟢 |
 | Catalina | 10.15 | 🟢 |
 | Mojave | 10.14 | 🟢 |
 | High Sierra | 10.13 | 🟢 |
