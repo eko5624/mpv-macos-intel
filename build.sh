@@ -929,6 +929,7 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
+  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
