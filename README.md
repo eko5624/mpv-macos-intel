@@ -4,4 +4,19 @@
 
 This repository provides unofficial git desktop builds of [mpv-player/mpv](https://github.com/mpv-player/mpv) for macOS.
 
-It is compiled with git versions of `ffmpeg` `libass` `libplacebo`.
+### OS support
+
+| macOS | version | compatibility |
+| :------------- | -------------: | :-------------: |
+| Ventura | 13.0 | 🟢 |
+| Monterey | 12.0 | 🟢 |
+| Big Sur | 11.0 | ❓ |
+| Catalina | 10.15 | 🟢 |
+| Mojave | 10.14 | 🟢 |
+| High Sierra | 10.13 | 🟢 |
+| Sierra | 10.12 | ❌ |
+| Any older versions | < 10.12 | ❌ |
+
+* 🟢 means compatible
+* ❌ means incompatible
+* ❓ means unknown
