@@ -79,8 +79,8 @@ jobs:
     - name: bundle mpv
       continue-on-error: true
       run: |
-        chmod +x ./build.sh
-        ./bundle.sh        
+        chmod +x ./bundle.sh
+        ./bundle.sh   
 
     - name: Zip binary packages 
       continue-on-error: true
