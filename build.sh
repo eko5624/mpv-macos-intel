@@ -582,6 +582,7 @@ if build "libdovi" "main"; then
   if [ ! -d "$WORKSPACE/.rustup" ]; then
     $WORKSPACE/.cargo/bin/rustup toolchain install stable-x86_64-apple-darwin --profile minimal
   fi
+  $WORKSPACE/.cargo/bin/rustup default stable-x86_64-apple-darwin
   curl -OL https://github.com/lu-zero/cargo-c/releases/download/v0.9.16/cargo-c-macos.zip
   unzip cargo-c-macos.zip -d "$WORKSPACE/.rustup/toolchains/stable-x86_64-apple-darwin/bin"
   git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
