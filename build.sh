@@ -1277,13 +1277,11 @@ if build "libsdl" "main"; then
   build_done "libsdl" "main"
 fi
 
-if build "snappy" "main"; then
-  cd $PACKAGES
-  git clone --recursive https://github.com/google/snappy.git --branch main --depth 1
-  cd snappy
+if build "snappy" "1.1.9"; then
+  download "https://github.com/google/snappy/archive/1.1.9.tar.gz"
   #Fixed comparison between signed and unsigned integer
-  curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/34.patch
-  execute patch -p1 -i 34.patch
+  curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/128.patch
+  execute patch -p1 -i 128.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
@@ -1296,7 +1294,7 @@ if build "snappy" "main"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "snappy" "main"
+  build_done "snappy" "1.1.9"
 fi
 CONFIGURE_OPTIONS+=("--enable-libsnappy")
 
