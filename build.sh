@@ -1474,12 +1474,5 @@ if build "mpv" "master"; then
     -Dswift-flags="-target x86_64-apple-macos10.13"
   meson compile -C build
   
-  # fix can't find libvpx.8.dylib 
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
-  install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
-  install_name_tool -change "/usr/local/opt/little-cms2/lib/liblcms2.2.dylib" "$WORKSPACE/lib/liblcms2.2.dylib" "$WORKSPACE/lib/libjxl.dylib"
-  
   build_done "mpv" "master"
 fi
