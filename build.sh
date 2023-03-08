@@ -570,7 +570,7 @@ if build "mujs" "master"; then
   curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/mujs-finding-libmujs.patch
   execute patch -p1 -i mujs-finding-libmujs.patch
   execute make release
-  execute make prefix="${WORKSPACE}" install-shared
+  execute make prefix="${WORKSPACE}" install
   build_done "mujs" "master"
 fi
 
