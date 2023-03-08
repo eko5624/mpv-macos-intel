@@ -7,10 +7,17 @@ WORKSPACE=$DIR/workspace
 RUNNER_WORKSPACE=/Users/runner/work/mpv-macos-intel/mpv-macos-intel/workspace
 export PATH="${WORKSPACE}/bin:$PATH"
 
+#fix dylibs install_name  
+install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
+install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
+install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
+install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
+install_name_tool -change "/usr/local/opt/little-cms2/lib/liblcms2.2.dylib" "$WORKSPACE/lib/liblcms2.2.dylib" "$WORKSPACE/lib/libjxl.dylib"
+
 #copy all *.dylib to mpv.app
 cp -r $PACKAGES/mpv/TOOLS/osxbundle/mpv.app $PACKAGES/mpv/build
 cp $PACKAGES/mpv/build/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS
-ln -s $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv-bundle
+sudo ln -s $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv-bundle
 
 mpv_otool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
 #echo "${mpv_otool[@]}" > $PACKAGES/mpv/build/mpv_otool
@@ -70,10 +77,5 @@ for f in $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/*.dylib; do
   fi   
 done
 
-#fix dylibs install_name  
-#install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
-#install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
-#install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
-#install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
-#install_name_tool -change "/usr/local/opt/little-cms2/lib/liblcms2.2.dylib" "$WORKSPACE/lib/liblcms2.2.dylib" "$WORKSPACE/lib/libjxl.dylib"
+#fix libmujs.dylib install_name
 install_name_tool -change "build/release/libmujs.dylib" "@executable_path/lib/libmujs.dylib"  "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv"
