@@ -5,7 +5,6 @@ PACKAGES=$DIR/packages
 WORKSPACE=$DIR/workspace
 RUNNER_WORKSPACE=/Users/runner/work/mpv-macos-intel/mpv-macos-intel/workspace
 SWIFT_PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/lib/swift/macosx
-export PATH="${WORKSPACE}/bin:$PATH"
 
 #fix dylibs install_name  
 install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
@@ -13,6 +12,7 @@ install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WOR
 install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
 install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
 install_name_tool -change "/usr/local/opt/little-cms2/lib/liblcms2.2.dylib" "$WORKSPACE/lib/liblcms2.2.dylib" "$WORKSPACE/lib/libjxl.dylib"
+install_name_tool -change "build/release/libmujs.dylib" "@executable_path/lib/libmujs.dylib"  "$PACKAGES/mpv/build/mpv"
 
 #copy all *.dylib to mpv.app
 cp -r $PACKAGES/mpv/TOOLS/osxbundle/mpv.app $PACKAGES/mpv/build
@@ -80,6 +80,3 @@ for f in $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/*.dylib; do
     done
   fi   
 done
-
-#fix libmujs.dylib install_name
-install_name_tool -change "build/release/libmujs.dylib" "@executable_path/lib/libmujs.dylib"  "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv"
