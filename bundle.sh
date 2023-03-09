@@ -4,6 +4,7 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PACKAGES=$DIR/packages
 WORKSPACE=$DIR/workspace
 RUNNER_WORKSPACE=/Users/runner/work/mpv-macos-intel/mpv-macos-intel/workspace
+SWIFT_PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/lib/swift/macosx
 export PATH="${WORKSPACE}/bin:$PATH"
 
 #fix dylibs install_name  
@@ -52,7 +53,11 @@ all_dylibs=($(echo "${all_dylibs[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 #echo "${all_dylibs[@]}" > $PACKAGES/mpv/build/all_dylibs
 
 for f in "${all_dylibs[@]}"; do
-  find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
+  if [[ "$(basename $f)" != "libswift"* ]]; then
+    find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
+  else  
+    find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
+  fi  
 done
 
 #remove rpath
