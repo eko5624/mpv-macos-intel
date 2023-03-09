@@ -45,20 +45,13 @@ install_name_tool -delete_rpath $RUNNER_WORKSPACE/lib $PACKAGES/mpv/build/mpv.ap
 install_name_tool -add_rpath @executable_path/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 
 for dylib in "${mpv_otool[@]}"; do
-	install_name_tool -change $RUNNER_WORKSPACE/lib/$dylib @executable_path/lib/$dylib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv;
+	install_name_tool -change $dylib @executable_path/lib/$(basename $dylib) $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 done
 
-for dylib in "${all_dylibs[@]}"; do
-  install_name_tool -id "@executable_path/lib/$dylib" "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/$dylib"
-	dylib_tool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/$dylib | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
-	for dylib_dylib in "${dylib_tool[@]}"; do
-		install_name_tool -change $RUNNER_WORKSPACE/lib/$dylib_dylib @executable_path/lib/$dylib_dylib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/$dylib
+for f in $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/*.dylib; do
+  install_name_tool -id "@executable_path/lib/$(basename $f)" "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/$(basename $f)"
+  dylib_tool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/$(basename $f) | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
+  for dylib in "${dylib_tool[@]}"; do
+    install_name_tool -change $dylib @executable_path/lib/$(basename $dylib) $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/$(basename $f)
   done 
 done
-
-#fix libvpx.8.dylib liblcms2.2
-install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavcodec.dylib"
-install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavdevice.dylib"
-install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavfilter.dylib"
-install_name_tool -change "libvpx.8.dylib" "$WORKSPACE/lib/libvpx.8.dylib" "$WORKSPACE/lib/libavformat.dylib"
-install_name_tool -change "/usr/local/opt/little-cms2/lib/liblcms2.2.dylib" "$WORKSPACE/lib/liblcms2.2.dylib" "$WORKSPACE/lib/libjxl.dylib"
