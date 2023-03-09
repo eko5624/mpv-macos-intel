@@ -20,10 +20,8 @@ jobs:
       EXTRA_CXXFLAGS: "-mmacosx-version-min=10.11 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       EXTRA_LDFLAGS: "-mmacosx-version-min=10.11 -isysroot /Applications/Xcode_12.5.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
       SWIFT_FLAGS: "-target x86_64-apple-macosx10.11"
-      SWIFT_PATH: "/Library/Developer/Toolchains/swift-latest.xctoolchain"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
-    steps:
-    
+    steps:    
     - name: Checkout
       uses: actions/checkout@main
       
@@ -92,25 +90,6 @@ jobs:
         rm -rf workspace/etc
         rm -rf workspace/man
         rm -rf workspace/var
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAVFoundation.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftAppKit.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCore.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreAudio.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreData.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreFoundation.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreGraphics.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreImage.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftCoreMedia.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDarwin.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftDispatch.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftFoundation.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftIOKit.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftMetal.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftObjectiveC.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftQuartzCore.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftXPC.dylib workspace/lib || true
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftos.dylib workspace/lib || true        
-        sudo cp $SWIFT_PATH/usr/lib/swift/macosx/libswiftsimd.dylib workspace/lib || true
         zip -r -y workspace-dir.zip workspace/
         rm -rf packages2 && mkdir packages2
         mv packages/mpv packages2 || true     
