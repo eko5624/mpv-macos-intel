@@ -4,7 +4,6 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PACKAGES=$DIR/packages
 WORKSPACE=$DIR/workspace
 RUNNER_WORKSPACE=/Users/runner/work/mpv-macos-intel/mpv-macos-intel/workspace
-export PATH="${WORKSPACE}/bin:$PATH"
 
 #copy all *.dylib to mpv.app
 cp -r $PACKAGES/mpv/TOOLS/osxbundle/mpv.app $PACKAGES/mpv/build
