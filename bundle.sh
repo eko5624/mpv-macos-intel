@@ -56,7 +56,7 @@ for f in "${all_dylibs[@]}"; do
   if [[ "$(basename $f)" != "libswift"* ]]; then
     find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
   else  
-    find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
+    find $SWIFT_PATH -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
   fi  
 done
 
