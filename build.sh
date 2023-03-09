@@ -566,9 +566,13 @@ fi
 
 if build "mujs" "master"; then
   cd $PACKAGES
-  git clone https://github.com/ccxvii/mujs.git --branch master --depth 1
+  git clone https://github.com/ccxvii/mujs.git --branch master
   cd mujs
-  execute make -j $MJOBS release
+  #revert to 1.3.2 for finding libmujs.a
+  git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/mujs-finding-libmujs.diff
+  execute patch -p1 -i mujs-finding-libmujs.diff
+  execute make release
   execute make prefix="${WORKSPACE}" install-shared
   build_done "mujs" "master"
 fi
@@ -891,7 +895,7 @@ if build "brotli" "master"; then
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
   #fix utimensat is only available on macOS 10.13 or newer.
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/brotli-fix-utimensat.patch
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/brotli-fix-utimensat.patch
   execute patch -p1 -i brotli-fix-utimensat.patch
   make_dir out
   cd out || exit  
@@ -932,7 +936,7 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/SDK-10.11/libjxl-fix-exclude-libs.patch
+  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/libjxl-fix-exclude-libs.patch
   execute patch -p1 -i libjxl-fix-exclude-libs.patch
   make_dir build
   cd build || exit  
