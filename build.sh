@@ -567,8 +567,8 @@ if build "mujs" "master"; then
   cd $PACKAGES
   git clone https://github.com/ccxvii/mujs.git --branch master
   cd mujs
-  #workaround can't find libmujs.a
-  git reset --hard 11385152552eac0cd03252b8d7012fac85464049
+  #revert to 1.3.2 for finding libmujs.a
+  git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
   execute make release
   execute make prefix="${WORKSPACE}" install-shared
   build_done "mujs" "master"
