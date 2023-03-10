@@ -12,17 +12,17 @@ cp $PACKAGES/mpv/build/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS
 ln -s $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv-bundle
 
 mpv_otool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
-#echo "${mpv_otool[@]}" > $PACKAGES/mpv/build/mpv_otool
+echo "${mpv_otool[@]}" > $PACKAGES/mpv/build/mpv_otool
 
 mpv_rpath=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
 
 swift_dylibs_otool=()
 for dylib in "${mpv_rpath[@]}"; do
-  swift_dylib_otool=($(otool -L $WORKSPACE/lib/$dylib | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
+  swift_dylib_otool=($(otool -L $SWIFT_PATH/$dylib | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
   swift_dylibs_otool+=("${swift_dylib_otool[@]}")
 done
 swift_dylibs_otool=($(echo "${swift_dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
-#echo "${swift_dylibs_otool[@]}" > $PACKAGES/mpv/build/swift_dylibs_otool
+echo "${swift_dylibs_otool[@]}" > $PACKAGES/mpv/build/swift_dylibs_otool
 
 mpv_dylibs_otool=()
 for dylib in "${mpv_otool[@]}"; do
@@ -30,7 +30,7 @@ for dylib in "${mpv_otool[@]}"; do
 	mpv_dylibs_otool+=("${mpv_dylib_otool[@]}")
 done
 mpv_dylibs_otool=($(echo "${mpv_dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
-#echo "${mpv_dylibs_otool[@]}" > $DIR/mpv_dylibs_otool
+echo "${mpv_dylibs_otool[@]}" > $DIR/mpv_dylibs_otool
 
 dylibs_otool=()
 for dylib in "${mpv_dylibs_otool[@]}"; do
@@ -38,11 +38,11 @@ for dylib in "${mpv_dylibs_otool[@]}"; do
 	dylibs_otool+=("${dylib_otool[@]}")
 done	
 dylibs_otool=($(echo "${dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
-#echo "${dylibs_otool[@]}" > $DIR/dylibs_otool
+echo "${dylibs_otool[@]}" > $DIR/dylibs_otool
 
 all_dylibs=(${mpv_otool[@]} ${swift_dylibs_otool[@]} ${mpv_dylibs_otool[@]} ${dylibs_otool[@]})
 all_dylibs=($(echo "${all_dylibs[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
-#echo "${all_dylibs[@]}" > $PACKAGES/mpv/build/all_dylibs
+echo "${all_dylibs[@]}" > $PACKAGES/mpv/build/all_dylibs
 
 for f in "${all_dylibs[@]}"; do
   if [[ "$(basename $f)" != "libswift"* ]]; then
