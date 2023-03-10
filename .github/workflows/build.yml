@@ -117,7 +117,7 @@ jobs:
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
         mv packages/mpv/build/mpv.app All-in-One
-        zip -r All-in-One-${{ env.date }}.zip All-in-One/*
+        zip -r -y All-in-One-${{ env.date }}.zip All-in-One/*
 
     - name: Create Release
       uses: softprops/action-gh-release@master
