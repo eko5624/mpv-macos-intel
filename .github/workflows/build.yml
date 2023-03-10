@@ -93,7 +93,7 @@ jobs:
         mv packages/*.done packages2
         rm -rf packages
         mv packages2 packages
-        zip -r packages-dir.zip packages/
+        zip -r -y packages-dir.zip packages/
         
     - name: Upload binary packages
       continue-on-error: true
