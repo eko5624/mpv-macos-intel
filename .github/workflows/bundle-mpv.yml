@@ -65,6 +65,12 @@ jobs:
         rm -rf packages/mpv
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
+
+    - name: build mpv
+      continue-on-error: true
+      run: |
+        chmod +x ./build.sh
+        ./build.sh
         
     - name: bundle mpv
       continue-on-error: true
