@@ -910,7 +910,6 @@ if build "highway" "master"; then
   cd $PACKAGES
   git clone https://github.com/google/highway.git --branch master --depth 1
   cd highway
-  sed -i "" 's/target_compile_options(hwy PUBLIC TOOLCHAIN_MISS_SYS_AUXV_H)/target_compile_definitions(hwy PUBLIC TOOLCHAIN_MISS_SYS_AUXV_H)/g' CMakeLists.txt
   make_dir out
   cd out || exit  
   execute cmake ../ \
