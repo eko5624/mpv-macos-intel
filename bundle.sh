@@ -55,7 +55,10 @@ for f in "${all_dylibs[@]}"; do
 done
 
 #remove rpath
-install_name_tool -delete_rpath /Library/Developer/Toolchains/swift-4.2.4-RELEASE.xctoolchain/usr/lib/swift/macosx $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
+rpaths_swift=($(otool -l $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -A2 LC_RPATH | grep path | grep -E "Xcode|CommandLineTools|swift" | awk '{ print $2 }'))
+for f in "${rpaths_swift[@]}"; do
+  install_name_tool -delete_rpath $f $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
+done
 install_name_tool -delete_rpath $RUNNER_WORKSPACE/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 
 #add rpath
