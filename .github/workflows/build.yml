@@ -136,7 +136,7 @@ jobs:
         git clone https://github.com/libjxl/libjxl.git --branch main
         pushd libjxl
         #temporary workaround for error: redefinition of '_mm512_cvtsi512_si32'
-        git reset 9ffdbe2
+        git reset --hard 9ffdbe2
         git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
         cmake -B build -S . \
           -DCMAKE_INSTALL_PREFIX=/usr/local \
