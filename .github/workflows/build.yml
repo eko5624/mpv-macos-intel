@@ -83,13 +83,15 @@ jobs:
       run: |
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
+        rm -rf workspace/.cargo
+        rm -rf workspace/.rustup
         rm -rf workspace/doc
         rm -rf workspace/etc
         rm -rf workspace/man
         rm -rf workspace/var
         zip -r -y workspace-dir.zip workspace/
         rm -rf packages2 && mkdir packages2
-        mv packages/mpv packages2 || true     
+        mv packages/mpv packages2 || true
         mv packages/*.done packages2
         rm -rf packages
         mv packages2 packages
