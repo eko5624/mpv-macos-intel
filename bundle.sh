@@ -17,16 +17,16 @@ mpv_otool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '
 
 mpv_dylibs_otool=()
 for dylib in "${mpv_otool[@]}"; do
-	mpv_dylib_otool=($(otool -L $WORKSPACE/lib/$dylib | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
-	mpv_dylibs_otool+=("${mpv_dylib_otool[@]}")
+  mpv_dylib_otool=($(otool -L $WORKSPACE/lib/$dylib | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
+  mpv_dylibs_otool+=("${mpv_dylib_otool[@]}")
 done
 mpv_dylibs_otool=($(echo "${mpv_dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 #echo "${mpv_dylibs_otool[@]}" > $PACKAGES/mpv/build/mpv_dylibs_otool
 
 dylibs_otool=()
 for dylib in "${mpv_dylibs_otool[@]}"; do
-	dylib_otool=($(otool -L $WORKSPACE/lib/$dylib | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
-	dylibs_otool+=("${dylib_otool[@]}")
+  dylib_otool=($(otool -L $WORKSPACE/lib/$dylib | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
+  dylibs_otool+=("${dylib_otool[@]}")
 done	
 dylibs_otool=($(echo "${dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 #echo "${dylibs_otool[@]}" > $PACKAGES/mpv/build/dylibs_otool
