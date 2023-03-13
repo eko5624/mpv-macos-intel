@@ -39,10 +39,10 @@ for f in "${all_dylibs[@]}"; do
   find $WORKSPACE/lib -name "$f" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
 done
 
-#remove rpath
+#removing lib rpath
 install_name_tool -delete_rpath $RUNNER_WORKSPACE/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 
-#add rpath
+#setting additional rpath for swift libraries
 install_name_tool -add_rpath @executable_path/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 
 for dylib in "${mpv_otool[@]}"; do
