@@ -1046,8 +1046,10 @@ fi
 
 if build "librist" "master"; then
   cd $PACKAGES
-  git clone https://code.videolan.org/rist/librist.git --branch master --depth 1
+  git clone https://code.videolan.org/rist/librist.git --branch master
   cd librist
+  #temporary workaround for error: use of undeclared identifier 'SO_BINDTODEVICE'
+  git reset --hard 10231fc9050ca0912b452f6cf297c231bcd59ccd  
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
