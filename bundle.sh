@@ -46,7 +46,7 @@ install_name_tool -delete_rpath $RUNNER_WORKSPACE/lib $PACKAGES/mpv/build/mpv.ap
 install_name_tool -add_rpath @executable_path/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 
 for dylib in "${mpv_otool[@]}"; do
-	install_name_tool -change $dylib @executable_path/lib/$(basename $dylib) $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
+  install_name_tool -change $dylib @executable_path/lib/$(basename $dylib) $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 done
 
 for f in $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib/*.dylib; do
