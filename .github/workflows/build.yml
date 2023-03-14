@@ -258,7 +258,24 @@ jobs:
         # Another workaround
         # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
         # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
+
+    - name: Zip binary packages 
+      continue-on-error: true
+      run: |
+        rm mpv-dir.zip || true
+        zip -r -y mpv-dir.zip mpv/
         
+    - name: Upload binary packages
+      continue-on-error: true
+      uses: softprops/action-gh-release@master
+      with:
+        tag_name: binary-packages
+        name: binary-packages
+        files: |
+          mpv-dir.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Get current timestamp
       run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
