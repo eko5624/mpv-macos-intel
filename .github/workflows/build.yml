@@ -230,43 +230,35 @@ jobs:
         make install
         popd
         rm -rf FFmpeg
-              
-    - name: Checkout mpv-player/mpv
+
+    - name: Checkout
       uses: actions/checkout@main
-      with:
-        repository: "mpv-player/mpv"
-        fetch-depth: 0
-      
-    - name: Fix bundle
-      run: |
-        curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
-        echo "Applying fix-bundle.patch"
-        patch -p1 < ./fix-bundle.patch
-
-        # Another workaround
-        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
-        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
-         
-
-    - name: Get mpv-player/mpv last version
-      id: version
-      run: echo "version=$(sh version.sh)" >> $GITHUB_ENV
-        
-    - name: Get mpv-player/mpv last commit SHA      
-      run: echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV 
       
     - name: Build mpv
       run: |
+        git clone https://github.com/mpv-player/mpv.git --branch master
+        pushd mpv
+        echo "version=$(sh version.sh)" >> $GITHUB_ENV
+        echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV
         export PKG_CONFIG_PATH=`brew --prefix zlib`/lib/pkgconfig/:$PKG_CONFIG_PATH
         export PKG_CONFIG_PATH=`brew --prefix luajit-openresty`/lib/pkgconfig/:$PKG_CONFIG_PATH
         export PKG_CONFIG_PATH=`brew --prefix libarchive`/lib/pkgconfig/:$PKG_CONFIG_PATH
         meson setup build
         meson compile -C build
-
+        popd
+      
     - name: Bundle mpv
       run: |
-        python3 TOOLS/osxbundle.py build/mpv
+        #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
+        #echo "Applying fix-bundle.patch"
+        #patch -p1 < ./fix-bundle.patch
+        chmod +x ./bundle.sh
+        ./bundle.sh
 
+        # Another workaround
+        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
+        # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlienc.1.dylib"
+        
     - name: Get current timestamp
       run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
