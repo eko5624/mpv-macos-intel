@@ -1,4 +1,4 @@
-set -x
+#set -x
 
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PACKAGES=$DIR
