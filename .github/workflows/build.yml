@@ -60,9 +60,6 @@ jobs:
         for dep in "${ffmpeg_deps[@]}"; do
             brew install --overwrite $dep;
         done
-    - name: Check python3 version
-      run: |  
-        /usr/local/bin/python3 -V
       
     - name: Install libzvbi
       run: |
@@ -238,7 +235,6 @@ jobs:
       run: |
         git clone https://github.com/mpv-player/mpv.git --branch master
         pushd mpv
-        echo "version=$(sh version.sh)" >> $GITHUB_ENV
         echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV
         export PKG_CONFIG_PATH=`brew --prefix zlib`/lib/pkgconfig/:$PKG_CONFIG_PATH
         export PKG_CONFIG_PATH=`brew --prefix luajit-openresty`/lib/pkgconfig/:$PKG_CONFIG_PATH
@@ -285,7 +281,6 @@ jobs:
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
-        mv build/mpv All-in-One
         mv build/mpv.app All-in-One
         zip -r All-in-One-${{ env.date }}.zip All-in-One/*
 
