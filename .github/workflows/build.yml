@@ -242,7 +242,13 @@ jobs:
         meson setup build
         meson compile -C build
         popd
-        
+ 
+    - name: Bundle mpv
+      continue-on-error: true
+      run: |
+        chmod +x ./bundle.sh
+        ./bundle.sh
+ 
     - name: Zip binary packages 
       continue-on-error: true
       run: |
@@ -260,13 +266,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
       
-    - name: Bundle mpv
-      run: |
+    #- name: Bundle mpv
+    #  run: |
         #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
         #echo "Applying fix-bundle.patch"
         #patch -p1 < ./fix-bundle.patch
-        chmod +x ./bundle.sh
-        ./bundle.sh
 
         # Another workaround
         # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
