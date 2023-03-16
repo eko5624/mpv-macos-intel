@@ -42,7 +42,9 @@ all_dylibs=($(echo "${all_dylibs[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 echo "${all_dylibs[@]}" > $PACKAGES/mpv/build/all_dylibs
 
 for f in "${all_dylibs[@]}"; do
-  sudo cp $f $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib || true
+  if [[ "$f" != "@loader_path"* ]]; then
+    sudo cp $f $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
+  fi
 done
 
 #removing rpath definitions towards dev tools
