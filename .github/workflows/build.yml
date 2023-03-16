@@ -247,24 +247,7 @@ jobs:
       continue-on-error: true
       run: |
         chmod +x ./bundle.sh
-        ./bundle.sh
- 
-    - name: Zip binary packages 
-      continue-on-error: true
-      run: |
-        rm mpv-dir.zip || true
-        zip -r -y mpv-dir.zip mpv/
-        
-    - name: Upload binary packages
-      continue-on-error: true
-      uses: softprops/action-gh-release@master
-      with:
-        tag_name: binary-packages
-        name: binary-packages
-        files: |
-          mpv-dir.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        ./bundle.sh       
       
     #- name: Bundle mpv
     #  run: |
