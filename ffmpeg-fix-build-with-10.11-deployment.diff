@@ -1,0 +1,220 @@
+diff --git a/libavfilter/metal/utils.h b/libavfilter/metal/utils.h
+index bd0319f63c..7350d42a35 100644
+--- a/libavfilter/metal/utils.h
++++ b/libavfilter/metal/utils.h
+@@ -20,16 +20,40 @@ 
+ #define AVFILTER_METAL_UTILS_H
+ 
+ #include <Metal/Metal.h>
++
++#include <AvailabilityMacros.h>
++
++// CoreVideo accidentally(?) preprocessor-gates Metal functionality
++// on MAC_OS_X_VERSION_MIN_REQUIRED >= 101100 (FB9816002).
++// There doesn't seem to be any particular reason for this,
++// so here we temporarily redefine it to at least that value
++// so CV will give us CVMetalTextureRef and the related functions.
++
++#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && (MAC_OS_X_VERSION_MIN_REQUIRED < 101100)
++#define ORIG_MAC_OS_X_VERSION_MIN_REQUIRED MAC_OS_X_VERSION_MIN_REQUIRED
++#undef MAC_OS_X_VERSION_MIN_REQUIRED
++#define MAC_OS_X_VERSION_MIN_REQUIRED 101100
++#endif
++
+ #include <CoreVideo/CoreVideo.h>
+ 
++#ifdef ORIG_MAC_OS_X_VERSION_MIN_REQUIRED
++#undef MAC_OS_X_VERSION_MIN_REQUIRED
++#define MAC_OS_X_VERSION_MIN_REQUIRED ORIG_MAC_OS_X_VERSION_MIN_REQUIRED
++#undef ORIG_MAC_OS_X_VERSION_MIN_REQUIRED
++#endif
++
+ void ff_metal_compute_encoder_dispatch(id<MTLDevice> device,
+                                        id<MTLComputePipelineState> pipeline,
+                                        id<MTLComputeCommandEncoder> encoder,
+-                                       NSUInteger width, NSUInteger height);
++                                       NSUInteger width, NSUInteger height)
++                                       API_AVAILABLE(macos(10.11), ios(8.0));
+ 
+ CVMetalTextureRef ff_metal_texture_from_pixbuf(void *avclass,
+                                                CVMetalTextureCacheRef textureCache,
+                                                CVPixelBufferRef pixbuf,
+                                                int plane,
+-                                               MTLPixelFormat format);
++                                               MTLPixelFormat format)
++                                               API_AVAILABLE(macos(10.11), ios(8.0));
++
+ #endif /* AVFILTER_METAL_UTILS_H */
+diff --git a/libavfilter/metal/vf_yadif_videotoolbox.metal b/libavfilter/metal/vf_yadif_videotoolbox.metal
+index 50783f2ffe..8a3d41a30f 100644
+--- a/libavfilter/metal/vf_yadif_videotoolbox.metal
++++ b/libavfilter/metal/vf_yadif_videotoolbox.metal
+@@ -26,6 +26,15 @@ 
+ 
+ using namespace metal;
+ 
++/*
++ * Version compat shims
++ */
++
++#if __METAL_VERSION__ < 210
++#define max3(x, y, z) max(x, max(y, z))
++#define min3(x, y, z) min(x, min(y, z))
++#endif
++
+ /*
+  * Parameters
+  */
+@@ -44,7 +53,7 @@  struct deintParams {
+  */
+ 
+ #define accesstype access::sample
+-const sampler s(coord::pixel);
++constexpr sampler s(coord::pixel);
+ 
+ template <typename T>
+ T tex2D(texture2d<float, access::sample> tex, uint x, uint y)
+diff --git a/libavfilter/vf_yadif_videotoolbox.m b/libavfilter/vf_yadif_videotoolbox.m
+index 65f155982e..455745817f 100644
+--- a/libavfilter/vf_yadif_videotoolbox.m
++++ b/libavfilter/vf_yadif_videotoolbox.m
+@@ -26,10 +26,12 @@ 
+ #include "libavutil/hwcontext.h"
+ #include "libavutil/objc.h"
+ 
++#include <assert.h>
++
+ extern char ff_vf_yadif_videotoolbox_metallib_data[];
+ extern unsigned int ff_vf_yadif_videotoolbox_metallib_len;
+ 
+-typedef struct YADIFVTContext {
++typedef struct API_AVAILABLE(macos(10.11), ios(8.0)) YADIFVTContext {
+     YADIFContext yadif;
+ 
+     AVBufferRef       *device_ref;
+@@ -44,7 +46,12 @@  typedef struct YADIFVTContext {
+     id<MTLBuffer> mtlParamsBuffer;
+ 
+     CVMetalTextureCacheRef textureCache;
+-} YADIFVTContext;
++} YADIFVTContext API_AVAILABLE(macos(10.11), ios(8.0));
++
++// Using sizeof(YADIFVTContext) outside of an availability check will error
++// if we're targeting an older OS version, so we need to calculate the size ourselves
++// (we'll statically verify it's correct in yadif_videotoolbox_init behind a check)
++#define YADIF_VT_CTX_SIZE (sizeof(YADIFContext) + sizeof(void*) * 10)
+ 
+ struct mtlYadifParams {
+     uint channels;
+@@ -62,7 +69,7 @@  static void call_kernel(AVFilterContext *ctx,
+                         id<MTLTexture> next,
+                         int channels,
+                         int parity,
+-                        int tff)
++                        int tff) API_AVAILABLE(macos(10.11), ios(8.0))
+ {
+     YADIFVTContext *s = ctx->priv;
+     id<MTLCommandBuffer> buffer = s->mtlQueue.commandBuffer;
+@@ -93,7 +100,7 @@  static void call_kernel(AVFilterContext *ctx,
+ }
+ 
+ static void filter(AVFilterContext *ctx, AVFrame *dst,
+-                   int parity, int tff)
++                   int parity, int tff) API_AVAILABLE(macos(10.11), ios(8.0))
+ {
+     YADIFVTContext *s = ctx->priv;
+     YADIFContext *y = &s->yadif;
+@@ -162,7 +169,7 @@  exit:
+     return;
+ }
+ 
+-static av_cold void yadif_videotoolbox_uninit(AVFilterContext *ctx)
++static av_cold void do_uninit(AVFilterContext *ctx) API_AVAILABLE(macos(10.11), ios(8.0))
+ {
+     YADIFVTContext *s = ctx->priv;
+     YADIFContext *y = &s->yadif;
+@@ -188,7 +195,15 @@  static av_cold void yadif_videotoolbox_uninit(AVFilterContext *ctx)
+     }
+ }
+ 
+-static av_cold int yadif_videotoolbox_init(AVFilterContext *ctx)
++
++static av_cold void yadif_videotoolbox_uninit(AVFilterContext *ctx)
++{
++    if (@available(macOS 10.11, iOS 8.0, *)) {
++        do_uninit(ctx);
++    }
++}
++
++static av_cold int do_init(AVFilterContext *ctx) API_AVAILABLE(macos(10.11), ios(8.0))
+ {
+     YADIFVTContext *s = ctx->priv;
+     NSError *err = nil;
+@@ -261,7 +276,19 @@  fail:
+     return AVERROR_EXTERNAL;
+ }
+ 
+-static int config_input(AVFilterLink *inlink)
++static av_cold int yadif_videotoolbox_init(AVFilterContext *ctx)
++{
++    if (@available(macOS 10.11, iOS 8.0, *)) {
++        // Ensure we calculated YADIF_VT_CTX_SIZE correctly
++        static_assert(YADIF_VT_CTX_SIZE == sizeof(YADIFVTContext), "Incorrect YADIF_VT_CTX_SIZE value!");
++        return do_init(ctx);
++    } else {
++        av_log(ctx, AV_LOG_ERROR, "Metal is not available on this OS version\n");
++        return AVERROR(ENOSYS);
++    }
++}
++
++static int do_config_input(AVFilterLink *inlink) API_AVAILABLE(macos(10.11), ios(8.0))
+ {
+     AVFilterContext *ctx = inlink->dst;
+     YADIFVTContext *s = ctx->priv;
+@@ -283,7 +310,18 @@  static int config_input(AVFilterLink *inlink)
+     return 0;
+ }
+ 
+-static int config_output(AVFilterLink *link)
++static int config_input(AVFilterLink *inlink)
++{
++    AVFilterContext *ctx = inlink->dst;
++    if (@available(macOS 10.11, iOS 8.0, *)) {
++        return do_config_input(inlink);
++    } else {
++        av_log(ctx, AV_LOG_ERROR, "Metal is not available on this OS version\n");
++        return AVERROR(ENOSYS);
++    }
++}
++
++static int do_config_output(AVFilterLink *link) API_AVAILABLE(macos(10.11), ios(8.0))
+ {
+     AVHWFramesContext *output_frames;
+     AVFilterContext *ctx = link->src;
+@@ -347,6 +385,17 @@  exit:
+     return ret;
+ }
+ 
++static int config_output(AVFilterLink *link)
++{
++    AVFilterContext *ctx = link->src;
++    if (@available(macOS 10.11, iOS 8.0, *)) {
++        return do_config_output(link);
++    } else {
++        av_log(ctx, AV_LOG_ERROR, "Metal is not available on this OS version\n");
++        return AVERROR(ENOSYS);
++    }
++}
++
+ #define FLAGS AV_OPT_FLAG_VIDEO_PARAM|AV_OPT_FLAG_FILTERING_PARAM
+ #define CONST(name, help, val, unit) { name, help, 0, AV_OPT_TYPE_CONST, {.i64=val}, INT_MIN, INT_MAX, FLAGS, unit }
+ 
+@@ -394,7 +443,7 @@  static const AVFilterPad yadif_videotoolbox_outputs[] = {
+ AVFilter ff_vf_yadif_videotoolbox = {
+     .name           = "yadif_videotoolbox",
+     .description    = NULL_IF_CONFIG_SMALL("YADIF for VideoToolbox frames using Metal compute"),
+-    .priv_size      = sizeof(YADIFVTContext),
++    .priv_size      = YADIF_VT_CTX_SIZE,
+     .priv_class     = &yadif_videotoolbox_class,
+     .init           = yadif_videotoolbox_init,
+     .uninit         = yadif_videotoolbox_uninit,
