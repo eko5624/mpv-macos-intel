@@ -27,7 +27,7 @@ echo "${swift_dylibs_otool[@]}" > $PACKAGES/mpv/build/swift_dylibs_otool
 
 mpv_dylibs_otool=()
 for dylib in "${mpv_otool[@]}"; do
-  mpv_dylib_otool=($(otool -L $WORKSPACE/lib/$(basename $dylib) | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
+  mpv_dylib_otool=($(otool -L $dylib | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
   mpv_dylibs_otool+=("${mpv_dylib_otool[@]}")
 done
 mpv_dylibs_otool=($(echo "${mpv_dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
@@ -35,7 +35,7 @@ echo "${mpv_dylibs_otool[@]}" > $PACKAGES/mpv/build/mpv_dylibs_otool
 
 dylibs_otool=()
 for dylib in "${mpv_dylibs_otool[@]}"; do
-  dylib_otool=($(otool -L $WORKSPACE/lib/$(basename $dylib) | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
+  dylib_otool=($(otool -L $dylib | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
   dylibs_otool+=("${dylib_otool[@]}")
 done	
 dylibs_otool=($(echo "${dylibs_otool[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
