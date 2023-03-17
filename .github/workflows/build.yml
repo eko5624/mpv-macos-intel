@@ -249,23 +249,7 @@ jobs:
       run: |
         chmod +x ./bundle.sh
         ./bundle.sh
-        
-    - name: Zip binary packages 
-      continue-on-error: true
-      run: |
-        rm mpv-dir.zip || true
-        zip -r -y mpv-dir.zip mpv/
-        
-    - name: Upload binary packages
-      continue-on-error: true
-      uses: softprops/action-gh-release@master
-      with:
-        tag_name: binary-packages
-        name: binary-packages
-        files: |
-          mpv-dir.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+            
     #- name: Bundle mpv
     #  run: |
         #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
@@ -281,12 +265,10 @@ jobs:
 
     - name: Package
       run: |
-        set -x
         mkdir All-in-One
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
-        ls mpv/build/mpv.app
         sudo mv mpv/build/mpv.app All-in-One
         zip -r -y All-in-One-${{ env.date }}.zip All-in-One/
 
