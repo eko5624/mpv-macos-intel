@@ -931,11 +931,15 @@ fi
 
 if build "libjxl" "main"; then
   cd $PACKAGES
-  git clone https://github.com/libjxl/libjxl.git --branch main
+  git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
+  
   #temporary workaround for error: redefinition of '_mm512_cvtsi512_si32'
-  git reset --hard 9ffdbe2
+  execute patch -p1 -i ../../libjxl-fix-redefinition-of-mm512_cvtsi512_si32.patch
+  
+  #workaround not support excluding libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
+  
   make_dir build
   cd build || exit  
   execute cmake ../ \
