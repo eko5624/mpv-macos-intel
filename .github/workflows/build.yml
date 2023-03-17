@@ -280,12 +280,13 @@ jobs:
 
     - name: Package
       run: |
+        set -x
         mkdir All-in-One
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
         mv ./mpv/build/mpv.app All-in-One
-        zip -r -y All-in-One-${{ env.date }}.zip All-in-One/*
+        zip -r -y All-in-One-${{ env.date }}.zip All-in-One/
 
     - name: Create Release
       uses: softprops/action-gh-release@master
