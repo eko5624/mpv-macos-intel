@@ -133,7 +133,8 @@ jobs:
         git clone https://github.com/libjxl/libjxl.git --branch main
         pushd libjxl
         #temporary workaround for error: redefinition of '_mm512_cvtsi512_si32'
-        git reset --hard 9ffdbe2
+        curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/libjxl-fix-redefinition-of-mm512_cvtsi512_si32.patch
+        execute patch -p1 -i libjxl-fix-redefinition-of-mm512_cvtsi512_si32.patch
         git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
         cmake -B build -S . \
           -DCMAKE_INSTALL_PREFIX=/usr/local \
