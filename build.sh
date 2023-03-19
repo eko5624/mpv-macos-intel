@@ -946,8 +946,12 @@ if build "libjxl" "main"; then
   curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/libjxl-fix-operator-delete-unavailable.patch
   execute patch -p1 -i libjxl-fix-operator-delete-unavailable.patch
   
+  #fix redefinition of '_mm512_cvtsi512_si32' on later than mac-10.14
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/libjxl-fix-redefinition-of-mm512_cvtsi512_si32.patch
+  execute patch -p1 -i libjxl-fix-redefinition-of-mm512_cvtsi512_si32.patch 
+  
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
