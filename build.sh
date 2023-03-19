@@ -937,8 +937,15 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
   cd libjxl
-  execute curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/libjxl-fix-exclude-libs.patch
+  
+  #workaround unknown option: --exclude-libs=all
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/libjxl-fix-exclude-libs.patch
   execute patch -p1 -i libjxl-fix-exclude-libs.patch
+  
+  #workaround error: 'operator delete' is unavailable: introduced in macOS 10.12
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/libjxl-fix-operator-delete-unavailable.patch
+  execute patch -p1 -i libjxl-fix-operator-delete-unavailable.patch
+  
   make_dir build
   cd build || exit  
   execute cmake ../ \
