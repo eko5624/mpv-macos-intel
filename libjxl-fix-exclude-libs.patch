@@ -1,7 +1,7 @@
 From 1fcf1ce6726f62357416a793fd46b38dd64f03d1 Mon Sep 17 00:00:00 2001
 From: eko5624 <562433403@qq.com>
 Date: Wed, 1 Feb 2023 00:24:28 +0800
-Subject: [PATCH] Fix not support excluding libs
+Subject: [PATCH] workaround unknown option: --exclude-libs=all
 
 ---
  lib/jxl.cmake | 11 -----------
