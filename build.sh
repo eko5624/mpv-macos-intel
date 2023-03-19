@@ -1457,9 +1457,8 @@ if build "ffmpeg" "master"; then
   cd $PACKAGES
   git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
   cd FFmpeg
-  curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/FFmpeg/pull/1.patch
-  execute patch -p1 -i 1.patch 
   execute ./configure "${CONFIGURE_OPTIONS[@]}" \
+    --disable-metal \
     --disable-debug \
     --disable-doc \
     --enable-gpl \
