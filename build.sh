@@ -723,6 +723,7 @@ if build "aribb24" "master"; then
   execute make install
   build_done "aribb24" "master"
 fi
+CONFIGURE_OPTIONS+=("--enable-libaribb24")
 
 if build "freetype" "master"; then
   cd $PACKAGES
