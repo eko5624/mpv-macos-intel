@@ -1457,8 +1457,8 @@ if build "ffmpeg" "master"; then
   cd $PACKAGES
   git clone https://github.com/FFmpeg/FFmpeg.git --branch master --depth 1
   cd FFmpeg
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.11/ffmpeg-fix-build-with-10.11-deployment.diff
-  execute patch -p1 -i ffmpeg-fix-build-with-10.11-deployment.diff  
+  curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/FFmpeg/pull/1.patch
+  execute patch -p1 -i 1.patch 
   execute ./configure "${CONFIGURE_OPTIONS[@]}" \
     --disable-debug \
     --disable-doc \
