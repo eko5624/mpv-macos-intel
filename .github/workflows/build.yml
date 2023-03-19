@@ -84,6 +84,8 @@ jobs:
       run: |
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
+        rm -rf workspace/.cargo
+        rm -rf workspace/.rustup
         rm -rf workspace/doc
         rm -rf workspace/etc
         rm -rf workspace/man
