@@ -1,0 +1,21 @@
+From 87c19b99099a2df5b7dc9287a7985fe070040c6a Mon Sep 17 00:00:00 2001
+From: eko5624 <562433403@qq.com>
+Date: Sun, 19 Mar 2023 10:14:38 +0800
+Subject: [PATCH] Update CMakeLists.txt
+
+---
+ lib/CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 6ed63abbcd..b71909fb4a 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -103,7 +103,6 @@ else ()
+     endif()  # Clang
+   else()  # WIN32
+     list(APPEND JPEGXL_INTERNAL_FLAGS
+-      -fsized-deallocation
+       -fno-exceptions
+ 
+       # Language flags
