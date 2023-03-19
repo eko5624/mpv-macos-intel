@@ -1,7 +1,7 @@
 From 87c19b99099a2df5b7dc9287a7985fe070040c6a Mon Sep 17 00:00:00 2001
 From: eko5624 <562433403@qq.com>
 Date: Sun, 19 Mar 2023 10:14:38 +0800
-Subject: [PATCH] Update CMakeLists.txt
+Subject: [PATCH] workaround error: 'operator delete' is unavailable: introduced in macOS 10.12
 
 ---
  lib/CMakeLists.txt | 1 -
