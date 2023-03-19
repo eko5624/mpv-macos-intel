@@ -713,6 +713,17 @@ if build "libpng" "libpng16"; then
   build_done "libpng" "libpng16"
 fi
 
+if build "aribb24" "master"; then
+  cd $PACKAGES
+  git clone https://github.com/nkoriyama/aribb24.git --branch master --depth 1
+  cd aribb24
+  execute ./bootstrap
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "aribb24" "master"
+fi
+
 if build "freetype" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/freetype/freetype.git --branch master --depth 1
