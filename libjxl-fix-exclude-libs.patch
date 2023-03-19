@@ -1,7 +1,7 @@
 From 1fcf1ce6726f62357416a793fd46b38dd64f03d1 Mon Sep 17 00:00:00 2001
 From: eko5624 <562433403@qq.com>
 Date: Wed, 1 Feb 2023 00:24:28 +0800
-Subject: [PATCH 1/2] Fix not support excluding libs
+Subject: [PATCH] Fix not support excluding libs
 
 ---
  lib/jxl.cmake | 11 -----------
@@ -36,25 +36,3 @@ index accc2b54e7..e3c6cc77ab 100644
  endforeach()
  
  # Only install libjxl shared library. The libjxl_dec is not installed since it
-
-From 632c871eb285a9efee695775e3d26a4dfb3a4d64 Mon Sep 17 00:00:00 2001
-From: eko5624 <562433403@qq.com>
-Date: Fri, 24 Feb 2023 09:23:40 +0800
-Subject: [PATCH 2/2] fix operator delete unavailable on macos 10.11
-
----
- lib/CMakeLists.txt | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 1668c98455..b6ea922ab9 100644
---- a/lib/CMakeLists.txt
-+++ b/lib/CMakeLists.txt
-@@ -103,7 +104,6 @@ if (WIN32)
-   endif()  # Clang
- else()  # WIN32
-   list(APPEND JPEGXL_INTERNAL_FLAGS
--    -fsized-deallocation
-     -fno-exceptions
- 
-     # Language flags
