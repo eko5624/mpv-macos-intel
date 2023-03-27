@@ -121,6 +121,10 @@ jobs:
         mv packages/mpv/build/mpv.app All-in-One
         zip -r -y All-in-One-${{ env.date }}.zip All-in-One/*
 
+    - name: Get mpv short sha
+      run: |
+        echo "sha=$(cat packages/mpv/build/SHORT_SHA)" >> $GITHUB_ENV
+
     - name: Create Release
       uses: softprops/action-gh-release@master
       with:
