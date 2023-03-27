@@ -1494,5 +1494,9 @@ if build "mpv" "master"; then
     -Dswift-flags="-target x86_64-apple-macos10.13"
   meson compile -C build
   
+  # get latest commit sha
+  short_sha=$(git rev-parse --short HEAD)
+  echo $short_sha > build/SHORT_SHA
+  
   build_done "mpv" "master"
 fi
