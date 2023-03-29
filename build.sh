@@ -583,7 +583,7 @@ if build "libdovi" "main"; then
     export RUSTUP_HOME="${WORKSPACE}"/.rustup
     export CARGO_HOME="${WORKSPACE}"/.cargo
     curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain stable --target x86_64-apple-darwin --no-modify-path
-    curl -OL https://github.com/lu-zero/cargo-c/releases/download/v0.9.16/cargo-c-macos.zip
+    curl -OL https://github.com/lu-zero/cargo-c/releases/latest/download/cargo-c-macos.zip
     unzip cargo-c-macos.zip -d "$WORKSPACE/.rustup/toolchains/stable-x86_64-apple-darwin/bin"
   fi
   $WORKSPACE/.cargo/bin/rustup default stable-x86_64-apple-darwin
