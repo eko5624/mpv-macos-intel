@@ -15,7 +15,6 @@ ln -s mpv mpv-bundle
 popd
 
 mpv_otool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
-echo "${mpv_otool[@]}" > $PACKAGES/mpv/build/mpv_otool
 
 get_deps() {
   local deps=$(otool -L $1 | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR>1 {print $1}')
@@ -25,6 +24,7 @@ get_deps() {
   done
 }
 mpv_deps=$(get_deps "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
+echo "${mpv_deps[@]}" > $PACKAGES/mpv/build/mpv_deps
 
 mpv_rpath=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
 swift_deps=()
