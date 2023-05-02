@@ -703,7 +703,7 @@ CONFIGURE_OPTIONS+=("--enable-frei0r")
 
 if build "libpng" "libpng16"; then
   cd $PACKAGES
-  git clone --recursive https://github.com/glennrp/libpng.git --branch libpng16 --depth 1
+  git clone https://github.com/glennrp/libpng.git --branch libpng16 --depth 1
   cd libpng
   export LDFLAGS="${LDFLAGS}"
   export CPPFLAGS="${CFLAGS}"
