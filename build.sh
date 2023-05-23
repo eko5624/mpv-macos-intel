@@ -1001,6 +1001,8 @@ if build "libmysofa" "main"; then
   cd $PACKAGES
   git clone https://github.com/hoene/libmysofa.git --branch main --depth 1
   cd libmysofa
+  curl -OL https://patch-diff.githubusercontent.com/raw/hoene/libmysofa/pull/199.patch
+  execute patch -p1 -i 199.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
