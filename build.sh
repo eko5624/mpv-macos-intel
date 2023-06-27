@@ -955,7 +955,7 @@ if build "libjxl" "main"; then
   
   make_dir build
   cd build || exit  
-  execute cmake ../ \
+  execute cmake .. \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
