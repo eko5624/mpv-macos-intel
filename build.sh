@@ -946,7 +946,7 @@ fi
 
 if build "libjxl" "main"; then
   cd $PACKAGES
-  git clone https://github.com/libjxl/libjxl.git --branch main --depth 1
+  git clone https://github.com/libjxl/libjxl.git --branch main
   cd libjxl
   git reset --hard 5f3cc36bca9e43cf78aa5b819b74b387c638cac5
   
