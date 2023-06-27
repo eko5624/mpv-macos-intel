@@ -946,12 +946,11 @@ fi
 
 if build "libjxl" "main"; then
   cd $PACKAGES
-  git clone https://github.com/libjxl/libjxl.git --branch main
+  git clone https://github.com/libjxl/libjxl.git --branch v0.8.2
   cd libjxl
-  git reset --hard 5f3cc36bca9e43cf78aa5b819b74b387c638cac5
   
   #workaround not support excluding libs
-  #execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
+  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   
   make_dir out
   cd out || exit  
