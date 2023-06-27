@@ -951,11 +951,11 @@ if build "libjxl" "main"; then
   git reset --hard 5f3cc36bca9e43cf78aa5b819b74b387c638cac5
   
   #workaround not support excluding libs
-  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
+  #execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   
-  make_dir build
-  cd build || exit  
-  execute cmake .. \
+  make_dir out
+  cd out || exit  
+  execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
