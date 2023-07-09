@@ -232,7 +232,7 @@ jobs:
     - name: Build mpv
       run: |
         git clone https://github.com/mpv-player/mpv.git --branch master
-        mv bundle.sh mpv
+        sudo mv bundle.sh mpv
         pushd mpv
         echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV
         export PKG_CONFIG_PATH=`brew --prefix zlib`/lib/pkgconfig/:$PKG_CONFIG_PATH
@@ -240,10 +240,12 @@ jobs:
         export PKG_CONFIG_PATH=`brew --prefix libarchive`/lib/pkgconfig/:$PKG_CONFIG_PATH
         meson setup build
         meson compile -C build
+        popd
  
     - name: Bundle mpv
       continue-on-error: true
       run: |    
+        pushd mpv
         chmod +x ./bundle.sh
         ./bundle.sh
         popd
