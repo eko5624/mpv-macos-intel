@@ -14,7 +14,10 @@ pushd $PACKAGES/mpv/build/mpv.app/Contents/MacOS
 ln -s mpv mpv-bundle
 popd
 
-mpv_otool=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
+mpv_deps=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
+for i in "${mpv_deps[@]}"; do
+  echo $i >> $PACKAGES/mpv/build/mpv_deps.txt
+done
 
 get_deps() {
   local deps=$(otool -L $1 | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR>1 {print $1}')
@@ -23,8 +26,10 @@ get_deps() {
     get_deps $dep
   done
 }
-mpv_deps=$(get_deps "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
-echo "${mpv_deps[@]}" > $PACKAGES/mpv/build/mpv_deps
+lib_deps=$(get_deps "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
+for i in "${lib_deps[@]}"; do
+  echo $i >> $PACKAGES/mpv/build/lib_deps.txt
+done
 
 mpv_rpath=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
 swift_deps=()
@@ -33,11 +38,15 @@ for dylib in "${mpv_rpath[@]}"; do
   swift_deps+=("${swift_dep[@]}")
 done
 swift_deps=($(echo "${swift_deps[@]}" | tr ' ' '\n' | sort -u))
-echo "${swift_deps[@]}" > $PACKAGES/mpv/build/swift_deps
+for i in "${swift_deps[@]}"; do
+  echo $i >> $PACKAGES/mpv/build/swift_deps.txt
+done
 
-all_deps=(${mpv_deps[@]} ${swift_deps[@]})
+all_deps=(${lib_deps[@]} ${swift_deps[@]})
 all_deps=($(echo "${all_deps[@]}" | tr ' ' '\n' | sort -u))
-echo "${all_deps[@]}" > $PACKAGES/mpv/build/all_deps
+for i in "${all_deps[@]}"; do
+  echo $i >> $PACKAGES/mpv/build/all_deps.txt
+done
 
 for f in "${all_deps[@]}"; do
   if [[ "$(basename $f)" != "libswift"* ]]; then
@@ -56,7 +65,7 @@ done
 #setting additional rpath for swift libraries
 install_name_tool -add_rpath @executable_path/lib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 
-for dylib in "${mpv_otool[@]}"; do
+for dylib in "${mpv_deps[@]}"; do
   sudo install_name_tool -change $dylib @executable_path/lib/$(basename $dylib) $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv
 done
 
