@@ -20,7 +20,7 @@ get_deps() {
   done
 }
 mpv_deps=$(get_deps "$DIR/build/mpv.app/Contents/MacOS/mpv" | sort -u)
-echo "${mpv_deps[@]}" > $DIR/build/mpv_deps
+echo "${mpv_deps[@]}" > $DIR/build/mpv_deps.txt
 
 for f in "${mpv_deps[@]}"; do
   if [[ "$f" != "@loader_path"* ]]; then
