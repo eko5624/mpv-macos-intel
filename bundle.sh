@@ -10,7 +10,7 @@ popd
 
 mpv_deps=($(otool -L $DIR/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }'))
 for i in "${mpv_deps[@]}"; do
-  echo $i >> $PACKAGES/mpv/build/mpv_deps.txt
+  echo $i >> $DIR/mpv/build/mpv_deps.txt
 done
 
 get_deps() {
