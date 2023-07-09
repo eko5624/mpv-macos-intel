@@ -13,7 +13,7 @@ mpv_otool=($(otool -L $DIR/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | gre
 echo "${mpv_otool[@]}" > $DIR/build/mpv_otool.txt
 
 get_deps() {
-  local deps=$(otool -L $1 | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR>1 {print $1}')
+  local deps=$(otool -L $1 | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk '{ print $1 }')
   for dep in $deps; do
     echo $dep
     get_deps $dep
