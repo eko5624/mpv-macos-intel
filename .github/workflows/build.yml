@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-12
     env:
       HOMEBREW_NO_ANALYTICS: 1
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
@@ -232,7 +232,6 @@ jobs:
     - name: Build mpv
       run: |
         git clone https://github.com/mpv-player/mpv.git --branch master
-        sudo mv bundle.sh mpv
         pushd mpv
         echo "sha=$(git log -n1 --format="%h")" >> $GITHUB_ENV
         export PKG_CONFIG_PATH=`brew --prefix zlib`/lib/pkgconfig/:$PKG_CONFIG_PATH
@@ -244,11 +243,9 @@ jobs:
  
     - name: Bundle mpv
       continue-on-error: true
-      run: |    
-        pushd mpv
+      run: |
         chmod +x ./bundle.sh
         ./bundle.sh
-        popd
             
     #- name: Bundle mpv
     #  run: |
@@ -269,8 +266,7 @@ jobs:
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
-        #sudo mv mpv/build/mpv.app All-in-One
-        mv mpv/build All-in-One
+        sudo mv mpv/build/mpv.app All-in-One
         zip -r -y All-in-One-${{ env.date }}.zip All-in-One/
 
     - name: Create Release
