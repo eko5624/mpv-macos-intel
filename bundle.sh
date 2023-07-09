@@ -27,8 +27,7 @@ get_deps() {
   done
 }
 lib_deps=$(get_deps "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
-for i in "${lib_deps[@]}"; do
-  echo $i >> $PACKAGES/mpv/build/lib_deps.txt
+echo "${lib_deps[@]}" > $PACKAGES/mpv/build/lib_deps.txt
 done
 
 mpv_rpath=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
