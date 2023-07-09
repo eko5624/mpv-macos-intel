@@ -32,11 +32,11 @@ for dylib in "${mpv_rpath[@]}"; do
   swift_dep=($(otool -L $SWIFT_PATH/$dylib | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
   swift_deps+=("${swift_dep[@]}")
 done
-swift_deps=($(echo "${swift_deps[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+swift_deps=($(echo "${swift_deps[@]}" | tr ' ' '\n' | sort -u))
 echo "${swift_deps[@]}" > $PACKAGES/mpv/build/swift_deps
 
 all_deps=(${mpv_deps[@]} ${swift_deps[@]})
-all_deps=($(echo "${all_deps[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+all_deps=($(echo "${all_deps[@]}" | tr ' ' '\n' | sort -u))
 echo "${all_deps[@]}" > $PACKAGES/mpv/build/all_deps
 
 for f in "${all_deps[@]}"; do
