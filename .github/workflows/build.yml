@@ -268,6 +268,7 @@ jobs:
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
         sudo mv mpv/build/mpv.app All-in-One
+        cp mpv/build/mpv All-in-One
         zip -r -y All-in-One-${{ env.date }}.zip All-in-One/
 
     - name: Create Release
