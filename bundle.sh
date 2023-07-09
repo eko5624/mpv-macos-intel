@@ -1,4 +1,7 @@
-#note: put bundle.sh into mpv source code directory
+#!/bin/bash
+set -x
+
+#Note: put bundle.sh into mpv source code directory
 
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
