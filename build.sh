@@ -1062,7 +1062,7 @@ fi
 
 if build "librist" "master"; then
   cd $PACKAGES
-  git clone https://code.videolan.org/rist/librist.git --branch master --depth 1
+  git clone https://code.videolan.org/rist/librist.git --branch v0.2.7
   cd librist 
   execute meson setup build \
     --prefix="${WORKSPACE}" \
