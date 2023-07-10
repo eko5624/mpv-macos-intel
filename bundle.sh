@@ -26,23 +26,25 @@ get_deps() {
     get_deps $dep
   done
 }
-lib_deps=$(get_deps "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
-echo "${lib_deps[@]}" > $PACKAGES/mpv/build/lib_deps.txt
+
+first_libdeps=($(get_deps $(otool -L $DIR/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR==1 { print $1 }') | sort -u))
+others_libdeps=($(get_deps "$DIR/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u))
+libdeps=($(echo ${first_libdeps[@]} ${others_libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' '))
+for i in "${libdeps[@]}"; do
+  echo $i >> $PACKAGES/mpv/build/libdeps.txt
 done
 
 mpv_rpath=($(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
-swift_deps=()
 for dylib in "${mpv_rpath[@]}"; do
   swift_dep=($(otool -L $SWIFT_PATH/$dylib | grep '@rpath' | awk '{ print $1 }' | awk -F '/' '{print $NF}'))
   swift_deps+=("${swift_dep[@]}")
 done
-swift_deps=($(echo "${swift_deps[@]}" | tr ' ' '\n' | sort -u))
+swift_deps=($(echo "${swift_deps[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 for i in "${swift_deps[@]}"; do
   echo $i >> $PACKAGES/mpv/build/swift_deps.txt
 done
 
-all_deps=(${lib_deps[@]} ${swift_deps[@]})
-all_deps=($(echo "${all_deps[@]}" | tr ' ' '\n' | sort -u))
+all_deps=($(echo ${libdeps[@]} ${swift_deps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' '))
 for i in "${all_deps[@]}"; do
   echo $i >> $PACKAGES/mpv/build/all_deps.txt
 done
