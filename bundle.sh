@@ -29,7 +29,7 @@ others_libdeps=($(get_deps "$DIR/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u
 libdeps=($(echo ${first_libdeps[@]} ${others_libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' '))
 echo "${libdeps[@]}" > $DIR/mpv/build/libdeps.txt
 
-all_deps=($(echo ${mpv_deps[@]} ${libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' ')
+all_deps=($(echo ${mpv_deps[@]} ${libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' '))
 for i in "${all_deps[@]}"; do
   echo $i >> $DIR/mpv/build/all_deps.txt
 done
