@@ -61,8 +61,8 @@ jobs:
         curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
         unzip workspace-dir.zip
         unzip packages-dir.zip
-        rm packages/librist.done || true
-        rm -rf packages/librist || true
+        rm packages/mpv.done || true
+        rm -rf packages/mpv || true
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
        
@@ -118,7 +118,8 @@ jobs:
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
-        mv packages/mpv/build All-in-One
+        mv packages/mpv/build/mpv.app All-in-One
+        mv packages/mpv/build/*deps.txt All-in-One
         zip -r -y All-in-One-${{ env.date }}.zip All-in-One/*
 
     - name: Get mpv short sha
