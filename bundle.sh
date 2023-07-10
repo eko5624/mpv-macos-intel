@@ -27,8 +27,8 @@ get_deps() {
   done
 }
 
-first_libdeps=($(get_deps $(otool -L $DIR/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR==1 { print $1 }') | sort -u))
-others_libdeps=($(get_deps "$DIR/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u))
+first_libdeps=($(get_deps $(otool -L $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR==1 { print $1 }') | sort -u))
+others_libdeps=($(get_deps "$PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u))
 libdeps=($(echo ${first_libdeps[@]} ${others_libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' '))
 for i in "${libdeps[@]}"; do
   echo $i >> $PACKAGES/mpv/build/libdeps.txt
