@@ -26,12 +26,10 @@ get_deps() {
 
 first_libdeps=$(get_deps $(otool -L $DIR/mpv/build/mpv.app/Contents/MacOS/mpv | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR==1 { print $1 }') | sort -u)
 others_libdeps=$(get_deps "$DIR/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
-libdeps=(${first_libdeps[@]} ${others_libdeps[@]})
-libdeps=($(echo "${libdeps[@]}" | sort -u)
+libdeps=($(echo ${first_libdeps[@]} ${others_libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' ')
 echo "${libdeps[@]}" > $DIR/mpv/build/libdeps.txt
 
-all_deps=(${mpv_deps[@]} ${libdeps[@]})
-all_deps=($(echo "${all_deps[@]}" | tr ' ' '\n' | sort -u))
+all_deps=($(echo ${mpv_deps[@]} ${libdeps[@]} | tr ' ' '\n' | sort -u | tr '\n' ' ')
 for i in "${all_deps[@]}"; do
   echo $i >> $DIR/mpv/build/all_deps.txt
 done
