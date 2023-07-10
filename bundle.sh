@@ -28,9 +28,9 @@ first_libdeps=$(get_deps $(otool -L $DIR/mpv/build/mpv.app/Contents/MacOS/mpv | 
 others_libdeps=$(get_deps "$DIR/mpv/build/mpv.app/Contents/MacOS/mpv" | sort -u)
 libdeps=(${first_libdeps[@]} ${others_libdeps[@]})
 libdeps=($(echo "${libdeps[@]}" | sort -u)
-echo "${lib_deps[@]}" > $DIR/mpv/build/lib_deps.txt
+echo "${libdeps[@]}" > $DIR/mpv/build/libdeps.txt
 
-all_deps=(${mpv_deps[@]} ${lib_deps[@]})
+all_deps=(${mpv_deps[@]} ${libdeps[@]})
 all_deps=($(echo "${all_deps[@]}" | tr ' ' '\n' | sort -u))
 for i in "${all_deps[@]}"; do
   echo $i >> $DIR/mpv/build/all_deps.txt
