@@ -948,10 +948,10 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
+  rm -rf third_party/libjpeg-turbo
   ln -s $PACKAGES/libjpeg-turbo third_party/libjpeg-turbo
   #workaround not support excluding libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
-  rm -rf third_party/libjpeg-turbo
   
   make_dir out
   cd out || exit  
