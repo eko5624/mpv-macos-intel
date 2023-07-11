@@ -946,7 +946,7 @@ fi
 
 if build "libjxl" "main"; then
   cd $PACKAGES
-  git clone https://github.com/libjxl/libjxl.git --branch v0.8.2
+  git clone https://github.com/libjxl/libjxl.git
   cd libjxl
   
   #workaround not support excluding libs
@@ -973,7 +973,7 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
     -DJPEGXL_ENABLE_SJPEG=OFF \
     -DJPEGXL_ENABLE_AVX512=ON \
-	-DJPEGXL_ENABLE_AVX512_ZEN4=ON
+    -DJPEGXL_ENABLE_AVX512_ZEN4=ON
   execute make -j $MJOBS
   execute make install
 
