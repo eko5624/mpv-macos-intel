@@ -948,8 +948,7 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
-  rm -rf third_party/libjpeg-turbo
-  ln -s $PACKAGES/libjpeg-turbo third_party/libjpeg-turbo
+  git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
   #workaround not support excluding libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   
@@ -972,9 +971,7 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF \
-    -DJPEGXL_ENABLE_AVX512=ON \
-    -DJPEGXL_ENABLE_AVX512_ZEN4=ON
+    -DJPEGXL_ENABLE_SJPEG=OFF
   execute make -j $MJOBS
   execute make install
 
