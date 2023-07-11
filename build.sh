@@ -951,7 +951,7 @@ if build "libjxl" "main"; then
   
   #workaround not support excluding libs
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
-  
+  git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
   make_dir out
   cd out || exit  
   execute cmake ../ \
