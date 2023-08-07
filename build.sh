@@ -548,7 +548,7 @@ fi
 
 if build "glslang" "main"; then
   cd $PACKAGES
-  git clone https://github.com/KhronosGroup/glslang.git --branch main --depth 1
+  git clone https://github.com/KhronosGroup/glslang.git --branch 12.3.1 --depth 1
   cd glslang
   make_dir build
   cd build || exit  
