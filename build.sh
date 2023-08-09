@@ -546,23 +546,23 @@ if build "lcms2" "master"; then
   build_done "lcms2" "master"
 fi
 
-if build "glslang" "main"; then
-  cd $PACKAGES
-  git clone https://github.com/KhronosGroup/glslang.git --branch 12.3.1 --depth 1
-  cd glslang
-  make_dir build
-  cd build || exit  
-  execute cmake .. -G "Ninja" \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_EXTERNAL=OFF \
-    -DENABLE_CTEST=OFF
-  execute make -j $MJOBS all
-  execute make install
+#if build "glslang" "main"; then
+#  cd $PACKAGES
+#  git clone https://github.com/KhronosGroup/glslang.git --branch 12.3.1 --depth 1
+#  cd glslang
+#  make_dir build
+#  cd build || exit  
+#  execute cmake .. -G "Ninja" \
+#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+#    -DCMAKE_BUILD_TYPE=Release \
+#    -DBUILD_EXTERNAL=OFF \
+#    -DENABLE_CTEST=OFF
+#  execute make -j $MJOBS all
+#  execute make install
 
-  build_done "glslang" "main"
-fi
+#  build_done "glslang" "main"
+#fi
 
 if build "mujs" "master"; then
   cd $PACKAGES
@@ -601,7 +601,7 @@ if build "libplacebo" "master"; then
   git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
   #fallback to no bug with gpu-next
-  git reset --hard 0f749e9810cdc110225ac07b53ed5bc2f982bf9f
+  #git reset --hard 0f749e9810cdc110225ac07b53ed5bc2f982bf9f
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
