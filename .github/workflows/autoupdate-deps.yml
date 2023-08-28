@@ -1,0 +1,23 @@
+name: autoupdate-deps
+
+on:
+  #schedule:
+  #- cron: '03 0 * * *'
+  workflow_dispatch:
+      
+jobs:
+  update:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@main
+      with:
+        token: ${{ secrets.BOT }}
+    - name: Getting latest stable version
+      run: |
+        rm ver.sh || true
+        chmod +x ./update-deps.sh
+        ./update-deps.sh
+        git config --global user.name 'eko5624'
+        git config --global user.email 'datong5624@gmail.com'
+        git commit -am "Automate" || echo "nothing updated"
+        git push
