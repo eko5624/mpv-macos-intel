@@ -11,9 +11,14 @@ jobs:
     env:
       HOMEBREW_NO_ANALYTICS: 1
     steps:
-    - uses: actions/checkout@main
+    - name: Checkout
+      uses: actions/checkout@main
       with:
-        token: ${{ secrets.BOT }}
+        fetch-depth: 0
+    - name: Set env
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - name: Getting latest stable version of deps
       run: |
         rm ver.sh || true
@@ -54,7 +59,6 @@ jobs:
           echo "ver_$i=$(brew info $i | grep "$i:" | awk '{print $4}')" >> ver.sh
         done
         sed -i "" 's/-/_/g' ver.sh
-        git config --global user.name 'eko5624'
-        git config --global user.email 'datong5624@gmail.com'
+        git add -A
         git commit -am "Automate" || echo "nothing updated"
         git push
