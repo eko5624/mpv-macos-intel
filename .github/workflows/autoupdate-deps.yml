@@ -1,4 +1,4 @@
-name: autoupdate-deps
+name: autoupdate
 
 on:
   #schedule:
