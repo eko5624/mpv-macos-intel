@@ -12,6 +12,8 @@ CONFIGURE_OPTIONS=()
 LATEST=false
 CURL_RETRIES="--connect-timeout 60 --retry 5 --retry-delay 5"
 
+source $DIR/ver.sh
+
 # Check for Apple Silicon
 if [[ ("$OSTYPE" == "darwin"*) ]]; then
   if [[ ("$(uname -m)" == "arm64") ]]; then
@@ -198,8 +200,8 @@ fi
 ## build tools
 ##
 
-if build "gdbm" "1.23"; then
-  download "https://ftp.gnu.org/gnu/gdbm/gdbm-1.23.tar.gz"
+if build "gdbm" "$VER_GDBM"; then
+  download "https://ftp.gnu.org/gnu/gdbm/gdbm-$VER_GDBM.tar.gz"
   # Fix -flat_namespace being used on Big Sur and later.
   curl -OL https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff
   execute patch -p1 -i configure-big_sur.diff
@@ -213,22 +215,22 @@ if build "gdbm" "1.23"; then
   # matches Debian's convention for gdbm's ndbm.h (libgdbm-compat-dev).
   mv "${WORKSPACE}"/include/ndbm.h "${WORKSPACE}"/include/gdbm-ndbm.h
   
-  build_done "gdbm" "1.23"
+  build_done "gdbm" "$VER_GDBM"
 fi
 
-if build "xz" "5.4.1"; then
-  download "https://downloads.sourceforge.net/project/lzmautils/xz-5.4.1.tar.gz"
+if build "xz" "$VER_XZ"; then
+  download "https://downloads.sourceforge.net/project/lzmautils/xz-$VER_XZ.tar.gz"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-debug
   execute make -j $MJOBS
   execute make install
 
-  build_done "xz" "5.4.1"
+  build_done "xz" "$VER_XZ"
 fi
 
-if build "tcl-tk" "8.6.13"; then
-  download "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.13/tcl8.6.13-src.tar.gz"
+if build "tcl-tk" "$VER_TCL-TK"; then
+  download "https://downloads.sourceforge.net/project/tcl/Tcl/$VER_TCL-TK/tcl$VER_TCL-TK-src.tar.gz"
   cd unix
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -238,19 +240,19 @@ if build "tcl-tk" "8.6.13"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "tcl-tk" "8.6.13"
+  build_done "tcl-tk" "$VER_TCL-TK"
 fi
 
-if build "zlib" "1.2.13"; then
-  download "https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.xz"
+if build "zlib" "$VER_ZLIB"; then
+  download "https://github.com/madler/zlib/releases/download/v$VER_ZLIB/zlib-$VER_ZLIB.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "zlib" "1.2.13"
+  build_done "zlib" "$VER_ZLIB"
 fi
 
-if build "openssl" "1.1.1t"; then
-  download "https://www.openssl.org/source/openssl-1.1.1t.tar.gz"
+if build "openssl" "$VER_OPENSSL"; then
+  download "https://www.openssl.org/source/openssl-$VER_OPENSSL.tar.gz"
   if $MACOS_M1; then
     sed -n 's/\(##### GNU Hurd\)/"darwin64-arm64-cc" => { \n    inherit_from     => [ "darwin-common", asm("aarch64_asm") ],\n    CFLAGS           => add("-Wall"),\n    cflags           => add("-arch arm64 "),\n    lib_cppflags     => add("-DL_ENDIAN"),\n    bn_ops           => "SIXTY_FOUR_BIT_LONG", \n    perlasm_scheme   => "macosx", \n}, \n\1/g' Configurations/10-main.conf
     execute ./Configure --prefix="${WORKSPACE}" no-shared no-asm darwin64-arm64-cc
@@ -264,90 +266,90 @@ if build "openssl" "1.1.1t"; then
   fi
   execute make -j $MJOBS
   execute make install_sw
-  build_done "openssl" "1.1.1s"
+  build_done "openssl" "$VER_OPENSSL"
 fi
 CONFIGURE_OPTIONS+=("--enable-openssl")
 
-if build "giflib" "5.2.1"; then
-  download "https://netcologne.dl.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz"
+if build "giflib" "$VER_GIFLIB"; then
+  download "https://netcologne.dl.sourceforge.net/project/giflib/giflib-$VER_GIFLIB.tar.gz"
     if [[ "$OSTYPE" == "darwin"* ]]; then
       # Upstream has stripped out the previous autotools-based build system and their
       # Makefile doesn't work on macOS. See https://sourceforge.net/p/giflib/bugs/133/  
       download "https://sourceforge.net/p/giflib/bugs/_discuss/thread/4e811ad29b/c323/attachment/Makefile.patch"
-      execute patch -p0 --forward "${PACKAGES}/giflib-5.2.1/Makefile" "${PACKAGES}/Makefile.patch" || true
+      execute patch -p0 --forward "${PACKAGES}/giflib-$VER_GIFLIB/Makefile" "${PACKAGES}/Makefile.patch" || true
     fi
-  cd "${PACKAGES}"/giflib-5.2.1 || exit
+  cd "${PACKAGES}"/giflib-$VER_GIFLIB || exit
   #multicore build disabled for this library
   execute make
   execute make PREFIX="${WORKSPACE}" install
-  build_done "giflib" "5.2.1"
+  build_done "giflib" "$VER_GIFLIB"
 fi
 
-if build "pkg-config" "0.29.2"; then
-  download "https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
+if build "pkg-config" "$VER_PKG-CONFIG"; then
+  download "https://pkgconfig.freedesktop.org/releases/pkg-config-$VER_PKG-CONFIG.tar.gz"
   execute ./configure \
     --silent --prefix="${WORKSPACE}" \
     --with-pc-path="${WORKSPACE}"/lib/pkgconfig \
     --with-internal-glib
   execute make -j $MJOBS
   execute make install
-  build_done "pkg-config" "0.29.2"
+  build_done "pkg-config" "$VER_PKG-CONFIG"
 fi
 
-if build "yasm" "1.3.0"; then
-  download "https://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz"
+if build "yasm" "$VER_YASM"; then
+  download "https://www.tortall.net/projects/yasm/releases/yasm-$VER_YASM.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "yasm" "1.3.0"
+  build_done "yasm" "$VER_YASM"
 fi
 
-if build "nasm" "2.16.01"; then
-  download "https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/nasm-2.16.01.tar.xz"
+if build "nasm" "$VER_NASM"; then
+  download "https://www.nasm.us/pub/nasm/releasebuilds/$VER_NASM/nasm-$VER_NASM.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "nasm" "2.16.01"
+  build_done "nasm" "$VER_NASM"
 fi
 
-if build "m4" "1.4.19"; then
-  download "https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz"
+if build "m4" "$VER_M4"; then
+  download "https://ftp.gnu.org/gnu/m4/m4-$VER_M4.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "m4" "1.4.19"
+  build_done "m4" "$VER_M4"
 fi
 
-if build "autoconf" "2.71"; then
-  download "https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz"
+if build "autoconf" "$VER_AUTOCONF"; then
+  download "https://ftp.gnu.org/gnu/autoconf/autoconf-$VER_AUTOCONF.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "autoconf" "2.71"
+  build_done "autoconf" "$VER_AUTOCONF"
 fi
 
-if build "automake" "1.16.5"; then
-  download "https://ftp.gnu.org/gnu/automake/automake-1.16.5.tar.gz"
+if build "automake" "$VER_AUTOMAKE"; then
+  download "https://ftp.gnu.org/gnu/automake/automake-$VER_AUTOMAKE.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "automake" "1.16.5"
+  build_done "automake" "$VER_AUTOMAKE"
 fi
 
-if build "libtool" "2.4.7"; then
-  download "https://ftpmirror.gnu.org/libtool/libtool-2.4.7.tar.gz"
+if build "libtool" "$VER_LIBTOOL"; then
+  download "https://ftpmirror.gnu.org/libtool/libtool-$VER_LIBTOOL.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libtool" "2.4.7"
+  build_done "libtool" "$VER_LIBTOOL"
 fi
 
-if build "ncurses" "6.4"; then
-  download "https://ftpmirror.gnu.org/ncurses/ncurses-6.4.tar.gz"
+if build "ncurses" "$VER_NCURSES"; then
+  download "https://ftpmirror.gnu.org/ncurses/ncurses-$VER_NCURSES.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "ncurses" "6.4"
+  build_done "ncurses" "$VER_NCURSES"
 fi  
 
 if build "libxml2" "master"; then
@@ -372,8 +374,8 @@ if build "libxml2" "master"; then
 fi  
 CONFIGURE_OPTIONS+=("--enable-libxml2")
 
-if build "gettext" "0.21.1"; then
-  download "https://ftpmirror.gnu.org/gettext/gettext-0.21.1.tar.gz"
+if build "gettext" "$VER_GETTEXT"; then
+  download "https://ftpmirror.gnu.org/gettext/gettext-$VER_GETTEXT.tar.gz"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-java \
@@ -384,19 +386,19 @@ if build "gettext" "0.21.1"; then
     --with-included-gettext
   execute make -j $MJOBS
   execute make install
-  build_done "gettext" "0.21.1"
+  build_done "gettext" "$VER_GETTEXT"
 fi
 
-if build "util-macros" "1.20.0"; then
-  download "https://www.x.org/archive/individual/util/util-macros-1.20.0.tar.xz"
+if build "util-macros" "$VER_UTIL-MACROS"; then
+  download "https://www.x.org/archive/individual/util/util-macros-$VER_UTIL-MACROS.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "util-macros" "1.20.0"
+  build_done "util-macros" "$VER_UTIL-MACROS"
 fi
 
-if build "xorgproto" "2022.2"; then
-  download "https://xorg.freedesktop.org/archive/individual/proto/xorgproto-2022.2.tar.gz"
+if build "xorgproto" "$VER_XORGPROTO"; then
+  download "https://xorg.freedesktop.org/archive/individual/proto/xorgproto-$VER_XORGPROTO.tar.gz"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --sysconfdir=$WORKSPACE/etc \
@@ -405,77 +407,77 @@ if build "xorgproto" "2022.2"; then
     --disable-silent-rules
   execute make -j $MJOBS
   execute make install
-  build_done "xorgproto" "2022.2"
+  build_done "xorgproto" "$VER_XORGPROTO"
 fi
 
-if build "libXau" "1.0.11"; then
-  download "https://www.x.org/archive/individual/lib/libXau-1.0.11.tar.xz"
+if build "libXau" "$VER_LIBXAU"; then
+  download "https://www.x.org/archive/individual/lib/libXau-$VER_LIBXAU.tar.xz"
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libXau" "1.0.11"
+  build_done "libXau" "$VER_LIBXAU"
 fi
 
-if build "libXdmcp" "1.1.4"; then
-  download "https://www.x.org/archive/individual/lib/libXdmcp-1.1.4.tar.xz"
+if build "libXdmcp" "$VER_LIBXDMCP"; then
+  download "https://www.x.org/archive/individual/lib/libXdmcp-$VER_LIBXDMCP.tar.xz"
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libXdmcp" "1.1.4"
+  build_done "libXdmcp" "$VER_LIBXDMCP"
 fi
 
-if build "xcb-proto" "1.15.2"; then
-  download "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.15.2.tar.xz"
+if build "xcb-proto" "$VER_XCB-PROTO"; then
+  download "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-$VER_XCB-PROTO.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "xcb-proto" "1.15.2"
+  build_done "xcb-proto" "$VER_XCB-PROTO"
 fi
 
-if build "libpthread-stubs" "0.4"; then
-  download "https://xcb.freedesktop.org/dist/libpthread-stubs-0.4.tar.bz2"
+if build "libpthread-stubs" "$VER_LIBPTHREAD-STUBS"; then
+  download "https://xcb.freedesktop.org/dist/libpthread-stubs-$VER_LIBPTHREAD-STUBS.tar.bz2"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libpthread-stubs" "0.4"
+  build_done "libpthread-stubs" "$VER_LIBPTHREAD-STUBS"
 fi
 
-if build "libxcb" "1.15"; then
-  download "https://xcb.freedesktop.org/dist/libxcb-1.15.tar.gz"
+if build "libxcb" "$VER_LIBXCB"; then
+  download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libxcb" "1.15"
+  build_done "libxcb" "$VER_LIBXCB"
 fi
 
-if build "xtrans" "1.4.0"; then
-  download "https://www.x.org/archive/individual/lib/xtrans-1.4.0.tar.bz2"
+if build "xtrans" "$VER_XTRANS"; then
+  download "https://www.x.org/archive/individual/lib/xtrans-$VER_XTRANS.tar.bz2"
   execute sed -i "" 's/# include <sys\/stropts.h>/# include <sys\/ioctl.h>/g' Xtranslcl.c
   execute ./configure \
   --prefix="${WORKSPACE}" \
   --enable-docs=no
   execute make -j $MJOBS
   execute make install
-  build_done "xtrans" "1.4.0"
+  build_done "xtrans" "$VER_XTRANS"
 fi
 
-if build "libX11" "1.8.4"; then
-  download "https://www.x.org/archive/individual/lib/libX11-1.8.4.tar.gz"
+if build "libX11" "$VER_LIBX11"; then
+  download "https://www.x.org/archive/individual/lib/libX11-$VER_LIBX11.tar.gz"
   export LC_ALL=""
   export LC_CTYPE="C"  
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libX11" "1.8.4"
+  build_done "libX11" "$VER_LIBX11"
 fi
 
-if build "python" "3.10"; then
+if build "python" "$VER_PYTHON"; then
   cd $PACKAGES
-  git clone https://github.com/python/cpython --branch 3.10
+  git clone https://github.com/python/cpython --branch "$VER_PYTHON"
   cd cpython
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -484,7 +486,7 @@ if build "python" "3.10"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "python" "3.10"
+  build_done "python" "$VER_PYTHON"
 fi
 
 if command_exists "python3"; then
@@ -499,23 +501,23 @@ if command_exists "python3"; then
   fi
 fi
 
-if build "cmake" "3.25.1"; then
-  download "https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz"
+if build "cmake" "$VER_CMAKE"; then
+  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --parallel="${MJOBS}" -- \
     -DCMAKE_USE_OPENSSL=OFF
   execute make -j $MJOBS
   execute make install
-  build_done "cmake" "3.25.1"
+  build_done "cmake" "$VER_CMAKE"
 fi
 
-if build "libtiff" "4.5.0"; then
-  download "https://download.osgeo.org/libtiff/tiff-4.5.0.tar.xz"
+if build "libtiff" "$VER_LIBTIFF"; then
+  download "https://download.osgeo.org/libtiff/tiff-$VER_LIBTIFF.tar.xz"
   execute ./configure --prefix="${WORKSPACE}" --disable-dependency-tracking --disable-lzma --disable-webp --disable-zstd --without-x
   execute make -j $MJOBS
   execute make install
-  build_done "libtiff" "4.5.0"
+  build_done "libtiff" "$VER_LIBTIFF"
 fi
 
 if build "libjpeg-turbo" "main"; then
@@ -624,21 +626,21 @@ if build "luajit2" "v2.1-agentzh"; then
   build_done "luajit2" "v2.1-agentzh"
 fi
 
-if build "uchardet" "master"; then
-  cd $PACKAGES
-  git clone https://gitlab.freedesktop.org/uchardet/uchardet.git --branch master --depth 1
-  cd uchardet
-  make_dir build
-  cd build || exit  
-  execute cmake ../ \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release
-  execute make -j $MJOBS all
-  execute make install
-
-  build_done "uchardet" "master"
-fi
+#if build "uchardet" "master"; then
+#  cd $PACKAGES
+#  git clone https://gitlab.freedesktop.org/uchardet/uchardet.git --branch master --depth 1
+#  cd uchardet
+#  make_dir build
+#  cd build || exit  
+#  execute cmake ../ \
+#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+#    -DCMAKE_BUILD_TYPE=Release
+#  execute make -j $MJOBS all
+#  execute make install
+#
+#  build_done "uchardet" "master"
+#fi
 
 ##
 ## video library
@@ -835,8 +837,8 @@ if build "libbluray" "master"; then
 fi  
 CONFIGURE_OPTIONS+=("--enable-libbluray")
 
-if build "lame" "3.100"; then
-  download "http://downloads.sourceforge.net/lame/lame-3.100.tar.gz" "lame-3.100.tar.gz"
+if build "lame" "$VER_LAME"; then
+  download "http://downloads.sourceforge.net/lame/lame-$VER_LAME.tar.gz" "lame-$VER_LAME.tar.gz"
   # Fix undefined symbol error _lame_init_old
   # https://sourceforge.net/p/lame/mailman/message/36081038/
   sed -i "" '/lame_init_old/d' include/libmp3lame.sym
@@ -847,7 +849,7 @@ if build "lame" "3.100"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "lame" "3.100"
+  build_done "lame" "$VER_LAME"
 fi
 CONFIGURE_OPTIONS+=("--enable-libmp3lame")
 
@@ -1060,9 +1062,9 @@ if build "mbedtls" "development"; then
   build_done "mbedtls" "development"
 fi
 
-if build "librist" "master"; then
+if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
-  git clone https://code.videolan.org/rist/librist.git --branch v0.2.7
+  git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
   cd librist 
   execute meson setup build \
     --prefix="${WORKSPACE}" \
@@ -1071,7 +1073,7 @@ if build "librist" "master"; then
   execute meson compile -C build
   execute meson install -C build
 
-  build_done "librist" "master"
+  build_done "librist" "$VER_LIBRIST"
 fi 
 CONFIGURE_OPTIONS+=("--enable-librist")
 
@@ -1179,13 +1181,13 @@ if build "libwebp" "main"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libwebp")
 
-if build "opencore" "0.1.6"; then
-  download "https://netactuate.dl.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-0.1.6.tar.gz" "opencore-amr-0.1.6.tar.gz"
+if build "opencore" "$VER_OPENCORE"; then
+  download "https://netactuate.dl.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-$VER_OPENCORE.tar.gz" "opencore-amr-$VER_OPENCORE.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
 
-  build_done "opencore" "0.1.6"
+  build_done "opencore" "$VER_OPENCORE"
 fi
 CONFIGURE_OPTIONS+=("--enable-libopencore_amrnb" "--enable-libopencore_amrwb")
 
@@ -1214,8 +1216,8 @@ if build "libsamplerate" "master"; then
   build_done "libsamplerate" "master"
 fi
 
-if build "mpg123" "1.31.2"; then
-  download "https://www.mpg123.de/download/mpg123-1.31.2.tar.bz2"
+if build "mpg123" "$VER_MPG123"; then
+  download "https://www.mpg123.de/download/mpg123-$VER_MPG123.tar.bz2"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-debug \
@@ -1226,7 +1228,7 @@ if build "mpg123" "1.31.2"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "mpg123" "1.31.2"
+  build_done "mpg123" "$VER_MPG123"
 fi
 
 if build "flac" "master"; then
@@ -1299,11 +1301,11 @@ if build "libsdl" "main"; then
   build_done "libsdl" "main"
 fi
 
-if build "snappy" "1.1.9"; then
-  download "https://github.com/google/snappy/archive/1.1.9.tar.gz"
+if build "snappy" "$VER_SNAPPY"; then
+  download "https://github.com/google/snappy/archive/$VER_SNAPPY.tar.gz"
   #Fixed comparison between signed and unsigned integer
-  curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/128.patch
-  execute patch -p1 -i 128.patch
+  #curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/128.patch
+  #execute patch -p1 -i 128.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
@@ -1316,7 +1318,7 @@ if build "snappy" "1.1.9"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "snappy" "1.1.9"
+  build_done "snappy" "$VER_SNAPPY"
 fi
 CONFIGURE_OPTIONS+=("--enable-libsnappy")
 
@@ -1393,8 +1395,8 @@ if build "uavs3d" "master"; then
 fi
 CONFIGURE_OPTIONS+=("--enable-libuavs3d")
 
-if build "xvidcore" "1.3.7"; then
-download "https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz"
+if build "xvidcore" "$VER_XVIDCORE"; then
+download "https://downloads.xvid.com/downloads/xvidcore-$VER_XVIDCORE.tar.gz"
 cd build/generic || exit
 execute ./configure --prefix="${WORKSPACE}"
 execute make -j $MJOBS
@@ -1408,7 +1410,7 @@ if [[ -f ${WORKSPACE}/lib/libxvidcore.so ]]; then
   execute rm "${WORKSPACE}"/lib/libxvidcore.so*
 fi
 
-build_done "xvidcore" "1.3.7"
+build_done "xvidcore" "$VER_XVIDCORE"
 fi
 CONFIGURE_OPTIONS+=("--enable-libxvid")
 
