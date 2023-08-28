@@ -1,6 +1,5 @@
 #!/bin/bash
 
-DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 deps=('gdbm'
       'xz'
       'tcl-tk'
@@ -35,5 +34,5 @@ deps=('gdbm'
       'snappy'
       'xvid')
 for i in "${deps[@]}"; do
-  echo "ver_$i=$(brew info $i | grep "$i:" | awk '{print $4}')" >> $DIR/ver.sh
+  echo "ver_$i=$(brew info $i | grep "$i:" | awk '{print $4}')" >> ver.sh
 done
