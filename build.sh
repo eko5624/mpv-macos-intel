@@ -229,8 +229,8 @@ if build "xz" "$VER_XZ"; then
   build_done "xz" "$VER_XZ"
 fi
 
-if build "tcl-tk" "$VER_TCL-TK"; then
-  download "https://downloads.sourceforge.net/project/tcl/Tcl/$VER_TCL-TK/tcl$VER_TCL-TK-src.tar.gz"
+if build "tcl-tk" "${VER_TCL-TK}"; then
+  download "https://downloads.sourceforge.net/project/tcl/Tcl/${VER_TCL-TK}/tcl${VER_TCL-TK}-src.tar.gz"
   cd unix
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -240,7 +240,7 @@ if build "tcl-tk" "$VER_TCL-TK"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "tcl-tk" "$VER_TCL-TK"
+  build_done "tcl-tk" "${VER_TCL-TK}"
 fi
 
 if build "zlib" "$VER_ZLIB"; then
@@ -285,15 +285,15 @@ if build "giflib" "$VER_GIFLIB"; then
   build_done "giflib" "$VER_GIFLIB"
 fi
 
-if build "pkg-config" "$VER_PKG-CONFIG"; then
-  download "https://pkgconfig.freedesktop.org/releases/pkg-config-$VER_PKG-CONFIG.tar.gz"
+if build "pkg-config" "${VER_PKG-CONFIG}"; then
+  download "https://pkgconfig.freedesktop.org/releases/pkg-config-${VER_PKG-CONFIG}.tar.gz"
   execute ./configure \
     --silent --prefix="${WORKSPACE}" \
     --with-pc-path="${WORKSPACE}"/lib/pkgconfig \
     --with-internal-glib
   execute make -j $MJOBS
   execute make install
-  build_done "pkg-config" "$VER_PKG-CONFIG"
+  build_done "pkg-config" "${VER_PKG-CONFIG}"
 fi
 
 if build "yasm" "$VER_YASM"; then
@@ -389,12 +389,12 @@ if build "gettext" "$VER_GETTEXT"; then
   build_done "gettext" "$VER_GETTEXT"
 fi
 
-if build "util-macros" "$VER_UTIL-MACROS"; then
-  download "https://www.x.org/archive/individual/util/util-macros-$VER_UTIL-MACROS.tar.xz"
+if build "util-macros" "${VER_UTIL-MACROS}"; then
+  download "https://www.x.org/archive/individual/util/util-macros-${VER_UTIL-MACROS}.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "util-macros" "$VER_UTIL-MACROS"
+  build_done "util-macros" "${VER_UTIL-MACROS}"
 fi
 
 if build "xorgproto" "$VER_XORGPROTO"; then
@@ -428,20 +428,20 @@ if build "libXdmcp" "$VER_LIBXDMCP"; then
   build_done "libXdmcp" "$VER_LIBXDMCP"
 fi
 
-if build "xcb-proto" "$VER_XCB-PROTO"; then
-  download "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-$VER_XCB-PROTO.tar.xz"
+if build "xcb-proto" "${VER_XCB-PROTO}"; then
+  download "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-${VER_XCB-PROTO}.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "xcb-proto" "$VER_XCB-PROTO"
+  build_done "xcb-proto" "${VER_XCB-PROTO}"
 fi
 
-if build "libpthread-stubs" "$VER_LIBPTHREAD-STUBS"; then
-  download "https://xcb.freedesktop.org/dist/libpthread-stubs-$VER_LIBPTHREAD-STUBS.tar.bz2"
+if build "libpthread-stubs" "${VER_LIBPTHREAD-STUBS}"; then
+  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD-STUBS}.tar.bz2"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
-  build_done "libpthread-stubs" "$VER_LIBPTHREAD-STUBS"
+  build_done "libpthread-stubs" "${VER_LIBPTHREAD-STUBS}"
 fi
 
 if build "libxcb" "$VER_LIBXCB"; then
