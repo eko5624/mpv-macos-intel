@@ -1,5 +1,4 @@
 #!/bin/bash
-
 deps=('gdbm'
       'xz'
       'tcl-tk'
@@ -36,3 +35,5 @@ deps=('gdbm'
 for i in "${deps[@]}"; do
   echo "ver_$i=$(brew info $i | grep "$i:" | awk '{print $4}')" >> ver.sh
 done
+sed -i "" 's/-/_/g' ver.sh
+cat ver.sh
