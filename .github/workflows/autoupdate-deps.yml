@@ -8,15 +8,52 @@ on:
 jobs:
   update:
     runs-on: macos-latest
+    env:
+      HOMEBREW_NO_ANALYTICS: 1
     steps:
     - uses: actions/checkout@main
       with:
         token: ${{ secrets.BOT }}
-    - name: Getting latest stable version
+    - name: Getting latest stable version of deps
       run: |
         rm ver.sh || true
-        chmod +x ./update-deps.sh
-        ./update-deps.sh
+        deps=('gdbm'
+              'xz'
+              'tcl-tk'
+              'zlib'
+              'openssl@1.1'
+              'giflib'
+              'pkg-config'
+              'yasm'
+              'nasm'
+              'm4'
+              'autoconf'
+              'automake'
+              'libtool'
+              'ncurses'
+              'gettext'
+              'util-macros'
+              'xorgproto'
+              'libxau'
+              'libxdmcp'
+              'xcb-proto'
+              'libpthread-stubs'
+              'libxcb'
+              'xtrans'
+              'libx11'
+              'python@3.11'
+              'cmake'
+              'libtiff'
+              'lame'
+              'librist'
+              'opencore-amr'
+              'mpg123'
+              'snappy'
+              'xvid')
+        for i in "${deps[@]}"; do
+          echo "ver_$i=$(brew info $i | grep "$i:" | awk '{print $4}')" >> ver.sh
+        done
+        sed -i "" 's/-/_/g' ver.sh
         git config --global user.name 'eko5624'
         git config --global user.email 'datong5624@gmail.com'
         git commit -am "Automate" || echo "nothing updated"
