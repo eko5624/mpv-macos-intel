@@ -437,7 +437,7 @@ if build "xcb-proto" "${ver_xcb_proto}"; then
 fi
 
 if build "libpthread-stubs" "${ver_libpthread_stubs}"; then
-  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${ver_libpthread_stubs}.tar.bz2"
+  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${ver_libpthread_stubs}.tar.xz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
@@ -454,7 +454,7 @@ if build "libxcb" "$ver_libpxcb"; then
 fi
 
 if build "xtrans" "$ver_xtrans"; then
-  download "https://www.x.org/archive/individual/lib/xtrans-$ver_xtrans.tar.bz2"
+  download "https://www.x.org/archive/individual/lib/xtrans-$ver_xtrans.tar.xz"
   execute sed -i "" 's/# include <sys\/stropts.h>/# include <sys\/ioctl.h>/g' Xtranslcl.c
   execute ./configure \
   --prefix="${WORKSPACE}" \
@@ -1217,7 +1217,7 @@ if build "libsamplerate" "master"; then
 fi
 
 if build "mpg123" "$ver_mpg123"; then
-  download "https://www.mpg123.de/download/mpg123-$ver_mpg123.tar.bz2"
+  download "https://downloads.sourceforge.net/project/mpg123/mpg123/$ver_mpg123/mpg123-$ver_mpg123.tar.bz2"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-debug \
