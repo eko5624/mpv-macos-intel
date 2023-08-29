@@ -60,6 +60,7 @@ jobs:
           echo "ver_$i=$(brew info $i | grep -e "==>" -e "$i:" | awk '{print $4}')" >> ver.sh
         done
         sed -i "" 's/-/_/g' ver.sh
+        sed -i "" 's/@/_/g' ver.sh
         git add -A
         git commit -am "Automate" || echo "nothing updated"
         git push
