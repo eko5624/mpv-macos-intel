@@ -352,9 +352,9 @@ if build "ncurses" "$VER_NCURSES"; then
   build_done "ncurses" "$VER_NCURSES"
 fi  
 
-if build "python" "`$VER_PYTHON_3_11`"; then
+if build "python" "$VER_PYTHON_3_11"; then
   cd $PACKAGES
-  git clone https://github.com/python/cpython --branch "`$VER_PYTHON_3_11`"
+  git clone https://github.com/python/cpython --branch "$VER_PYTHON_3_11"
   cd cpython
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -363,7 +363,7 @@ if build "python" "`$VER_PYTHON_3_11`"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "python" "`$VER_PYTHON_3_11`"
+  build_done "python" "$VER_PYTHON_3_11"
 fi
 
 if build "libxml2" "master"; then
