@@ -57,7 +57,8 @@ jobs:
               'snappy'
               'xvid')
         for i in "${deps[@]}"; do
-          echo "ver_${i//./_} | tr '[:lower:]' '[:upper:]'=$(brew info $i | grep -e "==>" -e "$i:" | awk '{print $4}')" >> ver.sh
+          k=$(echo $i | tr '-.@' '_')
+          echo "ver_$k | tr '[:lower:]' '[:upper:]'=$(brew info $i | grep -e "==>" -e "$i:" | awk '{print $4}')" >> ver.sh
         done
         sed -i "" 's/-/_/g' ver.sh
         sed -i "" 's/@/_/g' ver.sh
