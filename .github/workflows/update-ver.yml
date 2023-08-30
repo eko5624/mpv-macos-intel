@@ -58,7 +58,7 @@ jobs:
               'xvid')
         for i in "${deps[@]}"; do
           k=$(echo $i | tr '-' '_' | tr '.' '_' | tr '@' '_' | tr '[:lower:]' '[:upper:]')
-          echo "ver_$k=$(brew info $i | grep -e "==>" -e "$i:" | awk '{print $4}')" >> ver.sh
+          echo "VER_$k=$(brew info $i | grep -e "==>" -e "$i:" | awk '{print $4}')" >> ver.sh
         done
         sed -i "" 's/-/_/g' ver.sh
         sed -i "" 's/@/_/g' ver.sh
