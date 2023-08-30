@@ -354,7 +354,7 @@ fi
 
 if build "python" "$VER_PYTHON_3_11"; then
   cd $PACKAGES
-  git clone https://github.com/python/cpython --branch "$VER_PYTHON_3_11"
+  git clone https://github.com/python/cpython --branch 3.11
   cd cpython
   execute ./configure \
     --prefix="${WORKSPACE}" \
