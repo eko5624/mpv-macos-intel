@@ -352,6 +352,20 @@ if build "ncurses" "$VER_NCURSES"; then
   build_done "ncurses" "$VER_NCURSES"
 fi  
 
+if build "python" "`$VER_PYTHON_3_11`"; then
+  cd $PACKAGES
+  git clone https://github.com/python/cpython --branch "`$VER_PYTHON_3_11`"
+  cd cpython
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --with-pydebug \
+    --with-openssl="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+
+  build_done "python" "`$VER_PYTHON_3_11`"
+fi
+
 if build "libxml2" "master"; then
   cd $PACKAGES
   git clone https://github.com/GNOME/libxml2.git --branch master --depth 1
@@ -473,20 +487,6 @@ if build "libX11" "$VER_LIBX11"; then
   execute make -j $MJOBS
   execute make install
   build_done "libX11" "$VER_LIBX11"
-fi
-
-if build "python" "`$VER_PYTHON_3_11`"; then
-  cd $PACKAGES
-  git clone https://github.com/python/cpython --branch "`$VER_PYTHON_3_11`"
-  cd cpython
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --with-pydebug \
-    --with-openssl="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "python" "`$VER_PYTHON_3_11`"
 fi
 
 if command_exists "python3"; then
