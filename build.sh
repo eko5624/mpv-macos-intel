@@ -444,7 +444,12 @@ fi
 
 if build "xcb-proto" "${VER_XCB_PROTO}"; then
   download "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-${VER_XCB_PROTO}.tar.xz"
-  execute ./configure --prefix="${WORKSPACE}"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --sysconfdir="${WORKSPACE}"/etc \
+    --localstatedir="${WORKSPACE}"/var \
+    --disable-silent-rules \
+    PYTHON="${WORKSPACE}"/bin/python3
   execute make -j $MJOBS
   execute make install
   build_done "xcb-proto" "${VER_XCB_PROTO}"
