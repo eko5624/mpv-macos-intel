@@ -455,13 +455,13 @@ if build "xcb-proto" "${VER_XCB_PROTO}"; then
   build_done "xcb-proto" "${VER_XCB_PROTO}"
 fi
 
-if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
-  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.xz"
-  execute ./configure --prefix="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
-  build_done "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"
-fi
+#if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
+#  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.xz"
+#  execute ./configure --prefix="${WORKSPACE}"
+#  execute make -j $MJOBS
+#  execute make install
+#  build_done "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"
+#fi
 
 if build "libxcb" "$VER_LIBXCB"; then
   download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
