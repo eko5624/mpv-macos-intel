@@ -1314,8 +1314,8 @@ fi
 if build "snappy" "$VER_SNAPPY"; then
   download "https://github.com/google/snappy/archive/$VER_SNAPPY.tar.gz"
   #Fixed comparison between signed and unsigned integer
-  #curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/128.patch
-  #execute patch -p1 -i 128.patch
+  curl -OL https://patch-diff.githubusercontent.com/raw/google/snappy/pull/128.patch
+  execute patch -p1 -i 128.patch
   make_dir build
   cd build || exit  
   execute cmake ../ \
