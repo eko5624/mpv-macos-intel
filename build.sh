@@ -465,6 +465,8 @@ fi
 
 if build "libxcb" "$VER_LIBXCB"; then
   download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
+  # Drop libpthread-stubs on macOS
+  sed -i "" 's/linux*)/linux*|darwin*)/g' configure
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   ./configure \
     --prefix="${WORKSPACE}" \
