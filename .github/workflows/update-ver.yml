@@ -43,7 +43,6 @@ jobs:
               'libxau'
               'libxdmcp'
               'xcb-proto'
-              'libpthread-stubs'
               'libxcb'
               'xtrans'
               'libx11'
@@ -54,7 +53,6 @@ jobs:
               'librist'
               'opencore-amr'
               'mpg123'
-              'snappy'
               'xvid')
         for i in "${deps[@]}"; do
           k=$(echo $i | tr '-' '_' | tr '.' '_' | tr '@' '_' | tr '[:lower:]' '[:upper:]')
