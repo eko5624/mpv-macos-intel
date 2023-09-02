@@ -470,16 +470,7 @@ if build "libxcb" "$VER_LIBXCB"; then
   patch -p1 -i libxcb-drop-libpthread-stubs.diff
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   ./configure \
-    --prefix="${WORKSPACE}" \
-    --enable-dri3 \
-    --enable-ge \
-    --enable-xevie \
-    --enable-xprint \
-    --enable-selinux \
-    --disable-silent-rules \
-    --enable-devel-docs=no \
-    --with-doxygen=no \
-    PYTHON="${WORKSPACE}"/bin/python3
+    --prefix="${WORKSPACE}"
   make -j $MJOBS
   make install
   build_done "libxcb" "$VER_LIBXCB"
