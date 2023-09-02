@@ -456,7 +456,7 @@ if build "xcb-proto" "${VER_XCB_PROTO}"; then
 fi
 
 if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
-  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.xz"
+  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.bz2"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
