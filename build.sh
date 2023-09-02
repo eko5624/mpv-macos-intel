@@ -12,7 +12,7 @@ CONFIGURE_OPTIONS=()
 LATEST=false
 CURL_RETRIES="--connect-timeout 60 --retry 5 --retry-delay 5"
 
-source $DIR/ver.sh
+source $DIR/ver-10.13.sh
 
 # Check for Apple Silicon
 if [[ ("$OSTYPE" == "darwin"*) ]]; then
@@ -455,13 +455,13 @@ if build "xcb-proto" "${VER_XCB_PROTO}"; then
   build_done "xcb-proto" "${VER_XCB_PROTO}"
 fi
 
-#if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
-#  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.xz"
-#  execute ./configure --prefix="${WORKSPACE}"
-#  execute make -j $MJOBS
-#  execute make install
-#  build_done "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"
-#fi
+if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
+  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.xz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"
+fi
 
 if build "libxcb" "$VER_LIBXCB"; then
   download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
