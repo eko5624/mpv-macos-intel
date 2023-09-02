@@ -598,9 +598,9 @@ if build "mujs" "master"; then
   git clone https://github.com/ccxvii/mujs.git --branch master
   cd mujs
   #revert to 1.3.2 for finding libmujs.a
-  git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/mujs-finding-libmujs.diff
-  execute patch -p1 -i mujs-finding-libmujs.diff
+  #git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
+  #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/mujs-finding-libmujs.diff
+  #xecute patch -p1 -i mujs-finding-libmujs.diff
   execute make release
   execute make prefix="${WORKSPACE}" install-shared
   build_done "mujs" "master"
