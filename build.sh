@@ -466,7 +466,7 @@ fi
 if build "libxcb" "$VER_LIBXCB"; then
   download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
   # Drop libpthread-stubs on macOS
-  patch -ulbf configure << EOF
+  execute patch -p1 -i libxcb-drop-libpthread-stubs.diff
 @@ -20662,7 +20662,7 @@
  fi
  NEEDED="xau >= 0.99.2"
