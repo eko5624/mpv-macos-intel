@@ -469,15 +469,14 @@ if build "libxcb" "$VER_LIBXCB"; then
   #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libxcb-drop-libpthread-stubs.diff
   #patch -p1 -i libxcb-drop-libpthread-stubs.diff
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
-  ./configure \
-    --prefix="${WORKSPACE}"
-  make -j $MJOBS
-  make install
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
   build_done "libxcb" "$VER_LIBXCB"
 fi
 
 if build "xtrans" "$VER_XTRANS"; then
-  download "https://www.x.org/archive/individual/lib/xtrans-$VER_XTRANS.tar.xz"
+  download "https://www.x.org/archive/individual/lib/xtrans-$VER_XTRANS.tar.bz2"
   execute sed -i "" 's/# include <sys\/stropts.h>/# include <sys\/ioctl.h>/g' Xtranslcl.c
   execute ./configure \
   --prefix="${WORKSPACE}" \
