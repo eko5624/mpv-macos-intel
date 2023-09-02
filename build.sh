@@ -466,7 +466,17 @@ fi
 if build "libxcb" "$VER_LIBXCB"; then
   download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
   # Drop libpthread-stubs on macOS
-  sed -i "" 's/linux*) ;;/linux*|darwin*) ;;/g' configure
+  patch -ulbf configure << EOF
+@@ -20662,7 +20662,7 @@
+ fi
+ NEEDED="xau >= 0.99.2"
+ case $host_os in
+-linux*) ;;
++linux*|darwin*) ;;
+      *) NEEDED="$NEEDED pthread-stubs" ;;
+ esac
+
+EOF
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   ./configure \
     --prefix="${WORKSPACE}" \
