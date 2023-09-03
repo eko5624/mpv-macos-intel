@@ -556,22 +556,22 @@ if build "lcms2" "master"; then
   build_done "lcms2" "master"
 fi
 
-#if build "glslang" "main"; then
-#  cd $PACKAGES
-#  git clone https://github.com/KhronosGroup/glslang.git --branch 12.3.1 --depth 1
-#  cd glslang
-#  make_dir build
-#  cd build || exit  
-#  execute cmake .. -G "Ninja" \
-#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DBUILD_EXTERNAL=OFF \
-#    -DENABLE_CTEST=OFF
-#  execute make -j $MJOBS all
-#  execute make install
+if build "glslang" "12.3.1"; then
+  cd $PACKAGES
+  git clone https://github.com/KhronosGroup/glslang.git --branch 12.3.1 --depth 1
+  cd glslang
+  make_dir build
+  cd build || exit  
+  execute cmake .. -G "Ninja" \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_EXTERNAL=OFF \
+    -DENABLE_CTEST=OFF
+  execute make -j $MJOBS all
+  execute make install
 
-#  build_done "glslang" "main"
+  build_done "glslang" "12.3.1"
 #fi
 
 if build "mujs" "master"; then
