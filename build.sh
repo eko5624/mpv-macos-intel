@@ -634,21 +634,21 @@ if build "luajit2" "v2.1-agentzh"; then
   build_done "luajit2" "v2.1-agentzh"
 fi
 
-#if build "uchardet" "master"; then
-#  cd $PACKAGES
-#  git clone https://gitlab.freedesktop.org/uchardet/uchardet.git --branch master --depth 1
-#  cd uchardet
-#  make_dir build
-#  cd build || exit  
-#  execute cmake ../ \
-#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-#    -DCMAKE_BUILD_TYPE=Release
-#  execute make -j $MJOBS all
-#  execute make install
-#
-#  build_done "uchardet" "master"
-#fi
+if build "uchardet" "master"; then
+  cd $PACKAGES
+  git clone https://gitlab.freedesktop.org/uchardet/uchardet.git --branch master --depth 1
+  cd uchardet
+  make_dir build
+  cd build || exit  
+  execute cmake ../ \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release
+  execute make -j $MJOBS all
+  execute make install
+
+  build_done "uchardet" "master"
+fi
 
 ##
 ## video library
