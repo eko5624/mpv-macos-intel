@@ -572,7 +572,7 @@ if build "glslang" "12.3.1"; then
   execute make install
 
   build_done "glslang" "12.3.1"
-#fi
+fi
 
 if build "mujs" "master"; then
   cd $PACKAGES
