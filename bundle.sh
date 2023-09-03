@@ -37,9 +37,10 @@ for i in "${all_deps[@]}"; do
 done
 
 for f in "${all_deps[@]}"; do
-  if [[ "$f" != "@loader_path"* ]]; then
+  if [[ "$f" = "@loader_path"* ]] || [[ "$f" = "@rpath"* ]]; then
+    find /usr/local -name "$(basename $f)" -print0 | xargs -0 -I {} sudo cp -f {} $DIR/mpv/build/mpv.app/Contents/MacOS/lib
+  else
     sudo cp $f $DIR/mpv/build/mpv.app/Contents/MacOS/lib
-  fi
 done
 
 #removing rpath definitions towards dev tools
