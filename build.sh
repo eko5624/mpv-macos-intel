@@ -610,8 +610,6 @@ if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
-  #fallback to no bug with gpu-next
-  git reset --hard 0f749e9810cdc110225ac07b53ed5bc2f982bf9f
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
