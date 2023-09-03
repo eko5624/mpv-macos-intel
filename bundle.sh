@@ -17,7 +17,7 @@ for i in "${mpv_deps[@]}"; do
 done
 
 get_deps() {
-  local deps=$(otool -L $1 | grep -e '\t' | grep -Ev "\/usr\/lib|\/System|@rpath" | awk 'NR>1 {print $1}')
+  local deps=$(otool -L $1 | grep -e '\t' | grep -Ev "\/usr\/lib|\/System" | awk 'NR>1 {print $1}')
   for dep in $deps; do
     echo $dep
     get_deps $dep
