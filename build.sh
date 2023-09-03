@@ -562,7 +562,7 @@ if build "glslang" "12.3.1"; then
   cd glslang
   make_dir build
   cd build || exit  
-  execute cmake .. -G "Ninja" \
+  execute cmake .. \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release \
