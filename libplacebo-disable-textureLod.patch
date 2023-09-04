@@ -1,0 +1,45 @@
+From 4bcb6698c2d6c34604deafdc744c699ee57d65f5 Mon Sep 17 00:00:00 2001
+From: Niklas Haas <git@haasn.dev>
+Date: Sun, 3 Sep 2023 12:52:52 +0200
+Subject: [PATCH] dispatch: disable textureLod() when using non-normal samplers
+
+I'm really unhappy with this solution, but I'm also really unhappy with
+the alternatives. I'm starting to think that we may actually want to go
+back to using `texture()` inside shaders and #defining texture
+textureLod(..., 0)
+
+Or just stop using textureLod altogether.
+
+Fixes: https://github.com/haasn/libplacebo/issues/195
+---
+ src/dispatch.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/src/dispatch.c b/src/dispatch.c
+index 85180bda..2be20f5f 100644
+--- a/src/dispatch.c
++++ b/src/dispatch.c
+@@ -407,6 +407,20 @@ static void generate_shaders(pl_dispatch dp,
+         ADD(pre, "precision highp int; \n");
+     }
+ 
++    // textureLod() doesn't work on external/rect samplers, simply disable
++    // LOD sampling in this case. We don't currently support mipmaps anyway.
++    for (int i = 0; i < sh->descs.num; i++) {
++        if (pass_params->descriptors[i].type != PL_DESC_SAMPLED_TEX)
++            continue;
++        pl_tex tex = sh->descs.elem[i].binding.object;
++        if (tex->sampler_type != PL_SAMPLER_NORMAL) {
++            ADD(pre, "#define textureLod(t, p, b) texture(t, p) \n"
++                     "#define textureLodOffset(t, p, b, o)    \\\n"
++                     "        textureOffset(t, p, o)            \n");
++            break;
++        }
++    }
++
+     // Add all of the push constants as their own element
+     if (pass_params->push_constants_size) {
+         // We re-use add_buffer_vars to make sure variables are sorted, this
+-- 
+GitLab
+
