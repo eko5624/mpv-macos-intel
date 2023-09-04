@@ -576,15 +576,15 @@ fi
 
 if build "mujs" "master"; then
   cd $PACKAGES
-  git clone https://github.com/ccxvii/mujs.git --branch master
+  git clone https://github.com/ccxvii/mujs.git --branch 1.3.3
   cd mujs
   #revert to 1.3.2 for finding libmujs.a
   #git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
   #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/mujs-finding-libmujs.diff
   #xecute patch -p1 -i mujs-finding-libmujs.diff
-  execute make release
+  execute make prefix="${WORKSPACE}" release
   execute make prefix="${WORKSPACE}" install-shared
-  build_done "mujs" "master"
+  build_done "mujs" "1.3.3"
 fi
 
 if build "libdovi" "main"; then
@@ -610,6 +610,8 @@ if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
+  https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-disable-textureLod.patch
+  execute patch -p1 -i libplacebo-disable-textureLod.patch
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
