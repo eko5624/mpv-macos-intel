@@ -574,7 +574,7 @@ if build "glslang" "12.3.1"; then
   build_done "glslang" "12.3.1"
 fi
 
-if build "mujs" "master"; then
+if build "mujs" "1.3.3"; then
   cd $PACKAGES
   git clone https://github.com/ccxvii/mujs.git --branch 1.3.3
   cd mujs
@@ -610,7 +610,7 @@ if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
-  https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-disable-textureLod.patch
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-disable-textureLod.patch
   execute patch -p1 -i libplacebo-disable-textureLod.patch
   execute meson setup build \
     --prefix="${WORKSPACE}" \
