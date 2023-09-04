@@ -608,8 +608,9 @@ fi
 
 if build "libplacebo" "master"; then
   cd $PACKAGES
-  git clone --recursive https://github.com/haasn/libplacebo.git --branch d6f1db186d535f3d99d56165bb468de71d58dc6e
+  git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
+  git reset --hard d6f1db186d535f3d99d56165bb468de71d58dc6e
   curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-disable-textureLod.patch
   execute patch -p1 -i libplacebo-disable-textureLod.patch
   execute meson setup build \
