@@ -610,14 +610,14 @@ if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git
   cd libplacebo
-  execute meson setup build \
+  meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=disabled \
     -Dlibdovi=enabled \
     -Ddemos=false 
-  execute meson compile -C build
-  execute meson install -C build
+  meson compile -C build
+  meson install -C build
 
   build_done "libplacebo" "master"
 fi
