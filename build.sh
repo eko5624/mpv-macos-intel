@@ -610,8 +610,8 @@ if build "libplacebo" "6.292.1"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git --branch v6.292.1
   cd libplacebo
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-disable-textureLod.patch
-  patch -p1 -i libplacebo-disable-textureLod.patch
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-fix-purple-screen.diff
+  patch -p1 -i libplacebo-fix-purple-screen.diff
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
