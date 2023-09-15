@@ -1,4 +1,4 @@
-name: update-ver
+name: autoupdate-ver
 
 on:
   #schedule:
