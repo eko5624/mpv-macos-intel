@@ -921,12 +921,13 @@ if build "brotli" "master"; then
   cd brotli
   make_dir out
   cd out || exit  
-  execute cmake ../ \
+  cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DSHARE_INSTALL_PREFIX=="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib
-  execute make -j $MJOBS
-  execute make install
+  make -j $MJOBS
+  make install
 
   build_done "brotli" "master"
 fi
