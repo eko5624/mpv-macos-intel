@@ -1040,9 +1040,9 @@ if build "cjson" "master"; then
   build_done "cjson" "master"
 fi
 
-if build "mbedtls" "development"; then
+if build "mbedtls" "v3.4.1"; then
   cd $PACKAGES
-  git clone https://github.com/Mbed-TLS/mbedtls --branch development --depth 1
+  git clone https://github.com/Mbed-TLS/mbedtls --branch v3.4.1 --depth 1
   cd mbedtls
   # enable pthread mutexes
   sed -i "" 's|//#define MBEDTLS_THREADING_PTHREAD|#define MBEDTLS_THREADING_PTHREAD|g' include/mbedtls/mbedtls_config.h
@@ -1063,7 +1063,7 @@ if build "mbedtls" "development"; then
   make -j $MJOBS all
   make install
 
-  build_done "mbedtls" "development"
+  build_done "mbedtls" "v3.4.1"
 fi
 
 if build "librist" "$VER_LIBRIST"; then
