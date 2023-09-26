@@ -12,7 +12,7 @@ CONFIGURE_OPTIONS=()
 LATEST=false
 CURL_RETRIES="--connect-timeout 60 --retry 5 --retry-delay 5"
 
-source $DIR/ver-10.13.sh
+source $DIR/ver.sh
 
 # Check for Apple Silicon
 if [[ ("$OSTYPE" == "darwin"*) ]]; then
@@ -21,7 +21,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=10.13
+    export MACOSX_DEPLOYMENT_TARGET=11
   fi
 fi
 
@@ -455,19 +455,19 @@ if build "xcb-proto" "${VER_XCB_PROTO}"; then
   build_done "xcb-proto" "${VER_XCB_PROTO}"
 fi
 
-if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
-  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.bz2"
-  execute ./configure --prefix="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
-  build_done "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"
-fi
+#if build "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"; then
+#  download "https://xcb.freedesktop.org/dist/libpthread-stubs-${VER_LIBPTHREAD_STUBS}.tar.bz2"
+#  execute ./configure --prefix="${WORKSPACE}"
+#  execute make -j $MJOBS
+#  execute make install
+#  build_done "libpthread-stubs" "${VER_LIBPTHREAD_STUBS}"
+#fi
 
 if build "libxcb" "$VER_LIBXCB"; then
   download "https://xcb.freedesktop.org/dist/libxcb-$VER_LIBXCB.tar.gz"
   # Drop libpthread-stubs on macOS
-  #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libxcb-drop-libpthread-stubs.diff
-  #patch -p1 -i libxcb-drop-libpthread-stubs.diff
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libxcb-drop-libpthread-stubs.diff
+  patch -p1 -i libxcb-drop-libpthread-stubs.diff
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
@@ -958,8 +958,6 @@ if build "libjxl" "main"; then
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
-  #workaround not support excluding libs
-  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   
   make_dir out
   cd out || exit  
