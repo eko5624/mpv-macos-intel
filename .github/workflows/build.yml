@@ -47,10 +47,8 @@ jobs:
         curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
         unzip workspace-dir.zip
         unzip packages-dir.zip
-        #rm packages/mujs.done || true
-        #rm -rf packages/mujs || true
-        rm packages/libplacebo.done || true
-        rm -rf packages/libplacebo || true
+        rm packages/libmodplug.done || true
+        rm -rf packages/libmodplug || true
         #rm packages/FFmpeg.done || true
         #rm -rf packages/FFmpeg || true
         rm packages/mpv.done || true

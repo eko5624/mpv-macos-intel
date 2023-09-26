@@ -988,8 +988,8 @@ if build "libmodplug" "master"; then
   git clone https://github.com/Konstanty/libmodplug.git --branch master --depth 1
   cd libmodplug
   # Fix -flat_namespace being used on Big Sur and later.
-  # curl $CURL_RETRIES -OL "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-  # execute patch -p1 -i configure-big_sur.diff || true
+  curl $CURL_RETRIES -OL "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
+  execute patch -p1 -i configure-big_sur.diff || true
   execute autoreconf -fvi
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -1048,6 +1048,8 @@ if build "mbedtls" "development"; then
   sed -i "" 's|//#define MBEDTLS_THREADING_PTHREAD|#define MBEDTLS_THREADING_PTHREAD|g' include/mbedtls/mbedtls_config.h
   # allow use of mutexes within mbed TLS
   sed -i "" 's|//#define MBEDTLS_THREADING_C|#define MBEDTLS_THREADING_C|g' include/mbedtls/mbedtls_config.h
+  # enable DTLS-SRTP extension
+  sed -i "" 's|//#define MBEDTLS_SSL_DTLS_SRTP|#define MBEDTLS_SSL_DTLS_SRTP|g' include/mbedtls/mbedtls_config.h
   make_dir build
   cd build || exit  
   execute cmake ../ \
