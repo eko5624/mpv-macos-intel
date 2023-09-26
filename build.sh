@@ -1052,7 +1052,7 @@ if build "mbedtls" "development"; then
   sed -i "" 's|//#define MBEDTLS_SSL_DTLS_SRTP|#define MBEDTLS_SSL_DTLS_SRTP|g' include/mbedtls/mbedtls_config.h
   make_dir build
   cd build || exit  
-  execute cmake ../ \
+  cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release \
@@ -1060,8 +1060,8 @@ if build "mbedtls" "development"; then
     -DPython3_EXECUTABLE="${WORKSPACE}"/bin/python3 \
     -DENABLE_TESTING=OFF \
     -DGEN_FILES=ON
-  execute make -j $MJOBS all
-  execute make install
+  make -j $MJOBS all
+  make install
 
   build_done "mbedtls" "development"
 fi
