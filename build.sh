@@ -988,8 +988,8 @@ if build "libmodplug" "master"; then
   git clone https://github.com/Konstanty/libmodplug.git --branch master --depth 1
   cd libmodplug
   # Fix -flat_namespace being used on Big Sur and later.
-  curl $CURL_RETRIES -OL "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-  execute patch -p1 -i configure-big_sur.diff || true
+  #curl -OL "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
+  #execute patch -p1 -i configure-big_sur.diff || true
   execute autoreconf -fvi
   execute ./configure \
     --prefix="${WORKSPACE}" \
