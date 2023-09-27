@@ -21,7 +21,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=11
+    export MACOSX_DEPLOYMENT_TARGET=10.15
   fi
 fi
 
@@ -1488,12 +1488,14 @@ if build "mpv" "master"; then
   cd $PACKAGES
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
+  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
-    -Dmanpage-build=disabled
+    -Dmanpage-build=disabled \
+    -Dswift-flags="-target x86_64-apple-macos10.15"
   meson compile -C build
   
   # get latest commit sha
