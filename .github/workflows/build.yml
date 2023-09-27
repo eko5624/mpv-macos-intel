@@ -8,27 +8,41 @@ on:
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-13
     env:
       CC: clang
       CXX: clang++
-      MACOSX_DEPLOYMENT_TARGET: 11
-      SDKROOT: "/Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      MACOS_SDK: "/Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SDK_PATH: "/Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
-      EXTRA_CFLAGS: "-mmacosx-version-min=11 -isysroot /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_CXXFLAGS: "-mmacosx-version-min=11 -isysroot /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      EXTRA_LDFLAGS: "-mmacosx-version-min=11 -isysroot /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-      SWIFT_FLAGS: "-target x86_64-apple-macosx11"
+      MACOSX_DEPLOYMENT_TARGET: 10.15
+      SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      MACOS_SDK: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SDK_PATH: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
+      EXTRA_CFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_LDFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SWIFT_FLAGS: "-target x86_64-apple-macosx10.15"
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:    
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Switch to Xcode 13.2.1
+    - name: Switch to MacOSX 10.15 SDK
+      run: |
+        #curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.15.sdk.tar.xz
+        tar -C $SDK_PATH -xf MacOSX10.15.sdk.tar.xz
+        sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
+        sudo rm -rf $SDK_PATH/MacOSX.sdk
+        sudo ln -s $SDK_PATH/MacOSX10.15.sdk $SDK_PATH/MacOSX.sdk
+        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.15" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+
+    - name: Install Swift 5.x toolchain
+      run: |
+        curl -ksJLO https://download.swift.org/swift-5.2.5-release/xcode/swift-5.2.5-RELEASE/swift-5.2.5-RELEASE-osx.pkg
+        sudo installer -pkg swift-5.2.5-RELEASE-osx.pkg -target /
+
+    - name: Switch to Xcode 14.2
       run: |
         sudo xcode-select --reset
-        sudo xcode-select -s /Applications/Xcode_13.2.1.app/Contents/Developer  
+        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer  
  
     - name: Remove stray upstream python binary symlinks under /usr/local
       run: |
