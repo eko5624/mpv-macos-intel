@@ -5,3 +5,5 @@
 This repository provides unofficial git desktop builds of [mpv-player/mpv](https://github.com/mpv-player/mpv) for macOS.
 
 It is compiled with git versions of `ffmpeg` `libass` `libplacebo`.
+
+https://github.com/eko5624/mpv-macos-intel/releases/download/2023-02-27/mpv-10.11.zip
