@@ -955,7 +955,8 @@ if build "libjxl" "main"; then
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
-  
+  #workaround unknown option: --exclude-libs=ALL
+  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir out
   cd out || exit  
   cmake ../ \
