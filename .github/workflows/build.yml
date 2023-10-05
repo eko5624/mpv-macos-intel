@@ -22,7 +22,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        xargs brew install --formula < homebrew/build.txt
+        #xargs brew install --formula < homebrew/build.txt
         xargs brew install --formula < homebrew/runtime.txt
 
        
@@ -57,7 +57,7 @@ jobs:
     - name: Bundle mpv
       run: |
         chmod +x ./bundle.sh
-        ./bundle.sh
+         
         
     - name: Get current timestamp
       id: timestamp
