@@ -1191,7 +1191,7 @@ fi
 CONFIGURE_OPTIONS+=("--enable-libwebp")
 
 if build "opencore" "$VER_OPENCORE_AMR"; then
-  download "https://netactuate.dl.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-$VER_OPENCORE_AMR.tar.gz" "opencore-amr-$VER_OPENCORE_AMR.tar.gz"
+  download "https://downloads.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-$VER_OPENCORE_AMR.tar.gz" "opencore-amr-$VER_OPENCORE_AMR.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
