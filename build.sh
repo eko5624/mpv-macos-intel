@@ -352,19 +352,19 @@ if build "ncurses" "$VER_NCURSES"; then
   build_done "ncurses" "$VER_NCURSES"
 fi  
 
-if build "python" "$VER_PYTHON_3_11"; then
-  cd $PACKAGES
-  git clone https://github.com/python/cpython --branch 3.11
-  cd cpython
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --with-pydebug \
-    --with-openssl="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
-
-  build_done "python" "$VER_PYTHON_3_11"
-fi
+#if build "python" "$VER_PYTHON_3_11"; then
+#  cd $PACKAGES
+#  git clone https://github.com/python/cpython --branch 3.11
+#  cd cpython
+#  execute ./configure \
+#    --prefix="${WORKSPACE}" \
+#    --with-pydebug \
+#    --with-openssl="${WORKSPACE}"
+#  execute make -j $MJOBS
+#  execute make install
+#
+#  build_done "python" "$VER_PYTHON_3_11"
+#fi
 
 if build "libxml2" "master"; then
   cd $PACKAGES
@@ -553,24 +553,6 @@ if build "lcms2" "master"; then
   build_done "lcms2" "master"
 fi
 
-if build "glslang" "12.3.1"; then
-  cd $PACKAGES
-  git clone https://github.com/KhronosGroup/glslang.git --branch 12.3.1 --depth 1
-  cd glslang
-  make_dir build
-  cd build || exit  
-  execute cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_EXTERNAL=OFF \
-    -DENABLE_CTEST=OFF
-  execute make -j $MJOBS all
-  execute make install
-
-  build_done "glslang" "12.3.1"
-fi
-
 if build "mujs" "1.3.3"; then
   cd $PACKAGES
   git clone https://github.com/ccxvii/mujs.git --branch 1.3.3
@@ -593,14 +575,106 @@ if build "libdovi" "main"; then
     curl -OL https://github.com/lu-zero/cargo-c/releases/latest/download/cargo-c-macos.zip
     unzip cargo-c-macos.zip -d "$WORKSPACE/.rustup/toolchains/stable-x86_64-apple-darwin/bin"
   fi
-  $WORKSPACE/.cargo/bin/rustup default stable-x86_64-apple-darwin
+  if [ ! -d "$WORKSPACE/.rustup" ]; then
+    $WORKSPACE/.cargo/bin/rustup default stable-x86_64-apple-darwin
+  fi  
   git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
   cd dovi_tool/dolby_vision
   mkdir build
   export PATH="$WORKSPACE/.rustup/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
+  export CARGO_BUILD_TARGET_DIR=build
   export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-  execute cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
+  cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
   build_done "libdovi" "main"
+fi
+
+#if build "glslang" "main"; then
+#  cd $PACKAGES
+#  git clone https://github.com/KhronosGroup/glslang.git --branch main
+#  cd glslang
+#  make_dir build
+#  cd build || exit  
+#  execute cmake .. \
+#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+#    -DCMAKE_BUILD_TYPE=Release \
+#    -DBUILD_EXTERNAL=OFF \
+#    -DENABLE_CTEST=OFF
+#  execute make -j $MJOBS all
+#  execute make install
+#
+#  build_done "glslang" "main"
+#fi
+
+if build "shaderc" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/google/shaderc.git --branch main
+  cp shaderc/DEPS ./
+  curl -OL https://github.com/KhronosGroup/glslang/archive/`cat DEPS | grep glslang | head -n1 | cut -d\' -f4`.tar.gz
+  curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
+  curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
+  for f in *.gz; do tar xvf "$f"; done 
+  mv glslang* glslang
+  mv SPIRV-Headers* spirv-headers
+  mv SPIRV-Tools* spirv-tools
+  cd shaderc
+  mv ../spirv-headers third_party
+  mv ../spirv-tools third_party
+  mv ../glslang third_party
+  make_dir build
+  cd build || exit  
+  execute cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSHADERC_SKIP_TESTS=ON \
+    -DSKIP_GLSLANG_INSTALL=ON \
+    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
+    -DSKIP_GOOGLETEST_INSTALL=ON
+  execute make -j $MJOBS 
+  execute make install
+
+  build_done "shaderc" "main"
+fi
+
+if build "vulkan" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/KhronosGroup/Vulkan-Headers.git --branch main
+  git clone https://github.com/KhronosGroup/Vulkan-Loader.git --branch main
+  cd Vulkan-Headers
+  make_dir build
+  cd build || exit  
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release
+  cmake --install .
+  cd Vulkan-Loader
+  make_dir build
+  cd build || exit
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DVULKAN_HEADERS_INSTALL_DIR="${WORKSPACE}"
+  cmake --build .
+  cmake --install .
+  build_done "vulkan" "main"
+fi
+
+if build "MoltenVK" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/KhronosGroup/MoltenVK.git --branch main
+  cd MoltenVK
+  ./fetchDependencies --macos --v-headers-root "${WORKSPACE}"
+  make macos MVK_CONFIG_LOG_LEVEL=1
+  sed -i '' "s|./libMoltenVK|$WORKSPACE/lib/libMoltenVK|g" Package/Latest/MoltenVK/dylib/macOS/MoltenVK_icd.json
+  cat Package/Latest/MoltenVK/dylib/macOS/MoltenVK_icd.json
+  mkdir -p "${WORKSPACE}"/share/vulkan/icd.d
+  install -vm755 Package/Latest/MoltenVK/dylib/macOS/libMoltenVK.dylib "${WORKSPACE}"/lib
+  install -vm644 Package/Latest/MoltenVK/dylib/macOS/MoltenVK_icd.json "${WORKSPACE}"/share/vulkan/icd.d
+
+  build_done "MoltenVK" "main"
 fi
 
 if build "libplacebo" "master"; then
@@ -956,7 +1030,7 @@ if build "libjxl" "main"; then
   cd libjxl
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
   #workaround unknown option: --exclude-libs=ALL
-  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
+  #execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir out
   cd out || exit  
   cmake ../ \
@@ -1187,7 +1261,7 @@ fi
 CONFIGURE_OPTIONS+=("--enable-libwebp")
 
 if build "opencore" "$VER_OPENCORE_AMR"; then
-  download "https://netactuate.dl.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-$VER_OPENCORE_AMR.tar.gz" "opencore-amr-$VER_OPENCORE_AMR.tar.gz"
+  download "https://downloads.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-$VER_OPENCORE_AMR.tar.gz" "opencore-amr-$VER_OPENCORE_AMR.tar.gz"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
