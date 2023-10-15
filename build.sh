@@ -684,9 +684,16 @@ if build "libplacebo" "master"; then
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
-    -Dvulkan=disabled \
+    -Dvulkan=enabled \
+    -Dshaderc=enabled \
+    -Dlcms=enabled \
+    -Dopengl=disabled \
+    -Dd3d11=disabled \
+    -Dglslang=disabled \
+    -Ddemos=false \
     -Dlibdovi=enabled \
-    -Ddemos=false 
+    -Ddemos=false \
+    -Dvulkan-registry="${WORKSPACE}"/share/vulkan/registry/vk.xml
   meson compile -C build
   meson install -C build
 
