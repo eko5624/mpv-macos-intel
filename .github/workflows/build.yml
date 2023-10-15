@@ -10,73 +10,131 @@ jobs:
   build:
     runs-on: macos-13
     env:
-      HOMEBREW_NO_INSTALL_CLEANUP: 1
-      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+      CC: clang
+      CXX: clang++
+      MACOSX_DEPLOYMENT_TARGET: 10.15
+      SDKROOT: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      MACOS_SDK: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SDK_PATH: "/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
+      EXTRA_CFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_CXXFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      EXTRA_LDFLAGS: "-mmacosx-version-min=10.15 -isysroot /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+      SWIFT_FLAGS: "-target x86_64-apple-macosx10.15"
+      CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
     steps:    
-    - name: Checkout source code
-      uses: actions/checkout@main
-      with:
-        repository: "m154k1/mpv-build-macOS"
-        ref: "master"          
-        fetch-depth: 0
-
-    - name: Install dependencies
-      run: |
-        #xargs brew install --formula < homebrew/build.txt
-        xargs brew install --formula < homebrew/runtime.txt
-
-       
-    - name: Create installation directory
-      run: |
-        sudo mkdir /opt/local
-        sudo chown $USER:admin /opt/local
-        
-    - name: Build and install
-      continue-on-error: true
-      run: |
-        git -C src clone "https://github.com/KhronosGroup/MoltenVK.git"
-        ./build-MoltenVK
-        git -C src clone "https://gitlab.freedesktop.org/freetype/freetype.git"
-        git -C src clone "https://github.com/harfbuzz/harfbuzz.git"
-        ./build-FreeType -Dharfbuzz=disabled
-        ./build-HarfBuzz
-        ./build-FreeType
-        git -C src clone "https://github.com/libass/libass.git"
-        ./build-libass
-        git -C src clone --recursive "https://code.videolan.org/videolan/libplacebo.git"
-        ./build-libplacebo
-        git -C src clone "https://git.ffmpeg.org/ffmpeg.git"
-        ./build-FFmpeg
-        git -C src clone "https://github.com/mpv-player/mpv.git"
-        git -C src/mpv apply "$(pwd)"/patches/mpv/*
-        ./build-mpv
-
     - name: Checkout
       uses: actions/checkout@main
-      
-    - name: Bundle mpv
+
+    - name: Switch to MacOSX 10.15 SDK
+      run: |
+        #curl -OL https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.15.sdk.tar.xz
+        tar -C $SDK_PATH -xf MacOSX10.15.sdk.tar.xz
+        sudo rm -rf $SDK_PATH/MacOSX13.1.sdk
+        sudo rm -rf $SDK_PATH/MacOSX.sdk
+        sudo ln -s $SDK_PATH/MacOSX10.15.sdk $SDK_PATH/MacOSX.sdk
+        sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.15" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+
+    - name: Install Swift 5.x toolchain
+      run: |
+        curl -ksJLO https://download.swift.org/swift-5.2.5-release/xcode/swift-5.2.5-RELEASE/swift-5.2.5-RELEASE-osx.pkg
+        sudo installer -pkg swift-5.2.5-RELEASE-osx.pkg -target /
+
+    - name: Switch to Xcode 14.2
+      run: |
+        sudo xcode-select --reset
+        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer  
+ 
+    - name: Remove stray upstream python binary symlinks under /usr/local
+      run: |
+        find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
+        brew unlink python
+
+    #- name: Switch to CLTs
+    #  run: |
+    #    sudo xcode-select --reset
+    #    sudo xcode-select --switch /Library/Developer/CommandLineTools/
+
+    - name: Install binary packages
+      continue-on-error: true
+      run: |
+        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/workspace-dir.zip
+        curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
+        unzip workspace-dir.zip
+        unzip packages-dir.zip
+        #rm packages/libmodplug.done || true
+        #rm -rf packages/libmodplug || true
+        #rm packages/FFmpeg.done || true
+        #rm -rf packages/FFmpeg || true
+        rm packages/mpv.done || true
+        rm -rf packages/mpv || true
+        rm workspace-dir.zip || true
+        rm packages-dir.zip || true
+       
+    - name: build mpv
+      continue-on-error: true
+      run: |
+        chmod +x ./build.sh
+        ./build.sh
+        
+    - name: bundle mpv
+      continue-on-error: true
       run: |
         chmod +x ./bundle.sh
-         
+        ./bundle.sh   
+
+    - name: Zip binary packages 
+      continue-on-error: true
+      run: |
+        rm workspace-dir.zip || true
+        rm packages-dir.zip || true
+        rm -rf workspace/.cargo
+        rm -rf workspace/.rustup
+        rm -rf workspace/doc
+        rm -rf workspace/etc
+        rm -rf workspace/man
+        rm -rf workspace/var
+        zip -r -y workspace-dir.zip workspace/
+        rm -rf packages2 && mkdir packages2
+        mv packages/mpv packages2 || true
+        mv packages/*.done packages2
+        rm -rf packages
+        mv packages2 packages
+        zip -r -y packages-dir.zip packages/
         
+    - name: Upload binary packages
+      continue-on-error: true
+      uses: softprops/action-gh-release@master
+      with:
+        tag_name: binary-packages
+        name: binary-packages
+        files: |
+          workspace-dir.zip
+          packages-dir.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Get current timestamp
-      id: timestamp
-      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT      
-      
-    - name: Package
+      run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV        
+
+    - name: Zip mpv.app
       run: |
         mkdir All-in-One
         curl -OL https://github.com/eko5624/mpv-config/archive/refs/heads/main.zip
         unzip main.zip
         mv mpv-config-main/macos_config All-in-One
-        sudo mv mpv/build All-in-One
-        zip -r -y All-in-One-${{ steps.timestamp.outputs.date }}.zip All-in-One/
+        mv packages/mpv/build/mpv.app All-in-One
+        mv packages/mpv/build/*deps.txt All-in-One
+        zip -r -y All-in-One-${{ env.date }}.zip All-in-One/*
+
+    - name: Get mpv short sha
+      run: |
+        echo "sha=$(cat packages/mpv/build/SHORT_SHA)" >> $GITHUB_ENV
 
     - name: Create Release
       uses: softprops/action-gh-release@master
       with:
-        tag_name: ${{ steps.timestamp.outputs.date }}
-        name: ${{ steps.timestamp.outputs.date }}
+        tag_name: ${{ env.date }}
+        name: ${{ env.date }}
         body: Bump to mpv-player/mpv@${{ env.sha }}
         files: All*.zip
       env:
