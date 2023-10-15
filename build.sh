@@ -610,13 +610,8 @@ if build "libplacebo" "master"; then
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
-    -Dvulkan-registry="${WORKSPACE}"/share/vulkan/registry/vk.xml \
-    -Dvulkan=enabled \
-    -Dshaderc=enabled \
+    -Dvulkan=disabled \
     -Dlcms=enabled \
-    -Dopengl=disabled \
-    -Dd3d11=disabled \
-    -Dglslang=disabled \
     -Ddemos=false \
     -Dlibdovi=enabled \
     -Ddemos=false 
