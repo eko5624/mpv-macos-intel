@@ -62,7 +62,7 @@ jobs:
         unzip workspace-dir.zip
         unzip packages-dir.zip
         #rm packages/libmodplug.done || true
-        #rm -rf packages/libmodplug || true
+        rm -rf packages/Vulkan* || true
         #rm packages/FFmpeg.done || true
         #rm -rf packages/FFmpeg || true
         rm packages/mpv.done || true
