@@ -70,6 +70,7 @@ jobs:
         rm -rf packages/mpv || true
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
+        rm workspace/bin/libtool
        
     - name: build mpv
       continue-on-error: true
