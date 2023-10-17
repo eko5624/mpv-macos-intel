@@ -1590,7 +1590,7 @@ if build "mpv" "master"; then
     --libdir="${WORKSPACE}"/lib \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
-    -Dmanpage-build=disabled \
+    -Dmanpage-build=disabled
 #    -Dswift-flags="-target x86_64-apple-macos10.15"
   meson compile -C build
   
