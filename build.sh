@@ -620,36 +620,37 @@ fi
 #  build_done "glslang" "main"
 #fi
 
-#if build "shaderc" "main"; then
-#  cd $PACKAGES
-#  git clone https://github.com/google/shaderc.git --branch main
-#  cp shaderc/DEPS ./
-#  curl -OL https://github.com/KhronosGroup/glslang/archive/`cat DEPS | grep glslang | head -n1 | cut -d\' -f4`.tar.gz
-#  curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
-#  curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
-#  for f in *.gz; do tar xvf "$f"; done 
-#  mv glslang* glslang
-#  mv SPIRV-Headers* spirv-headers
-#  mv SPIRV-Tools* spirv-tools
-#  cd shaderc
-#  mv ../spirv-headers third_party
-#  mv ../spirv-tools third_party
-#  mv ../glslang third_party
-#  make_dir build
-#  cd build || exit  
-#  execute cmake .. \
-#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DSHADERC_SKIP_TESTS=ON \
-#    -DSKIP_GLSLANG_INSTALL=ON \
-#    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
-#    -DSKIP_GOOGLETEST_INSTALL=ON
-#  execute make -j $MJOBS 
-#  execute make install
-#
-#  build_done "shaderc" "main"
-#fi
+if build "shaderc" "main"; then
+  cd $PACKAGES
+  git clone https://github.com/google/shaderc.git --branch main
+  cp shaderc/DEPS ./
+  curl -OL https://github.com/KhronosGroup/glslang/archive/`cat DEPS | grep glslang | head -n1 | cut -d\' -f4`.tar.gz
+  curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
+  curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
+  for f in *.gz; do tar xvf "$f"; done 
+  mv glslang* glslang
+  mv SPIRV-Headers* spirv-headers
+  mv SPIRV-Tools* spirv-tools
+  cd shaderc
+  sed -i '' "s|${SHADERC_SKIP_INSTALL}|ON|g" third_party/CMakeLists.txt
+  mv $PACKAGES/spirv-headers third_party
+  mv $PACKAGES/spirv-tools third_party
+  mv $PACKAGES/glslang third_party
+  make_dir build
+  cd build || exit  
+  execute cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSHADERC_SKIP_TESTS=ON \
+    -DSKIP_GLSLANG_INSTALL=ON \
+    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
+    -DSKIP_GOOGLETEST_INSTALL=ON
+  cmake --build . 
+  cmake --install .
+
+  build_done "shaderc" "main"
+fi
 
 if build "vulkan" "main"; then
   cd $PACKAGES
@@ -699,8 +700,9 @@ if build "libplacebo" "master"; then
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=enabled \
+    -Dshaderc=enabled \
     -Dlcms=enabled \
-    -Dopengl=disabled \
+    -Dopengl=enabled \
     -Dd3d11=disabled \
     -Dglslang=disabled \
     -Ddemos=false \
