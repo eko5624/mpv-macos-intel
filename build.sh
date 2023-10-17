@@ -663,7 +663,7 @@ if build "vulkan" "main"; then
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release
   cmake --install .
-  cd Vulkan-Loader
+  cd $PACKAGES/Vulkan-Loader
   make_dir build
   cd build || exit
   cmake .. \
