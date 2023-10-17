@@ -251,22 +251,37 @@ if build "zlib" "$VER_ZLIB"; then
   build_done "zlib" "$VER_ZLIB"
 fi
 
-if build "openssl" "${VER_OPENSSL_1_1}"; then
-  download "https://www.openssl.org/source/openssl-"${VER_OPENSSL_1_1}".tar.gz"
-  if $MACOS_M1; then
-    sed -n 's/\(##### GNU Hurd\)/"darwin64-arm64-cc" => { \n    inherit_from     => [ "darwin-common", asm("aarch64_asm") ],\n    CFLAGS           => add("-Wall"),\n    cflags           => add("-arch arm64 "),\n    lib_cppflags     => add("-DL_ENDIAN"),\n    bn_ops           => "SIXTY_FOUR_BIT_LONG", \n    perlasm_scheme   => "macosx", \n}, \n\1/g' Configurations/10-main.conf
-    execute ./Configure --prefix="${WORKSPACE}" no-shared no-asm darwin64-arm64-cc
-  else
+#if build "openssl" "${VER_OPENSSL_1_1}"; then
+#  download "https://www.openssl.org/source/openssl-"${VER_OPENSSL_1_1}".tar.gz"
+#  if $MACOS_M1; then
+#    sed -n 's/\(##### GNU Hurd\)/"darwin64-arm64-cc" => { \n    inherit_from     => [ "darwin-common", asm("aarch64_asm") ],\n    CFLAGS           => add("-Wall"),\n    cflags           => add("-arch arm64 "),\n    lib_cppflags     => add("-DL_ENDIAN"),\n    bn_ops           => "SIXTY_FOUR_BIT_LONG", \n    perlasm_scheme   => "macosx", \n}, \n\1/g' Configurations/10-main.conf
+#    execute ./Configure --prefix="${WORKSPACE}" no-shared no-asm darwin64-arm64-cc
+#  else
+#    execute ./config \
+#      --prefix="${WORKSPACE}" \
+#      --openssldir="${WORKSPACE}" \
+#      --with-zlib-include="${WORKSPACE}"/include/ \
+#      --with-zlib-lib="${WORKSPACE}"/lib \
+#      zlib
+#  fi
+#  execute make -j $MJOBS
+#  execute make install_sw
+#  build_done "openssl" "${VER_OPENSSL_1_1}"
+#fi
+#CONFIGURE_OPTIONS+=("--enable-openssl")
+
+if build "openssl" "${VER_OPENSSL_3}"; then
+  download "https://www.openssl.org/source/openssl-"${VER_OPENSSL_3}".tar.gz"
     execute ./config \
       --prefix="${WORKSPACE}" \
       --openssldir="${WORKSPACE}" \
-      --with-zlib-include="${WORKSPACE}"/include/ \
-      --with-zlib-lib="${WORKSPACE}"/lib \
-      zlib
-  fi
+      --libdir="${WORKSPACE}"/lib \
+      no-ssl3 \
+      no-ssl3-method \
+      no-zlib
   execute make -j $MJOBS
-  execute make install_sw
-  build_done "openssl" "${VER_OPENSSL_1_1}"
+  execute make install
+  build_done "openssl" "${VER_OPENSSL_3}"
 fi
 CONFIGURE_OPTIONS+=("--enable-openssl")
 
@@ -605,36 +620,36 @@ fi
 #  build_done "glslang" "main"
 #fi
 
-if build "shaderc" "main"; then
-  cd $PACKAGES
-  git clone https://github.com/google/shaderc.git --branch main
-  cp shaderc/DEPS ./
-  curl -OL https://github.com/KhronosGroup/glslang/archive/`cat DEPS | grep glslang | head -n1 | cut -d\' -f4`.tar.gz
-  curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
-  curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
-  for f in *.gz; do tar xvf "$f"; done 
-  mv glslang* glslang
-  mv SPIRV-Headers* spirv-headers
-  mv SPIRV-Tools* spirv-tools
-  cd shaderc
-  mv ../spirv-headers third_party
-  mv ../spirv-tools third_party
-  mv ../glslang third_party
-  make_dir build
-  cd build || exit  
-  execute cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DSHADERC_SKIP_TESTS=ON \
-    -DSKIP_GLSLANG_INSTALL=ON \
-    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
-    -DSKIP_GOOGLETEST_INSTALL=ON
-  execute make -j $MJOBS 
-  execute make install
-
-  build_done "shaderc" "main"
-fi
+#if build "shaderc" "main"; then
+#  cd $PACKAGES
+#  git clone https://github.com/google/shaderc.git --branch main
+#  cp shaderc/DEPS ./
+#  curl -OL https://github.com/KhronosGroup/glslang/archive/`cat DEPS | grep glslang | head -n1 | cut -d\' -f4`.tar.gz
+#  curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
+#  curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
+#  for f in *.gz; do tar xvf "$f"; done 
+#  mv glslang* glslang
+#  mv SPIRV-Headers* spirv-headers
+#  mv SPIRV-Tools* spirv-tools
+#  cd shaderc
+#  mv ../spirv-headers third_party
+#  mv ../spirv-tools third_party
+#  mv ../glslang third_party
+#  make_dir build
+#  cd build || exit  
+#  execute cmake .. \
+#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+#    -DCMAKE_BUILD_TYPE=Release \
+#    -DSHADERC_SKIP_TESTS=ON \
+#    -DSKIP_GLSLANG_INSTALL=ON \
+#    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
+#    -DSKIP_GOOGLETEST_INSTALL=ON
+#  execute make -j $MJOBS 
+#  execute make install
+#
+#  build_done "shaderc" "main"
+#fi
 
 if build "vulkan" "main"; then
   cd $PACKAGES
@@ -684,7 +699,6 @@ if build "libplacebo" "master"; then
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     -Dvulkan=enabled \
-    -Dshaderc=enabled \
     -Dlcms=enabled \
     -Dopengl=disabled \
     -Dd3d11=disabled \
