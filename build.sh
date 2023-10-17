@@ -34,7 +34,7 @@ elif [[ -f /proc/cpuinfo ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   MJOBS=$(sysctl -n machdep.cpu.thread_count)
   CONFIGURE_OPTIONS=("--enable-videotoolbox")
-  MACOS_LIBTOOL="$(which libtool)" # gnu libtool is installed in this script and need to avoid name conflict
+#  MACOS_LIBTOOL="$(which libtool)" # gnu libtool is installed in this script and need to avoid name conflict
 else
   MJOBS=3
 fi
