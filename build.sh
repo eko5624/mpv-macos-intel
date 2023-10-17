@@ -1046,8 +1046,9 @@ fi
 
 if build "libjxl" "main"; then
   cd $PACKAGES
-  git clone https://github.com/libjxl/libjxl.git --branch c6a7bc2b079666ebfde3ca66afb0d17915cc634a
+  git clone https://github.com/libjxl/libjxl.git
   cd libjxl
+  git reset --hard c6a7bc2b079666ebfde3ca66afb0d17915cc634a
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
   #workaround unknown option: --exclude-libs=ALL
   #execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
