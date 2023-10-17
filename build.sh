@@ -632,7 +632,7 @@ if build "shaderc" "main"; then
   mv SPIRV-Headers* spirv-headers
   mv SPIRV-Tools* spirv-tools
   cd shaderc
-  sed -i '' "s|${SHADERC_SKIP_INSTALL}|ON|g" third_party/CMakeLists.txt
+  sed -i "" 's/${SHADERC_SKIP_INSTALL}/ON/g' third_party/CMakeLists.txt
   mv $PACKAGES/spirv-headers third_party
   mv $PACKAGES/spirv-tools third_party
   mv $PACKAGES/glslang third_party
