@@ -1594,7 +1594,7 @@ if build "mpv" "master"; then
     -Dprefix="${WORKSPACE}" \
     -Dmanpage-build=disabled
 #    -Dswift-flags="-target x86_64-apple-macos10.15"
-  meson compile -C build
+  meson compile -C build --tags runtime,devel
   
   # get latest commit sha
   short_sha=$(git rev-parse --short HEAD)
