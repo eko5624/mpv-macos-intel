@@ -1584,8 +1584,10 @@ fi
 
 if build "mpv" "master"; then
   cd $PACKAGES
+  curl -OL https://raw.githubusercontent.com/m154k1/mpv-build-macOS/master/patches/mpv/0001-vo-gpu-next-videotoolbox.patch
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
+  patch -p1 -i ../0001-vo-gpu-next-videotoolbox.patch
 #  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
