@@ -61,8 +61,6 @@ jobs:
         curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
         unzip workspace-dir.zip
         unzip packages-dir.zip
-        rm packages/shaderc.done || true
-        rm -rf packages/shaderc || true
         rm packages/MoltenVK.done || true
         rm -rf packages/MoltenVK || true
         rm packages/vulkan.done || true

@@ -643,12 +643,9 @@ if build "shaderc" "main"; then
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DSHADERC_SKIP_TESTS=ON \
-    -DSKIP_GLSLANG_INSTALL=ON \
-    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
-    -DSKIP_GOOGLETEST_INSTALL=ON
+    -DSHADERC_SKIP_EXAMPLES=ON
   cmake --build . 
   cmake --install .
-  sed -i 
 
   build_done "shaderc" "main"
 fi
