@@ -648,6 +648,7 @@ if build "shaderc" "main"; then
     -DSKIP_GOOGLETEST_INSTALL=ON
   cmake --build . 
   cmake --install .
+  sed -i 
 
   build_done "shaderc" "main"
 fi
@@ -674,6 +675,8 @@ if build "vulkan" "main"; then
     -DVULKAN_HEADERS_INSTALL_DIR="${WORKSPACE}"
   cmake --build .
   cmake --install .
+  sed -i "" 's/lvulkan/lMoltenVK/g' "${WORKSPACE}"/lib/pkgconfig/vulkan.pc
+
   build_done "vulkan" "main"
 fi
 
