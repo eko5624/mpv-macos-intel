@@ -34,7 +34,7 @@ elif [[ -f /proc/cpuinfo ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   MJOBS=$(sysctl -n machdep.cpu.thread_count)
   CONFIGURE_OPTIONS=("--enable-videotoolbox")
-#  MACOS_LIBTOOL="$(which libtool)" # gnu libtool is installed in this script and need to avoid name conflict
+  MACOS_LIBTOOL="$(which libtool)" # gnu libtool is installed in this script and need to avoid name conflict
 else
   MJOBS=3
 fi
@@ -351,13 +351,13 @@ if build "automake" "$VER_AUTOMAKE"; then
   build_done "automake" "$VER_AUTOMAKE"
 fi
 
-#if build "libtool" "$VER_LIBTOOL"; then
-#  download "https://ftpmirror.gnu.org/libtool/libtool-$VER_LIBTOOL.tar.gz"
-#  execute ./configure --prefix="${WORKSPACE}"
-#  execute make -j $MJOBS
-#  execute make install
-#  build_done "libtool" "$VER_LIBTOOL"
-#fi
+if build "libtool" "$VER_LIBTOOL"; then
+  download "https://ftpmirror.gnu.org/libtool/libtool-$VER_LIBTOOL.tar.gz"
+  execute ./configure --prefix="${WORKSPACE}"
+  execute make -j $MJOBS
+  execute make install
+  build_done "libtool" "$VER_LIBTOOL"
+fi
 
 if build "ncurses" "$VER_NCURSES"; then
   download "https://ftpmirror.gnu.org/ncurses/ncurses-$VER_NCURSES.tar.gz"
@@ -614,6 +614,7 @@ if build "shaderc" "main"; then
   mv SPIRV-Headers* spirv-headers
   mv SPIRV-Tools* spirv-tools
   cd shaderc
+  mv $WORKSPACE/bin/libtool $WORKSPACE/bin/libtool.bak
   sed -i "" 's/${SHADERC_SKIP_INSTALL}/ON/g' third_party/CMakeLists.txt
   mv $PACKAGES/spirv-headers third_party
   mv $PACKAGES/spirv-tools third_party
@@ -628,6 +629,7 @@ if build "shaderc" "main"; then
     -DSHADERC_SKIP_EXAMPLES=ON
   cmake --build . 
   cmake --install .
+  mv $WORKSPACE/bin/libtool.bak $WORKSPACE/bin/libtool
 
   build_done "shaderc" "main"
 fi
