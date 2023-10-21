@@ -1577,7 +1577,8 @@ if build "mpv" "master"; then
     --libdir="${WORKSPACE}"/lib \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
-    -Dmanpage-build=disabled
+    -Dmanpage-build=disabled \
+    -Dswift-flags="-target x86_64-apple-macos11.0"
   meson compile -C build
   
   # get latest commit sha
