@@ -34,11 +34,11 @@ jobs:
         sudo ln -s $SDK_PATH/MacOSX11.0.sdk $SDK_PATH/MacOSX.sdk
         sudo /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 11.0" /Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
-#    - name: Install Swift 5.x toolchain
-#      run: |
-#        curl -ksJLO https://download.swift.org/swift-5.3.1-release/xcode/swift-5.3.1-RELEASE/swift-5.3.1-RELEASE-osx.pkg
-#        sudo installer -pkg swift-5.3.1-RELEASE-osx.pkg -target /
-#
+    - name: Install Swift 5.x toolchain
+      run: |
+        curl -ksJLO https://download.swift.org/swift-5.3.1-release/xcode/swift-5.3.1-RELEASE/swift-5.3.1-RELEASE-osx.pkg
+        sudo installer -pkg swift-5.3.1-RELEASE-osx.pkg -target /
+
     - name: Switch to Xcode 14.2
       run: |
         sudo xcode-select --reset

@@ -1572,6 +1572,7 @@ if build "mpv" "master"; then
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
   git apply ../0001-vo-gpu-next-videotoolbox.patch
+  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
