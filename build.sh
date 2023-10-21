@@ -21,7 +21,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=13
+    export MACOSX_DEPLOYMENT_TARGET=10.15
   fi
 fi
 
@@ -351,13 +351,13 @@ if build "automake" "$VER_AUTOMAKE"; then
   build_done "automake" "$VER_AUTOMAKE"
 fi
 
-if build "libtool" "$VER_LIBTOOL"; then
-  download "https://ftpmirror.gnu.org/libtool/libtool-$VER_LIBTOOL.tar.gz"
-  execute ./configure --prefix="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
-  build_done "libtool" "$VER_LIBTOOL"
-fi
+#if build "libtool" "$VER_LIBTOOL"; then
+#  download "https://ftpmirror.gnu.org/libtool/libtool-$VER_LIBTOOL.tar.gz"
+#  execute ./configure --prefix="${WORKSPACE}"
+#  execute make -j $MJOBS
+#  execute make install
+#  build_done "libtool" "$VER_LIBTOOL"
+#fi
 
 if build "ncurses" "$VER_NCURSES"; then
   download "https://ftpmirror.gnu.org/ncurses/ncurses-$VER_NCURSES.tar.gz"
@@ -520,16 +520,16 @@ if command_exists "python3"; then
   fi
 fi
 
-if build "cmake" "$VER_CMAKE"; then
-  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
-  execute ./configure \
-    --prefix="${WORKSPACE}" \
-    --parallel="${MJOBS}" -- \
-    -DCMAKE_USE_OPENSSL=OFF
-  execute make -j $MJOBS
-  execute make install
-  build_done "cmake" "$VER_CMAKE"
-fi
+#if build "cmake" "$VER_CMAKE"; then
+#  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
+#  execute ./configure \
+#    --prefix="${WORKSPACE}" \
+#    --parallel="${MJOBS}" -- \
+#    -DCMAKE_USE_OPENSSL=OFF
+#  execute make -j $MJOBS
+#  execute make install
+#  build_done "cmake" "$VER_CMAKE"
+#fi
 
 if build "libtiff" "$VER_LIBTIFF"; then
   download "https://download.osgeo.org/libtiff/tiff-$VER_LIBTIFF.tar.xz"
@@ -601,24 +601,6 @@ if build "libdovi" "main"; then
   cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
   build_done "libdovi" "main"
 fi
-
-#if build "glslang" "main"; then
-#  cd $PACKAGES
-#  git clone https://github.com/KhronosGroup/glslang.git --branch main
-#  cd glslang
-#  make_dir build
-#  cd build || exit  
-#  execute cmake .. \
-#    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-#    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DBUILD_EXTERNAL=OFF \
-#    -DENABLE_CTEST=OFF
-#  execute make -j $MJOBS all
-#  execute make install
-#
-#  build_done "glslang" "main"
-#fi
 
 if build "shaderc" "main"; then
   cd $PACKAGES
@@ -1053,7 +1035,7 @@ if build "libjxl" "main"; then
   git reset --hard c6a7bc2b079666ebfde3ca66afb0d17915cc634a
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
   #workaround unknown option: --exclude-libs=ALL
-  #execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
+  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir out
   cd out || exit  
   cmake ../ \
@@ -1588,16 +1570,15 @@ if build "mpv" "master"; then
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
   git apply ../0001-vo-gpu-next-videotoolbox.patch
-#  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
+  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
-    -Dmanpage-build=disabled
-#    -Dswift-flags="-target x86_64-apple-macos10.15"
+    -Dmanpage-build=disabled \
+    -Dswift-flags="-target x86_64-apple-macos10.15"
   meson compile -C build
-  meson install -C build --tags runtime,devel
   
   # get latest commit sha
   short_sha=$(git rev-parse --short HEAD)
