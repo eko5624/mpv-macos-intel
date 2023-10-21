@@ -390,13 +390,13 @@ if build "libxml2" "master"; then
   # https://gitlab.gnome.org/GNOME/libxml2/issues/12
   #execute curl $CURL_RETRIES -L --silent -o fix_crash.patch "https://bugzilla.opensuse.org/attachment.cgi?id=746044"
   #execute patch -p1 -i fix_crash.patch
-  execute autoreconf -fvi
-  execute ./configure \
+  autoreconf -fvi
+  ./configure \
     --prefix="${WORKSPACE}" \
     --without-python \
     --without-lzma
-  execute make -j $MJOBS
-  execute make install
+  make -j $MJOBS
+  make install
 
   build_done "libxml2" "master"
 fi  
