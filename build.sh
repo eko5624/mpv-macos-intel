@@ -21,7 +21,7 @@ if [[ ("$OSTYPE" == "darwin"*) ]]; then
     export MACOSX_DEPLOYMENT_TARGET=11
     MACOS_M1=true
   else
-    export MACOSX_DEPLOYMENT_TARGET=10.15
+    export MACOSX_DEPLOYMENT_TARGET=11
   fi
 fi
 
@@ -1036,8 +1036,6 @@ if build "libjxl" "main"; then
   cd libjxl
   git reset --hard c6a7bc2b079666ebfde3ca66afb0d17915cc634a
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
-  #workaround unknown option: --exclude-libs=ALL
-  execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   make_dir out
   cd out || exit  
   cmake ../ \
@@ -1572,14 +1570,12 @@ if build "mpv" "master"; then
   git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
   cd mpv
   git apply ../0001-vo-gpu-next-videotoolbox.patch
-  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
     -Diconv=disabled \
     -Dprefix="${WORKSPACE}" \
-    -Dmanpage-build=disabled \
-    -Dswift-flags="-target x86_64-apple-macos10.15"
+    -Dmanpage-build=disabled
   meson compile -C build
   
   # get latest commit sha
