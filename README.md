@@ -4,14 +4,14 @@
 
 This repository provides unofficial git desktop builds of [mpv-player/mpv](https://github.com/mpv-player/mpv) for macOS.
 
-### OS support: 10.15 and later (since release 2023-09-27)
+### OS support: 11 and later
 
 | macOS | version | compatibility |
 | :------------- | -------------: | :-------------: |
 | Ventura | 13.0 | 🟢 |
 | Monterey | 12.0 | 🟢 |
 | Big Sur | 11.0 | 🟢 |
-| Catalina | 10.15 | 🟢 |
+| Catalina | 10.15 | ❌ |
 | Mojave | 10.14 | ❌ |
 | High Sierra | 10.13 | ❌ |
 | Sierra | 10.12 | ❌ |
