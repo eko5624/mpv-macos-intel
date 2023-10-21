@@ -36,13 +36,13 @@ jobs:
 
 #    - name: Install Swift 5.x toolchain
 #      run: |
-#        curl -ksJLO https://download.swift.org/swift-5.2.5-release/xcode/swift-5.2.5-RELEASE/swift-5.2.5-RELEASE-osx.pkg
-#        sudo installer -pkg swift-5.2.5-RELEASE-osx.pkg -target /
+#        curl -ksJLO https://download.swift.org/swift-5.3.1-release/xcode/swift-5.3.1-RELEASE/swift-5.3.1-RELEASE-osx.pkg
+#        sudo installer -pkg swift-5.3.1-RELEASE-osx.pkg -target /
 #
-#    - name: Switch to Xcode 14.2
-#      run: |
-#        sudo xcode-select --reset
-#        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer  
+    - name: Switch to Xcode 14.2
+      run: |
+        sudo xcode-select --reset
+        sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer  
  
     - name: Remove stray upstream python binary symlinks under /usr/local
       run: |
