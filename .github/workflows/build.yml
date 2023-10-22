@@ -130,12 +130,22 @@ jobs:
       run: |
         echo "sha=$(cat packages/mpv/build/SHORT_SHA)" >> $GITHUB_ENV
 
+    - name: "Generate release note"
+      id: note
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const sha = `${{ env.sha }}`;
+          let note = `Bump to mpv-player/mpv@${sha}\n`;
+          note+="**System Requirements**: macOS 10.13 or later\n";
+          core.setOutput("note", note);
+
     - name: Create Release
       uses: softprops/action-gh-release@master
       with:
         tag_name: ${{ env.date }}
         name: ${{ env.date }}
-        body: Bump to mpv-player/mpv@${{ env.sha }}
+        body: ${{ steps.note.outputs.note }}
         files: All*.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
