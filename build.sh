@@ -509,16 +509,16 @@ if command_exists "python3"; then
   fi
 fi
 
-#if build "cmake" "$VER_CMAKE"; then
-#  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
-#  execute ./configure \
-#    --prefix="${WORKSPACE}" \
-#    --parallel="${MJOBS}" -- \
-#    -DCMAKE_USE_OPENSSL=OFF
-#  execute make -j $MJOBS
-#  execute make install
-#  build_done "cmake" "$VER_CMAKE"
-#fi
+if build "cmake" "$VER_CMAKE"; then
+  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --parallel="${MJOBS}" -- \
+    -DCMAKE_USE_OPENSSL=OFF
+  execute make -j $MJOBS
+  execute make install
+  build_done "cmake" "$VER_CMAKE"
+fi
 
 if build "libtiff" "$VER_LIBTIFF"; then
   download "https://download.osgeo.org/libtiff/tiff-$VER_LIBTIFF.tar.xz"
@@ -606,12 +606,10 @@ if build "libdovi" "main"; then
   build_done "libdovi" "main"
 fi
 
-if build "libplacebo" "6.292.0"; then
+if build "libplacebo" "master"; then
   cd $PACKAGES
-  git clone --recursive https://github.com/haasn/libplacebo.git --branch v6.292.0
+  git clone --recursive https://github.com/haasn/libplacebo.git --branch master
   cd libplacebo
-  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-fix-purple-screen.diff
-  patch -p1 -i libplacebo-fix-purple-screen.diff
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
@@ -621,7 +619,7 @@ if build "libplacebo" "6.292.0"; then
   meson compile -C build
   meson install -C build
 
-  build_done "libplacebo" "6.292.0"
+  build_done "libplacebo" "master"
 fi
 
 if build "luajit2" "v2.1-agentzh"; then
