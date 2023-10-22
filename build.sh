@@ -520,16 +520,16 @@ if command_exists "python3"; then
   fi
 fi
 
-#if build "cmake" "$VER_CMAKE"; then
-#  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
-#  execute ./configure \
-#    --prefix="${WORKSPACE}" \
-#    --parallel="${MJOBS}" -- \
-#    -DCMAKE_USE_OPENSSL=OFF
-#  execute make -j $MJOBS
-#  execute make install
-#  build_done "cmake" "$VER_CMAKE"
-#fi
+if build "cmake" "$VER_CMAKE"; then
+  download "https://github.com/Kitware/CMake/releases/download/v$VER_CMAKE/cmake-$VER_CMAKE.tar.gz"
+  execute ./configure \
+    --prefix="${WORKSPACE}" \
+    --parallel="${MJOBS}" -- \
+    -DCMAKE_USE_OPENSSL=OFF
+  execute make -j $MJOBS
+  execute make install
+  build_done "cmake" "$VER_CMAKE"
+fi
 
 if build "libtiff" "$VER_LIBTIFF"; then
   download "https://download.osgeo.org/libtiff/tiff-$VER_LIBTIFF.tar.xz"
