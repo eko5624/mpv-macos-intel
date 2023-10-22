@@ -1486,7 +1486,9 @@ CONFIGURE_OPTIONS+=("--enable-libuavs3d")
 if build "xvidcore" "$VER_XVID"; then
 download "https://downloads.xvid.com/downloads/xvidcore-$VER_XVID.tar.gz"
 cd build/generic || exit
-execute ./configure --prefix="${WORKSPACE}"
+execute ./configure \
+  --prefix="${WORKSPACE}" \
+  --disable-assembly
 make -j $MJOBS
 execute make install
 
