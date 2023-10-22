@@ -606,22 +606,6 @@ if build "libdovi" "main"; then
   build_done "libdovi" "main"
 fi
 
-if build "libplacebo" "master"; then
-  cd $PACKAGES
-  git clone --recursive https://github.com/haasn/libplacebo.git --branch master
-  cd libplacebo
-  meson setup build \
-    --prefix="${WORKSPACE}" \
-    --buildtype=release \
-    -Dvulkan=disabled \
-    -Dlibdovi=enabled \
-    -Ddemos=false 
-  meson compile -C build
-  meson install -C build
-
-  build_done "libplacebo" "master"
-fi
-
 if build "luajit2" "v2.1-agentzh"; then
   cd $PACKAGES
   git clone https://github.com/openresty/luajit2.git --branch v2.1-agentzh --depth 1
