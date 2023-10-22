@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-13
     env:
       CC: clang
       CXX: clang++
@@ -63,8 +63,6 @@ jobs:
         unzip packages-dir.zip
         #rm packages/mujs.done || true
         #rm -rf packages/mujs || true
-        rm packages/libplacebo.done || true
-        rm -rf packages/libplacebo || true
         #rm packages/FFmpeg.done || true
         #rm -rf packages/FFmpeg || true
         rm packages/mpv.done || true
