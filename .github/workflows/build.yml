@@ -136,8 +136,7 @@ jobs:
       with:
         script: |
           const sha = `${{ env.sha }}`;
-          let note = `Bump to mpv-player/mpv@${sha}`;
-          note+=`**MPV Git commit**: https://github.com/dyphire/mpv/commit/${sha}\n`;
+          let note = `Bump to mpv-player/mpv@${sha}\n`;
           note+="**System Requirements**: macOS 11 or later\n";
           note+="**Add vulkan support by setting**: `vo=gpu gpu-context=macvk`";
           core.setOutput("note", note);
