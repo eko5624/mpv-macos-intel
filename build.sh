@@ -606,6 +606,25 @@ if build "libdovi" "main"; then
   build_done "libdovi" "main"
 fi
 
+if build "libplacebo" "6.292.1"; then
+  # 
+  cd $PACKAGES
+  git clone --recursive https://github.com/haasn/libplacebo.git --branch v6.292.1
+  cd libplacebo
+  curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/macOS-10.13/libplacebo-disable-textureLod.patch
+  patch -p1 -i libplacebo-disable-textureLod.patch
+  meson setup build \
+    --prefix="${WORKSPACE}" \
+    --buildtype=release \
+    -Dvulkan=disabled \
+    -Dlibdovi=enabled \
+    -Ddemos=false 
+  meson compile -C build
+  meson install -C build
+
+  build_done "libplacebo" "6.292.1"
+fi
+
 if build "luajit2" "v2.1-agentzh"; then
   cd $PACKAGES
   git clone https://github.com/openresty/luajit2.git --branch v2.1-agentzh --depth 1
