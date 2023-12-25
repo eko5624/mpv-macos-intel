@@ -1489,7 +1489,7 @@ cd build/generic || exit
 execute ./configure \
   --prefix="${WORKSPACE}" \
   --disable-assembly
-make -j $MJOBS
+make
 execute make install
 
 if [[ -f ${WORKSPACE}/lib/libxvidcore.4.dylib ]]; then
