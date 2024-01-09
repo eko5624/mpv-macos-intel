@@ -1520,13 +1520,6 @@ if build "zvbi" "main"; then
   cd $PACKAGES
   git clone https://github.com/zapping-vbi/zvbi.git --branch main --depth 1
   cd zvbi
-  curl $CURL_RETRIES -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
-  curl $CURL_RETRIES -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
-  curl $CURL_RETRIES -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
-  for patch in ./*.patch; do
-      echo "Applying $patch"
-      patch -p1 < "$patch"
-  done
   execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
