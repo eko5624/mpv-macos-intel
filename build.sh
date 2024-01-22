@@ -1152,11 +1152,7 @@ if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
   git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
   cd librist
-  patch -p1 -i <<EOF
-diff --git a/tools/srp_shared.c b/tools/srp_shared.c
-index f782126..900db41 100644
---- a/tools/srp_shared.c
-+++ b/tools/srp_shared.c
+  patch -ulbf tools/srp_shared.c <<EOF
 @@ -173,7 +173,11 @@ void user_verifier_lookup(char * username,
  	      if (stat(srpfile, &buf) != 0)
  		            return;
