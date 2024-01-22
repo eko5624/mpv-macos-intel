@@ -1151,7 +1151,25 @@ fi
 if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
   git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
-  cd librist 
+  cd librist
+  patch -p1 -i <<EOF
+diff --git a/tools/srp_shared.c b/tools/srp_shared.c
+index f782126..900db41 100644
+--- a/tools/srp_shared.c
++++ b/tools/srp_shared.c
+@@ -173,7 +173,11 @@ void user_verifier_lookup(char * username,
+ 	      if (stat(srpfile, &buf) != 0)
+ 		            return;
+
++#ifdef __APPLE__
++	             *generation = ((uint64_t)buf.st_mtimespec.tv_sec << 32) | buf.st_mtimespec.tv_nsec;
++#else
+ 	             *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
++#endif
+ #endif
+
+ 	             if (!lookup_data || !hashversion)
+EOF               
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
