@@ -1160,8 +1160,7 @@ if build "librist" "$VER_LIBRIST"; then
   git clone https://code.videolan.org/rist/librist.git
   cd librist
   #fix error: no member named 'st_mtim' in 'struct stat'
-  curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/librist/pull/1.patch
-  patch -p1 -i 1.patch
+  patch -p1 -i ../../librist-fix-st_mtim.patch
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
