@@ -1165,9 +1165,9 @@ index f782126..a734008 100644
 --- a/tools/srp_shared.c
 +++ b/tools/srp_shared.c
 @@ -172,8 +172,12 @@ void user_verifier_lookup(char * username,
-  struct stat buf;
-  if (stat(srpfile, &buf) != 0)
-    return;
+        struct stat buf;
+        if (stat(srpfile, &buf) != 0)
+                return;
 -
 -       *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
 +#endif
