@@ -61,6 +61,8 @@ jobs:
         curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
         unzip workspace-dir.zip
         unzip packages-dir.zip
+        rm packages/libjxl|| true
+        rm -rf packages/libjxl.done || true
         #rm packages/FFmpeg*|| true
         #rm -rf packages/FFmpeg || true
         rm packages/mpv.done || true
