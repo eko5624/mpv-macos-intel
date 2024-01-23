@@ -377,6 +377,8 @@ if build "python" "$VER_PYTHON_3_11"; then
     --with-openssl="${WORKSPACE}"
   execute make -j $MJOBS
   execute make install
+  cd "${WORKSPACE}"/bin
+  ln -s python3.11 python
   build_done "python" "$VER_PYTHON_3_11"
 fi
 
@@ -1155,14 +1157,14 @@ fi
 
 if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
-  git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
+  git clone https://code.videolan.org/rist/librist.git
   cd librist
-  execute meson setup build \
+  meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib
-  execute meson compile -C build
-  execute meson install -C build
+  meson compile -C build
+  meson install -C build
 
   build_done "librist" "$VER_LIBRIST"
 fi 
