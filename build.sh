@@ -1034,7 +1034,7 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
-  git reset --hard d3a69dbeef78f036969a2500f949f931df857e17
+  #git reset --hard d3a69dbeef78f036969a2500f949f931df857e17
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
   #workaround unknown option: --exclude-libs=ALL
   execute patch -p1 -i ../../libjxl-fix-exclude-libs.patch
@@ -1122,9 +1122,9 @@ if build "cjson" "master"; then
   build_done "cjson" "master"
 fi
 
-if build "mbedtls" "v3.4.1"; then
+if build "mbedtls" "v3.5.1"; then
   cd $PACKAGES
-  git clone https://github.com/Mbed-TLS/mbedtls --branch v3.4.1 --depth 1
+  git clone https://github.com/Mbed-TLS/mbedtls --branch v3.5.1 --depth 1
   cd mbedtls
   # enable pthread mutexes
   sed -i "" 's|//#define MBEDTLS_THREADING_PTHREAD|#define MBEDTLS_THREADING_PTHREAD|g' include/mbedtls/mbedtls_config.h
@@ -1145,27 +1145,31 @@ if build "mbedtls" "v3.4.1"; then
   make -j $MJOBS all
   make install
 
-  build_done "mbedtls" "v3.4.1"
+  build_done "mbedtls" "v3.5.1"
 fi
 
 if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
   git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
   cd librist
-  patch -ulbf tools/srp_shared.c <<EOF
+  patch -p1 -i 1.patch <<EOF
+diff --git a/tools/srp_shared.c b/tools/srp_shared.c
+index f782126..900db41 100644
+--- a/tools/srp_shared.c
++++ b/tools/srp_shared.c
 @@ -173,7 +173,11 @@ void user_verifier_lookup(char * username,
- 	      if (stat(srpfile, &buf) != 0)
- 		            return;
+  if (stat(srpfile, &buf) != 0)
+    return;
 
 +#ifdef __APPLE__
-+	             *generation = ((uint64_t)buf.st_mtimespec.tv_sec << 32) | buf.st_mtimespec.tv_nsec;
++ *generation = ((uint64_t)buf.st_mtimespec.tv_sec << 32) | buf.st_mtimespec.tv_nsec;
 +#else
- 	             *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
+  *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
 +#endif
  #endif
 
- 	             if (!lookup_data || !hashversion)
-EOF               
+  if (!lookup_data || !hashversion)
+EOF
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
