@@ -219,7 +219,7 @@ if build "gdbm" "$VER_GDBM"; then
 fi
 
 if build "xz" "$VER_XZ"; then
-  download "https://downloads.sourceforge.net/project/lzmautils/xz-$VER_XZ.tar.gz"
+  download "https://archive.org/download/xz-$VER_XZ/xz-$VER_XZ.tar.gz"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-debug
@@ -230,7 +230,7 @@ if build "xz" "$VER_XZ"; then
 fi
 
 if build "tcl-tk" "${VER_TCL_TK}"; then
-  download "https://downloads.sourceforge.net/project/tcl/Tcl/${VER_TCL_TK}/tcl${VER_TCL_TK}-src.tar.gz"
+  download download "https://fossies.org/linux/misc/tcl${VER_TCL_TK}-src.tar.gz"
   cd unix
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -1093,8 +1093,9 @@ CONFIGURE_OPTIONS+=("--enable-libmodplug")
 
 if build "libmysofa" "main"; then
   cd $PACKAGES
-  git clone https://github.com/hoene/libmysofa.git --branch main --depth 1
+  git clone --depth 1 --sparse --filter=tree:0 https://github.com/hoene/libmysofa.git
   cd libmysofa
+  git sparse-checkout set --no-cone '/*' '!tests'
   make_dir build
   cd build || exit  
   execute cmake ../ \
@@ -1157,7 +1158,7 @@ if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
   git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
   cd librist
-  patch -p1 -i 1.patch <<EOF
+  cat <<EOF >1.patch 
 diff --git a/tools/srp_shared.c b/tools/srp_shared.c
 index f782126..900db41 100644
 --- a/tools/srp_shared.c
@@ -1175,6 +1176,7 @@ index f782126..900db41 100644
 
   if (!lookup_data || !hashversion)
 EOF
+  patch -p1 -i 1.patch
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
