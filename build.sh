@@ -1160,27 +1160,7 @@ if build "librist" "$VER_LIBRIST"; then
   git clone https://code.videolan.org/rist/librist.git
   cd librist
   #fix error: no member named 'st_mtim' in 'struct stat'
-  cat <<EOF >1.patch 
-diff --git a/tools/srp_shared.c b/tools/srp_shared.c
-index f782126..a734008 100644
---- a/tools/srp_shared.c
-+++ b/tools/srp_shared.c
-@@ -172,8 +172,12 @@ void user_verifier_lookup(char * username,
-        struct stat buf;
-        if (stat(srpfile, &buf) != 0)
-                return;
--
--       *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
-+#endif
-+ 
-+#ifdef __APPLE__
-+       *generation = ((uint64_t)buf.st_mtimespec.tv_sec << 32) | buf.st_mtimespec.tv_nsec;
-+#else
-+       *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
- #endif
- 
-  if (!lookup_data || !hashversion)
-EOF
+  curl -OL https://patch-diff.githubusercontent.com/raw/eko5624/librist/pull/1.patch
   patch -p1 -i 1.patch
   meson setup build \
     --prefix="${WORKSPACE}" \
