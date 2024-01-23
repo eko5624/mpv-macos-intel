@@ -1564,8 +1564,8 @@ if build "ffmpeg" "master"; then
     --extra-libs="${EXTRALIBS}" \
     --pkgconfigdir="$WORKSPACE/lib/pkgconfig" \
     --prefix="${WORKSPACE}"
-  execute make -j $MJOBS
-  execute make install
+  make -j $MJOBS
+  make install
 
   build_done "FFmpeg" "master"
 fi
