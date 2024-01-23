@@ -1159,6 +1159,7 @@ if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
   git clone https://code.videolan.org/rist/librist.git
   cd librist
+  #fix error: no member named 'st_mtim' in 'struct stat'
   cat <<EOF >1.patch 
 diff --git a/tools/srp_shared.c b/tools/srp_shared.c
 index f782126..a734008 100644
