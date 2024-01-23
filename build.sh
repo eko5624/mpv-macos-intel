@@ -1035,7 +1035,7 @@ if build "libjxl" "main"; then
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
   #git reset --hard d3a69dbeef78f036969a2500f949f931df857e17
-  git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
+  git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
   #workaround unknown option: --exclude-libs=ALL
   sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
   sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+4d' lib/jxl.cmake
@@ -1058,7 +1058,10 @@ if build "libjxl" "main"; then
     -DJPEGXL_ENABLE_PLUGINS=OFF \
     -DJPEGXL_ENABLE_DEVTOOLS=OFF \
     -DJPEGXL_ENABLE_BENCHMARK=OFF \
-    -DJPEGXL_ENABLE_SJPEG=OFF
+    -DJPEGXL_ENABLE_SJPEG=OFF \
+    -DJPEGXL_FORCE_SYSTEM_LCMS2=ON \
+    -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
+    -DJPEGXL_FORCE_SYSTEM_HWY=ON
   make -j $MJOBS
   make install
 
