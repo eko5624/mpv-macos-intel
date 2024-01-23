@@ -1037,7 +1037,6 @@ if build "libjxl" "main"; then
   #git reset --hard d3a69dbeef78f036969a2500f949f931df857e17
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
   #workaround unknown option: --exclude-libs=ALL
-  #patch -p1 -i ../../libjxl-fix-exclude-libs.patch
   #sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
   #sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+4d' lib/jxl.cmake
   make_dir out
@@ -1158,25 +1157,6 @@ if build "librist" "$VER_LIBRIST"; then
   cd $PACKAGES
   git clone https://code.videolan.org/rist/librist.git --branch v$VER_LIBRIST
   cd librist
-  cat <<EOF >1.patch 
-diff --git a/tools/srp_shared.c b/tools/srp_shared.c
-index f782126..900db41 100644
---- a/tools/srp_shared.c
-+++ b/tools/srp_shared.c
-@@ -173,7 +173,11 @@ void user_verifier_lookup(char * username,
-  if (stat(srpfile, &buf) != 0)
-    return;
-
-+#ifdef __APPLE__
-+ *generation = ((uint64_t)buf.st_mtimespec.tv_sec << 32) | buf.st_mtimespec.tv_nsec;
-+#else
-  *generation = ((uint64_t)buf.st_mtim.tv_sec << 32) | buf.st_mtim.tv_nsec;
-+#endif
- #endif
-
-  if (!lookup_data || !hashversion)
-EOF
-  patch -p1 -i 1.patch
   execute meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
