@@ -1037,8 +1037,8 @@ if build "libjxl" "main"; then
   #git reset --hard d3a69dbeef78f036969a2500f949f931df857e17
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,libjpeg-turbo}
   #workaround unknown option: --exclude-libs=ALL
-  sed -i "/Check whether the linker support excluding libs/,+6d" lib/jxl.cmake
-  sed -i "/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+4d" lib/jxl.cmake
+  sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
+  sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+4d' lib/jxl.cmake
   make_dir out
   cd out || exit  
   cmake ../ \
