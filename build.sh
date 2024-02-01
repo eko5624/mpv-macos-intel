@@ -230,7 +230,7 @@ if build "xz" "$VER_XZ"; then
 fi
 
 if build "tcl-tk" "${VER_TCL_TK}"; then
-  download download "https://fossies.org/linux/misc/tcl${VER_TCL_TK}-src.tar.gz"
+  download "https://fossies.org/linux/misc/tcl${VER_TCL_TK}-src.tar.gz"
   cd unix
   execute ./configure \
     --prefix="${WORKSPACE}" \
