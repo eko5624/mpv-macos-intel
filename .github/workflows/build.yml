@@ -65,8 +65,8 @@ jobs:
         rm -rf packages/libjxl.done || true
         #rm packages/FFmpeg*|| true
         #rm -rf packages/FFmpeg || true
-        rm packages/mpv.done || true
-        rm -rf packages/mpv || true
+        #rm packages/mpv.done || true
+        #rm -rf packages/mpv || true
         rm workspace-dir.zip || true
         rm packages-dir.zip || true
        
