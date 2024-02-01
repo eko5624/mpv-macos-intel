@@ -1,19 +1,19 @@
-From 54ec39ea253c923c6573506ce66f611fd8edb226 Mon Sep 17 00:00:00 2001
+From 550c4a95d149c63a890fcd0b64a66b587e1c32bc Mon Sep 17 00:00:00 2001
 From: eko5624 <562433403@qq.com>
-Date: Mon, 2 Oct 2023 11:45:36 +0800
+Date: Tue, 23 Jan 2024 17:37:42 +0800
 Subject: [PATCH] fix unknown option: --exclude-libs=ALL
 
 ---
- lib/jxl.cmake | 11 -----------
- 1 file changed, 11 deletions(-)
+ lib/jxl.cmake | 12 ------------
+ 1 file changed, 12 deletions(-)
 
 diff --git a/lib/jxl.cmake b/lib/jxl.cmake
-index 24643832887..0e06fd4dfd3 100644
+index 54c6b0853c1..af1e59cfdc4 100644
 --- a/lib/jxl.cmake
 +++ b/lib/jxl.cmake
-@@ -256,13 +256,6 @@ set_target_properties(jxl_dec PROPERTIES
-   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+@@ -216,13 +216,6 @@ set_target_properties(jxl_dec PROPERTIES
+   VERSION ${JPEGXL_LIBRARY_VERSION}
+   SOVERSION ${JPEGXL_LIBRARY_SOVERSION})
  
 -# Check whether the linker support excluding libs
 -set(LINKER_EXCLUDE_LIBS_FLAG "-Wl,--exclude-libs=ALL")
@@ -22,10 +22,10 @@ index 24643832887..0e06fd4dfd3 100644
 -check_c_source_compiles("int main(){return 0;}" LINKER_SUPPORT_EXCLUDE_LIBS)
 -list(REMOVE_ITEM CMAKE_EXE_LINKER_FLAGS ${LINKER_EXCLUDE_LIBS_FLAG})
 -
- # Add a jxl.version file as a version script to tag symbols with the
- # appropriate version number. This script is also used to limit what's exposed
- # in the shared library from the static dependencies bundled here.
-@@ -281,10 +274,6 @@ foreach(target IN ITEMS jxl jxl_dec)
+ if(NOT BUILD_SHARED_LIBS)
+   target_compile_definitions(jxl PUBLIC -DJXL_STATIC_DEFINE)
+   target_compile_definitions(jxl_dec PUBLIC -DJXL_STATIC_DEFINE)
+@@ -246,11 +239,6 @@ foreach(target IN ITEMS jxl jxl_dec)
    # This hides the default visibility symbols from static libraries bundled into
    # the shared library. In particular this prevents exposing symbols from hwy
    # and skcms in the shared library.
@@ -33,6 +33,7 @@ index 24643832887..0e06fd4dfd3 100644
 -    set_property(TARGET ${target} APPEND_STRING PROPERTY
 -        LINK_FLAGS " ${LINKER_EXCLUDE_LIBS_FLAG}")
 -  endif()
- endforeach()
+-endforeach()
  
- # Only install libjxl shared library. The libjxl_dec is not installed since it
+ # Only install libjxl public library. The libjxl_dec is not installed since it
+ # contains symbols also in libjxl which would conflict if programs try to use
