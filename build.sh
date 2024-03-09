@@ -641,7 +641,7 @@ if build "vulkan" "main"; then
   git clone https://github.com/KhronosGroup/Vulkan-Headers.git --branch main
   git clone https://github.com/KhronosGroup/Vulkan-Loader.git --branch main
   cd Vulkan-Headers
-  git reset --hard ea45703effcb01df0856628286f8a890dd313ecd
+  #git reset --hard ea45703effcb01df0856628286f8a890dd313ecd
   make_dir build
   cd build || exit  
   cmake .. \
