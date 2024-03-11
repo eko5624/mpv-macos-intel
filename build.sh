@@ -671,10 +671,10 @@ if build "MoltenVK" "main"; then
   ./fetchDependencies --macos --v-headers-root "${WORKSPACE}"
   make macos MVK_CONFIG_LOG_LEVEL=1
   sed -i '' "s|./libMoltenVK|$WORKSPACE/lib/libMoltenVK|g" Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
-  cat Package/Latest/MoltenVK/dylib/macOS/MoltenVK_icd.json
+  cat Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
   mkdir -p "${WORKSPACE}"/share/vulkan/icd.d
-  install -vm755 Package/Latest/MoltenVK/dylib/macOS/libMoltenVK.dylib "${WORKSPACE}"/lib
-  install -vm644 Package/Latest/MoltenVK/dylib/macOS/MoltenVK_icd.json "${WORKSPACE}"/share/vulkan/icd.d
+  install -vm755 Package/Latest/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib "${WORKSPACE}"/lib
+  install -vm644 Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json "${WORKSPACE}"/share/vulkan/icd.d
 
   build_done "MoltenVK" "main"
 fi
