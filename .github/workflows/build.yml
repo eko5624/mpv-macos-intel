@@ -15,11 +15,18 @@ jobs:
       CC: clang
       CXX: clang++ 
     steps:
+    - name: Remove stray upstream python binary symlinks under /usr/local
+      run: |
+        find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
+        brew unlink python
+        
     - name: Install dependencies
       run: |
         brew cleanup
         brew install --overwrite python@3.11 meson
-        brew install --overwrite brotli giflib highway imath jpeg-turbo libpng little-cms2 openexr glslang libarchive luajit-openresty mujs uchardet
+        brew install --overwrite brotli giflib highway imath jpeg-turbo libpng little-cms2 openexr
+        brew install --overwrite vulkan-headers vulkan-loader shaderc
+        brew install --overwrite libarchive luajit-openresty mujs uchardet
         brew install -s automake
         brew install --overwrite libass --HEAD     
         ffmpeg_deps=(
@@ -126,7 +133,7 @@ jobs:
       run: |
         git clone https://github.com/libjxl/libjxl.git --branch v0.8.2
         pushd libjxl
-        git submodule update --init --recursive --depth 1 --recommend-shallow third_party/{highway,skcms}
+        git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
         cmake -B build -S . \
           -DCMAKE_INSTALL_PREFIX=/usr/local \
           -DCMAKE_BUILD_TYPE=Release \
@@ -144,7 +151,9 @@ jobs:
           -DJPEGXL_ENABLE_DEVTOOLS=OFF \
           -DJPEGXL_ENABLE_BENCHMARK=OFF \
           -DJPEGXL_ENABLE_SJPEG=OFF \
-          -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+          -DJPEGXL_FORCE_SYSTEM_LCMS2=ON \
+          -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
+          -DJPEGXL_FORCE_SYSTEM_HWY=ON
         cmake --build ./build -j3
         cmake --install ./build
         popd
@@ -157,7 +166,10 @@ jobs:
         meson setup build \
           --prefix=/usr/local \
           --buildtype=release \
-          -Dvulkan=disabled
+          -Dvulkan-registry=`brew --prefix vulkan-headers`/share/vulkan/registry/vk.xml \
+          -Dvulkan=enabled \
+          -Dshaderc=enabled \
+          -Dlcms=enabled
         meson compile -C build
         meson install -C build
         popd
@@ -235,17 +247,16 @@ jobs:
         meson compile -C build
         popd
  
-    - name: Bundle mpv
-      continue-on-error: true
-      run: |
-        chmod +x ./bundle.sh
-        ./bundle.sh
-            
     #- name: Bundle mpv
+    #  continue-on-error: true
     #  run: |
-        #curl -OL https://raw.githubusercontent.com/eko5624/mpv-macos-intel/main/fix-bundle.patch
-        #echo "Applying fix-bundle.patch"
-        #patch -p1 < ./fix-bundle.patch
+    #    chmod +x ./bundle.sh
+    #    ./bundle.sh
+            
+    - name: Bundle mpv
+      run: |
+        pushd mpv
+        meson compile -C build macos-bundle
 
         # Another workaround
         # install_name_tool -change "@loader_path/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlicommon.1.dylib" "$(brew --prefix)/lib/libbrotlidec.1.dylib"
