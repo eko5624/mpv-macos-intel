@@ -131,7 +131,7 @@ jobs:
       
     - name: Install libjxl
       run: |
-        git clone https://github.com/libjxl/libjxl.git --branch v0.8.2
+        git clone https://github.com/libjxl/libjxl.git
         pushd libjxl
         git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
         cmake -B build -S . \
