@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-13
     env:
       HOMEBREW_NO_ANALYTICS: 1
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 
@@ -19,9 +19,9 @@ jobs:
       run: |
         brew cleanup
         brew install --overwrite python@3.11 meson
-        brew install --overwrite glslang jpeg-turbo libarchive little-cms2 luajit-openresty mujs uchardet
+        brew install --overwrite brotli giflib highway imath jpeg-turbo libpng little-cms2 openexr glslang libarchive luajit-openresty mujs uchardet
         brew install -s automake
-        brew install --overwrite libass --HEAD          
+        brew install --overwrite libass --HEAD     
         ffmpeg_deps=(
           dav1d
           fontconfig
@@ -65,13 +65,6 @@ jobs:
       run: |
         git clone https://github.com/zapping-vbi/zvbi
         pushd zvbi
-        curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-fix-clang-support.patch
-        curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ioctl.patch
-        curl -OL https://raw.githubusercontent.com/videolan/vlc/master/contrib/src/zvbi/zvbi-ssize_max.patch
-        for patch in ./*.patch; do
-            echo "Applying $patch"
-            patch -p1 < "$patch"
-        done
         ./autogen.sh
         ./configure --prefix=/usr/local \
           --disable-dependency-tracking \
@@ -86,6 +79,7 @@ jobs:
       run: |
         git clone https://github.com/hoene/libmysofa.git
         pushd libmysofa
+        git sparse-checkout set --no-cone '/*' '!tests'
         cmake -B build -S . \
           -DCMAKE_INSTALL_PREFIX=/usr/local \
           -DCMAKE_INSTALL_NAME_DIR=/usr/local/lib \
@@ -98,7 +92,7 @@ jobs:
           
     - name: Install davs2
       run: |
-        git clone https://github.com/pkuvcl/davs2.git --branch master --depth 1
+        git clone https://github.com/pkuvcl/davs2.git
         pushd davs2/build/linux
         ./configure \
           --prefix=/usr/local \
@@ -114,7 +108,7 @@ jobs:
           
     - name: Install uavs3d
       run: |
-        git clone https://github.com/uavs3/uavs3d.git --branch master --depth 1
+        git clone https://github.com/uavs3/uavs3d.git --branch master
         pushd uavs3d
         mkdir -p build/linux && cd build/linux
         cmake ../.. \
