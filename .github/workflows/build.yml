@@ -23,11 +23,10 @@ jobs:
     - name: Install dependencies
       run: |
         brew cleanup
-        brew install --overwrite python@3.11 meson
-        brew install --overwrite brotli giflib highway imath jpeg-turbo libpng little-cms2 openexr
-        brew install --overwrite vulkan-headers vulkan-loader shaderc
+        brew install --overwrite autoconf automake pkg-config libtool python meson
+        brew install --overwrite brotli giflib highway imath jpeg-turbo libpng little-cms2 openexr webp
+        brew install --overwrite libplacebo molten-vk vulkan-loader vulkan-headers
         brew install --overwrite libarchive luajit-openresty mujs uchardet
-        brew install -s automake
         brew install --overwrite libass --HEAD     
         ffmpeg_deps=(
           dav1d
@@ -58,7 +57,6 @@ jobs:
           srt
           tesseract
           theora
-          webp
           xvid
           xz
           zeromq
@@ -82,6 +80,7 @@ jobs:
         make SUBDIRS=. install
         popd
         rm -rf zvbi
+        
     - name: Install libmysofa
       run: |
         git clone https://github.com/hoene/libmysofa.git
@@ -159,21 +158,21 @@ jobs:
         popd
         rm -rf libjxl
 
-    - name: Install libplacebo
-      run: |
-        git clone --recursive https://code.videolan.org/videolan/libplacebo
-        pushd libplacebo
-        meson setup build \
-          --prefix=/usr/local \
-          --buildtype=release \
-          -Dvulkan-registry=`brew --prefix vulkan-headers`/share/vulkan/registry/vk.xml \
-          -Dvulkan=enabled \
-          -Dshaderc=enabled \
-          -Dlcms=enabled
-        meson compile -C build
-        meson install -C build
-        popd
-        rm -rf libplacebo
+    #- name: Install libplacebo
+    #  run: |
+    #    git clone --recursive https://code.videolan.org/videolan/libplacebo
+    #    pushd libplacebo
+    #    meson setup build \
+    #      --prefix=/usr/local \
+    #      --buildtype=release \
+    #      -Dvulkan-registry=`brew --prefix vulkan-headers`/share/vulkan/registry/vk.xml \
+    #      -Dvulkan=enabled \
+    #      -Dshaderc=enabled \
+    #      -Dlcms=enabled
+    #    meson compile -C build
+    #    meson install -C build
+    #    popd
+    #    rm -rf libplacebo
     
     - name: Install ffmpeg
       run: |
