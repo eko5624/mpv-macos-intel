@@ -569,9 +569,9 @@ if build "lcms2" "master"; then
   build_done "lcms2" "master"
 fi
 
-if build "mujs" "1.3.4"; then
+if build "mujs" "$VER_MUJS"; then
   cd $PACKAGES
-  git clone https://github.com/ccxvii/mujs.git --branch 1.3.4
+  git clone https://github.com/ccxvii/mujs.git --branch "$VER_MUJS"
   cd mujs
   #revert to 1.3.2 for finding libmujs.a
   #git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
@@ -582,7 +582,7 @@ if build "mujs" "1.3.4"; then
   rm -rf mujs
   #workaround Could not resolve library: build/release/libmujs.dylib
   sudo install_name_tool -id "$WORKSPACE/lib/libmujs.dylib" "$WORKSPACE/lib/libmujs.dylib"
-  build_done "mujs" "1.3.4"
+  build_done "mujs" "$VER_MUJS"
 fi
 
 if build "libdovi" "main"; then
