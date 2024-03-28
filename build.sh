@@ -1042,8 +1042,9 @@ if build "libjxl" "main"; then
   cd libjxl
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
   #workaround unknown option: --exclude-libs=ALL
-  sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
-  sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+3d' lib/jxl.cmake
+  sed -i "" 's/-Wl,--exclude-libs=ALL//g' lib/jxl.cmake
+  #sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
+  #sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+3d' lib/jxl.cmake
   make_dir out
   cd out || exit
   cmake ../ \
