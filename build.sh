@@ -214,7 +214,7 @@ if build "gdbm" "$VER_GDBM"; then
   # Avoid conflicting with macOS SDK's ndbm.h.  Renaming to gdbm-ndbm.h
   # matches Debian's convention for gdbm's ndbm.h (libgdbm-compat-dev).
   mv "${WORKSPACE}"/include/ndbm.h "${WORKSPACE}"/include/gdbm-ndbm.h
-  
+
   build_done "gdbm" "$VER_GDBM"
 fi
 
@@ -289,7 +289,7 @@ if build "giflib" "$VER_GIFLIB"; then
   download "https://netcologne.dl.sourceforge.net/project/giflib/giflib-$VER_GIFLIB.tar.gz"
     if [[ "$OSTYPE" == "darwin"* ]]; then
       # Upstream has stripped out the previous autotools-based build system and their
-      # Makefile doesn't work on macOS. See https://sourceforge.net/p/giflib/bugs/133/  
+      # Makefile doesn't work on macOS. See https://sourceforge.net/p/giflib/bugs/133/
       download "https://sourceforge.net/p/giflib/bugs/_discuss/thread/4e811ad29b/c323/attachment/Makefile.patch"
       execute patch -p0 --forward "${PACKAGES}/giflib-$VER_GIFLIB/Makefile" "${PACKAGES}/Makefile.patch" || true
     fi
@@ -365,7 +365,7 @@ if build "ncurses" "$VER_NCURSES"; then
   execute make -j $MJOBS
   execute make install
   build_done "ncurses" "$VER_NCURSES"
-fi  
+fi
 
 if build "python" "$VER_PYTHON_3_11"; then
   cd $PACKAGES
@@ -401,7 +401,7 @@ if build "libxml2" "master"; then
   make install
 
   build_done "libxml2" "master"
-fi  
+fi
 CONFIGURE_OPTIONS+=("--enable-libxml2")
 
 if build "gettext" "$VER_GETTEXT"; then
@@ -502,7 +502,7 @@ fi
 if build "libX11" "$VER_LIBX11"; then
   download "https://www.x.org/archive/individual/lib/libX11-$VER_LIBX11.tar.gz"
   export LC_ALL=""
-  export LC_CTYPE="C"  
+  export LC_CTYPE="C"
   export PKG_CONFIG_PATH="${WORKSPACE}/share/pkgconfig:$PKG_CONFIG_PATH"
   execute ./configure --prefix="${WORKSPACE}"
   execute make -j $MJOBS
@@ -546,7 +546,7 @@ if build "libjpeg-turbo" "main"; then
   git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git --branch main --depth 1
   cd libjpeg-turbo
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -569,9 +569,9 @@ if build "lcms2" "master"; then
   build_done "lcms2" "master"
 fi
 
-if build "mujs" "1.3.3"; then
+if build "mujs" "1.3.4"; then
   cd $PACKAGES
-  git clone https://github.com/ccxvii/mujs.git --branch 1.3.3
+  git clone https://github.com/ccxvii/mujs.git --branch 1.3.4
   cd mujs
   #revert to 1.3.2 for finding libmujs.a
   #git reset --hard 0e611cdc0c81a90dabfcb2ab96992acca95b886d
@@ -579,7 +579,10 @@ if build "mujs" "1.3.3"; then
   #xecute patch -p1 -i mujs-finding-libmujs.diff
   execute make prefix="${WORKSPACE}" release
   execute make prefix="${WORKSPACE}" install-shared
-  build_done "mujs" "1.3.3"
+  rm -rf mujs
+  #workaround Could not resolve library: build/release/libmujs.dylib
+  sudo install_name_tool -id "$WORKSPACE/lib/libmujs.dylib" "$WORKSPACE/lib/libmujs.dylib"
+  build_done "mujs" "1.3.4"
 fi
 
 if build "libdovi" "main"; then
@@ -593,7 +596,7 @@ if build "libdovi" "main"; then
   fi
   if [ ! -d "$WORKSPACE/.rustup" ]; then
     $WORKSPACE/.cargo/bin/rustup default stable-x86_64-apple-darwin
-  fi  
+  fi
   git clone https://github.com/quietvoid/dovi_tool.git --branch main --depth 1
   cd dovi_tool/dolby_vision
   mkdir build
@@ -611,7 +614,7 @@ if build "shaderc" "main"; then
   curl -OL https://github.com/KhronosGroup/glslang/archive/`cat DEPS | grep glslang | head -n1 | cut -d\' -f4`.tar.gz
   curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
   curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
-  for f in *.gz; do tar xvf "$f"; done 
+  for f in *.gz; do tar xvf "$f"; done
   mv glslang* glslang
   mv SPIRV-Headers* spirv-headers
   mv SPIRV-Tools* spirv-tools
@@ -622,14 +625,17 @@ if build "shaderc" "main"; then
   mv $PACKAGES/spirv-tools third_party
   mv $PACKAGES/glslang third_party
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake .. \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DSHADERC_SKIP_TESTS=ON \
+    -DSKIP_GLSLANG_INSTALL=ON \
+    -DSKIP_SPIRV_TOOLS_INSTALL=ON \
+    -DSKIP_GOOGLETEST_INSTALL=ON \
     -DSHADERC_SKIP_EXAMPLES=ON
-  cmake --build . 
+  cmake --build .
   cmake --install .
   mv $WORKSPACE/bin/libtool.bak $WORKSPACE/bin/libtool
 
@@ -643,7 +649,7 @@ if build "vulkan" "main"; then
   cd Vulkan-Headers
   #git reset --hard ea45703effcb01df0856628286f8a890dd313ecd
   make_dir build
-  cd build || exit  
+  cd build || exit
   cmake .. \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -686,6 +692,7 @@ if build "libplacebo" "master"; then
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
+    -Dvulkan-registry="${WORKSPACE}"/share/vulkan/registry/vk.xml \
     -Dvulkan=enabled \
     -Dshaderc=enabled \
     -Dlcms=enabled \
@@ -694,8 +701,7 @@ if build "libplacebo" "master"; then
     -Dglslang=disabled \
     -Ddemos=false \
     -Dlibdovi=enabled \
-    -Ddemos=false \
-    -Dvulkan-registry="${WORKSPACE}"/share/vulkan/registry/vk.xml
+    -Ddemos=false
   meson compile -C build
   meson install -C build
 
@@ -717,7 +723,7 @@ if build "uchardet" "master"; then
   git clone https://gitlab.freedesktop.org/uchardet/uchardet.git --branch master --depth 1
   cd uchardet
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -737,20 +743,20 @@ if build "dav1d" "master"; then
   git clone https://github.com/videolan/dav1d.git --branch master --depth 1
   cd dav1d
   make_dir build
-      
+
   CFLAGSBACKUP=$CFLAGS
   if $MACOS_M1; then
     export CFLAGS="-arch arm64"
   fi
-      
+
   execute meson build --prefix="${WORKSPACE}" --buildtype=release --libdir="${WORKSPACE}"/lib
   execute ninja -C build
   execute ninja -C build install
-      
+
   if $MACOS_M1; then
     export CFLAGS=$CFLAGSBACKUP
   fi
-      
+
   build_done "dav1d" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libdav1d")
@@ -770,7 +776,7 @@ if build "davs2" "master"; then
   execute make install
 
   build_done "davs2" "master"
-fi  
+fi
 CONFIGURE_OPTIONS+=("--enable-libdavs2")
 
 if build "frei0r" "master"; then
@@ -780,7 +786,7 @@ if build "frei0r" "master"; then
   # Disable opportunistic linking against Cairo
   execute sed -i "" '/find_package (Cairo)/d' CMakeLists.txt
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DWITHOUT_OPENCV=ON \
@@ -789,7 +795,7 @@ if build "frei0r" "master"; then
   execute make install
 
   build_done "frei0r" "master"
-fi  
+fi
 CONFIGURE_OPTIONS+=("--enable-frei0r")
 
 if build "libpng" "libpng16"; then
@@ -821,7 +827,7 @@ if build "freetype" "master"; then
   git clone --recursive https://github.com/freetype/freetype.git --branch master --depth 1
   cd freetype
   #Fix glibtoolize: command not found
-  sed -i "" 's/glibtoolize/libtoolize/g' autogen.sh  
+  sed -i "" 's/glibtoolize/libtoolize/g' autogen.sh
   execute ./autogen.sh
   execute ./configure \
     --prefix="${WORKSPACE}" \
@@ -830,7 +836,7 @@ if build "freetype" "master"; then
   execute make -j $MJOBS
   execute make install
   build_done "freetype" "master"
-fi  
+fi
 CONFIGURE_OPTIONS+=("--enable-libfreetype")
 
 if build "fribidi" "master"; then
@@ -861,7 +867,7 @@ if build "harfbuzz" "main"; then
     --libdir="${WORKSPACE}"/lib
   execute meson compile -C build
   execute meson install -C build
-  
+
   build_done "harfbuzz" "main"
 fi
 
@@ -874,7 +880,7 @@ if build "libunibreak" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libunibreak" "master"   
+  build_done "libunibreak" "master"
 fi
 
 if build "libass" "master"; then
@@ -886,7 +892,7 @@ if build "libass" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libass" "master"   
+  build_done "libass" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libass")
 
@@ -903,14 +909,11 @@ if build "fontconfig" "main"; then
   execute make install
 
   build_done "fontconfig" "main"
-fi  
+fi
 CONFIGURE_OPTIONS+=("--enable-libfontconfig")
 
-if build "libbluray" "master"; then
-  cd $PACKAGES
-  git clone --recursive https://code.videolan.org/videolan/libbluray.git
-  cd libbluray
-  execute ./bootstrap
+if build "libbluray" "$VER_LIBBLURAY"; then
+  download "https://download.videolan.org/videolan/libbluray/$VER_LIBBLURAY/libbluray-$VER_LIBBLURAY.tar.bz2"
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --disable-dependency-tracking \
@@ -919,8 +922,8 @@ if build "libbluray" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libbluray" "master"
-fi  
+  build_done "libbluray" "$VER_LIBBLURAY"
+fi
 CONFIGURE_OPTIONS+=("--enable-libbluray")
 
 if build "lame" "$VER_LAME"; then
@@ -966,8 +969,8 @@ if build "libbs2b" "master"; then
   execute make install
 
   build_done "libbs2b" "master"
-fi 
-CONFIGURE_OPTIONS+=("--enable-libbs2b") 
+fi
+CONFIGURE_OPTIONS+=("--enable-libbs2b")
 
 if build "libcaca" "main"; then
   cd $PACKAGES
@@ -990,7 +993,7 @@ if build "libcaca" "main"; then
   execute make install
 
   build_done "libcaca" "main"
-fi 
+fi
 CONFIGURE_OPTIONS+=("--enable-libcaca")
 
 if build "brotli" "master"; then
@@ -998,7 +1001,7 @@ if build "brotli" "master"; then
   git clone https://github.com/google/brotli.git --branch master --depth 1
   cd brotli
   make_dir out
-  cd out || exit  
+  cd out || exit
   cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DSHARE_INSTALL_PREFIX=="${WORKSPACE}" \
@@ -1015,7 +1018,7 @@ if build "highway" "master"; then
   git clone https://github.com/google/highway.git --branch master --depth 1
   cd highway
   make_dir out
-  cd out || exit  
+  cd out || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -1037,13 +1040,12 @@ if build "libjxl" "main"; then
   cd $PACKAGES
   git clone https://github.com/libjxl/libjxl.git
   cd libjxl
-  #git reset --hard 3671f93c9c611ec7d6bf96a5cf4749b1480c5c27
   git submodule update --init --recursive --depth 1 --recommend-shallow third_party/libjpeg-turbo
   #workaround unknown option: --exclude-libs=ALL
-  #sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
-  #sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+3d' lib/jxl.cmake
+  sed -i "" '/Check whether the linker support excluding libs/,+6d' lib/jxl.cmake
+  sed -i "" '/if(LINKER_SUPPORT_EXCLUDE_LIBS)/,+3d' lib/jxl.cmake
   make_dir out
-  cd out || exit  
+  cd out || exit
   cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -1069,7 +1071,7 @@ if build "libjxl" "main"; then
   make install
 
   build_done "libjxl" "main"
-fi  
+fi
 CONFIGURE_OPTIONS+=("--enable-libjxl")
 
 if build "libmodplug" "master"; then
@@ -1090,7 +1092,7 @@ if build "libmodplug" "master"; then
   execute make install
 
   build_done "libmodplug" "master"
-fi 
+fi
 CONFIGURE_OPTIONS+=("--enable-libmodplug")
 
 if build "libmysofa" "main"; then
@@ -1099,7 +1101,7 @@ if build "libmysofa" "main"; then
   cd libmysofa
   git sparse-checkout set --no-cone '/*' '!tests'
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -1109,7 +1111,7 @@ if build "libmysofa" "main"; then
   execute make install
 
   build_done "libmysofa" "main"
-fi 
+fi
 CONFIGURE_OPTIONS+=("--enable-libmysofa")
 
 if build "cjson" "master"; then
@@ -1117,7 +1119,7 @@ if build "cjson" "master"; then
   git clone https://github.com/DaveGamble/cJSON.git --branch master --depth 1
   cd cJSON
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -1141,7 +1143,7 @@ if build "mbedtls" "v3.5.1"; then
   # enable DTLS-SRTP extension
   sed -i "" 's|//#define MBEDTLS_SSL_DTLS_SRTP|#define MBEDTLS_SSL_DTLS_SRTP|g' include/mbedtls/mbedtls_config.h
   make_dir build
-  cd build || exit  
+  cd build || exit
   cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -1170,7 +1172,7 @@ if build "librist" "$VER_LIBRIST"; then
   meson install -C build
 
   build_done "librist" "$VER_LIBRIST"
-fi 
+fi
 CONFIGURE_OPTIONS+=("--enable-librist")
 
 if build "libssh" "master"; then
@@ -1180,7 +1182,7 @@ if build "libssh" "master"; then
   export OPENSSL_ROOT_DIR="${WORKSPACE}"
   export ZLIB_ROOT_DIR="${WORKSPACE}"
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -1223,6 +1225,7 @@ if build "libvorbis" "master"; then
   cd vorbis_aotuv
   execute chmod +x ./autogen.sh
   execute ./autogen.sh
+  sed -i "" 's/ -force_cpusubtype_ALL//g' configure
   execute ./configure \
     --prefix="${WORKSPACE}" \
     --with-ogg-libraries="${WORKSPACE}"/lib \
@@ -1231,13 +1234,13 @@ if build "libvorbis" "master"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libvorbis" "master"
+  build_done "libvorbis" "$VER_VORBIS"
 fi
 CONFIGURE_OPTIONS+=("--enable-libvorbis")
 
 if build "libvpx" "main"; then
   cd $PACKAGES
-  git clone https://chromium.googlesource.com/webm/libvpx.git --branch main --depth 1 
+  git clone https://chromium.googlesource.com/webm/libvpx.git --branch main --depth 1
   cd libvpx
   echo "Applying Darwin patch"
   sed "s/,--version-script//g" build/make/Makefile >build/make/Makefile.patched
@@ -1289,7 +1292,7 @@ CONFIGURE_OPTIONS+=("--enable-libopencore_amrnb" "--enable-libopencore_amrwb")
 
 if build "opus" "master"; then
   cd $PACKAGES
-  git clone https://github.com/xiph/opus.git --branch master --depth 1
+  git clone https://github.com/xiph/opus.git
   cd opus
   execute ./autogen.sh
   execute ./configure --prefix="${WORKSPACE}"
@@ -1320,7 +1323,7 @@ if build "mpg123" "$VER_MPG123"; then
     --disable-dependency-tracking \
     --enable-static \
     --with-default-audio=coreaudio \
-    --with-cpu=x86-64    
+    --with-cpu=x86-64
   execute make -j $MJOBS
   execute make install
 
@@ -1348,7 +1351,7 @@ if build "libsndfile" "master"; then
   git clone https://github.com/libsndfile/libsndfile.git --branch master --depth 1
   cd libsndfile
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -1378,7 +1381,7 @@ if build "rubberband" "default"; then
   execute meson install -C build
 
   build_done "rubberband" "default"
-fi 
+fi
 CONFIGURE_OPTIONS+=("--enable-librubberband")
 
 if build "libsdl" "main"; then
@@ -1386,7 +1389,7 @@ if build "libsdl" "main"; then
   git clone https://github.com/libsdl-org/SDL.git --branch main --depth 1
   cd SDL
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -1405,7 +1408,7 @@ if build "snappy" "main"; then
   #execute patch -p1 -i 128.patch
   cd snappy
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -1430,7 +1433,7 @@ if build "soxr" "master"; then
   download "https://raw.githubusercontent.com/Homebrew/formula-patches/76868b36263be42440501d3692fd3a258f507d82/libsoxr/arm64_defines.patch"
   execute patch -p1 -i "${PACKAGES}/arm64_defines.patch" || true
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -1458,12 +1461,12 @@ CONFIGURE_OPTIONS+=("--enable-libspeex")
 if build "srt" "master"; then
   cd $PACKAGES
   git clone https://github.com/Haivision/srt.git
-  cd srt 
+  cd srt
   export OPENSSL_ROOT_DIR="${WORKSPACE}"
   export OPENSSL_LIB_DIR="${WORKSPACE}"/lib
   export OPENSSL_INCLUDE_DIR="${WORKSPACE}"/include/
   make_dir build
-  cd build || exit  
+  cd build || exit
   execute cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
@@ -1539,7 +1542,7 @@ if build "zvbi" "main"; then
   execute make -C src
   execute make -C src install
   execute make SUBDIRS=. install
-  
+
   build_done "zvbi" "main"
 fi
 CONFIGURE_OPTIONS+=("--enable-libzvbi")
@@ -1573,9 +1576,10 @@ fi
 
 if build "mpv" "master"; then
   cd $PACKAGES
-  git clone https://github.com/mpv-player/mpv.git --branch master --depth 1
+  git clone https://github.com/mpv-player/mpv.git
   cd mpv
-  export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
+  #git reset --hard 5dd2d19519a31998f2bea5c697a11d8c547b1e70
+  #export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
@@ -1584,10 +1588,11 @@ if build "mpv" "master"; then
     -Dmanpage-build=disabled \
     -Dswift-flags="-target x86_64-apple-macos11.0"
   meson compile -C build
-  
+  #meson compile -C build macos-bundle
+
   # get latest commit sha
   short_sha=$(git rev-parse --short HEAD)
   echo $short_sha > build/SHORT_SHA
-  
+
   build_done "mpv" "master"
 fi
