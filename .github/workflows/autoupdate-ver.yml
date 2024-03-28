@@ -54,6 +54,7 @@ jobs:
               'librist'
               'opencore-amr'
               'mpg123'
+              'mujs'
               'xvid')
         for i in "${deps[@]}"; do
           k=$(echo $i | tr '-' '_' | tr '.' '_' | tr '@' '_' | tr '[:lower:]' '[:upper:]')
