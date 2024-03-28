@@ -7,7 +7,7 @@ on:
       
 jobs:
   update:
-    runs-on: macos-latest
+    runs-on: macos-13
     env:
       HOMEBREW_NO_ANALYTICS: 1
     steps:
