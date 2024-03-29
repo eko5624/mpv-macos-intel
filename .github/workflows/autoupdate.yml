@@ -1,4 +1,4 @@
-name: autoupdate-ver
+name: autoupdate
 
 on:
   #schedule:
@@ -51,6 +51,7 @@ jobs:
               'cmake'
               'libtiff'
               'lame'
+              'libbluray'
               'librist'
               'opencore-amr'
               'mpg123'
