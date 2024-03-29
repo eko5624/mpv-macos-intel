@@ -615,15 +615,15 @@ if build "shaderc" "main"; then
   curl -OL https://github.com/KhronosGroup/SPIRV-Headers/archive/`cat DEPS | grep spirv_headers | head -n1 | cut -d\' -f4`.tar.gz
   curl -OL https://github.com/KhronosGroup/SPIRV-Tools/archive/`cat DEPS | grep spirv_tools | head -n1 | cut -d\' -f4`.tar.gz
   for f in *.gz; do tar xvf "$f"; done
-  mv glslang* glslang
-  mv SPIRV-Headers* spirv-headers
-  mv SPIRV-Tools* spirv-tools
+  execute mv glslang* glslang
+  execute mv SPIRV-Headers* spirv-headers
+  execute mv SPIRV-Tools* spirv-tools
   cd shaderc
   mv $WORKSPACE/bin/libtool $WORKSPACE/bin/libtool.bak
   sed -i "" 's/${SHADERC_SKIP_INSTALL}/ON/g' third_party/CMakeLists.txt
-  mv $PACKAGES/spirv-headers third_party
-  mv $PACKAGES/spirv-tools third_party
-  mv $PACKAGES/glslang third_party
+  execute mv $PACKAGES/spirv-headers third_party
+  execute mv $PACKAGES/spirv-tools third_party
+  execute mv $PACKAGES/glslang third_party
   make_dir build
   cd build || exit
   execute cmake .. \
@@ -1153,8 +1153,8 @@ if build "mbedtls" "v3.5.1"; then
     -DPython3_EXECUTABLE="${WORKSPACE}"/bin/python3 \
     -DENABLE_TESTING=OFF \
     -DGEN_FILES=ON
-  make -j $MJOBS all
-  make install
+  execute make -j $MJOBS all
+  execute make install
 
   build_done "mbedtls" "v3.5.1"
 fi
