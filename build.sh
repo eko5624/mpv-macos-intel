@@ -674,7 +674,7 @@ if build "MoltenVK" "main"; then
   cd $PACKAGES
   git clone https://github.com/KhronosGroup/MoltenVK.git --branch main
   cd MoltenVK
-  ./fetchDependencies --macos "${WORKSPACE}"
+  ./fetchDependencies --macos
   make macos MVK_CONFIG_LOG_LEVEL=1
   sed -i '' "s|./libMoltenVK|$WORKSPACE/lib/libMoltenVK|g" Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
   cat Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
