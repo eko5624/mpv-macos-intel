@@ -708,14 +708,15 @@ if build "libplacebo" "master"; then
   build_done "libplacebo" "master"
 fi
 
-if build "luajit2" "v2.1-agentzh"; then
+if build "LuaJIT" "v2.1"; then
   cd $PACKAGES
-  git clone https://github.com/openresty/luajit2.git --branch v2.1-agentzh --depth 1
-  cd luajit2
-  execute make -j $MJOBS amalg PREFIX="${WORKSPACE}" XCFLAGS=-DLUAJIT_ENABLE_GC64
-  execute make install PREFIX="${WORKSPACE}" XCFLAGS=-DLUAJIT_ENABLE_GC64
+  #git clone https://github.com/openresty/luajit2.git --branch v2.1-agentzh --depth 1
+  git clone https://github.com/LuaJIT/LuaJIT.git
+  cd LuaJIT
+  execute make -j $MJOBS amalg PREFIX="${WORKSPACE}"
+  execute make install PREFIX="${WORKSPACE}"
 
-  build_done "luajit2" "v2.1-agentzh"
+  build_done "LuaJIT" "v2.1"
 fi
 
 if build "uchardet" "master"; then
