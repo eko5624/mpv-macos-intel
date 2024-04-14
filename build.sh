@@ -711,7 +711,7 @@ fi
 if build "LuaJIT" "v2.1"; then
   cd $PACKAGES
   #git clone https://github.com/openresty/luajit2.git --branch v2.1-agentzh --depth 1
-  git clone https://github.com/LuaJIT/LuaJIT.git
+  git clone https://github.com/LuaJIT/LuaJIT.git --branch v2.1.ROLLING
   cd LuaJIT
   execute make -j $MJOBS amalg PREFIX="${WORKSPACE}"
   execute make install PREFIX="${WORKSPACE}"

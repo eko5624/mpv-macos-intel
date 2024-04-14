@@ -62,7 +62,9 @@ jobs:
         curl -OL https://github.com/${{ github.repository }}/releases/download/binary-packages/packages-dir.zip
         unzip workspace-dir.zip
         unzip packages-dir.zip
-        rm packages/luajit2|| true
+        rm packages/LuaJIT || true
+        rm -rf packages/LuaJIT.done || true
+        rm packages/luajit2 || true
         rm -rf packages/luajit2.done || true
         #rm packages/FFmpeg*|| true
         #rm -rf packages/FFmpeg || true
