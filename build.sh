@@ -619,7 +619,7 @@ if build "shaderc" "main"; then
   execute mv SPIRV-Headers* spirv-headers
   execute mv SPIRV-Tools* spirv-tools
   cd shaderc
-  mv $WORKSPACE/bin/libtool $WORKSPACE/bin/libtool.bak
+  mv $WORKSPACE/bin/libtool $WORKSPACE/bin/libtool.bak || true
   sed -i "" 's/${SHADERC_SKIP_INSTALL}/ON/g' third_party/CMakeLists.txt
   execute mv $PACKAGES/spirv-headers third_party
   execute mv $PACKAGES/spirv-tools third_party
@@ -637,7 +637,7 @@ if build "shaderc" "main"; then
     -DSHADERC_SKIP_EXAMPLES=ON
   cmake --build .
   cmake --install .
-  mv $WORKSPACE/bin/libtool.bak $WORKSPACE/bin/libtool
+  mv $WORKSPACE/bin/libtool.bak $WORKSPACE/bin/libtool || true
 
   build_done "shaderc" "main"
 fi
