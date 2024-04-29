@@ -675,7 +675,7 @@ if build "MoltenVK" "main"; then
   git clone https://github.com/KhronosGroup/MoltenVK.git --branch main
   cd MoltenVK
   ./fetchDependencies --macos
-  make macos MVK_CONFIG_LOG_LEVEL=1
+  make macos MVK_CONFIG_LOG_LEVEL=2
   sed -i '' "s|./libMoltenVK|$WORKSPACE/lib/libMoltenVK|g" Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
   cat Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
   mkdir -p "${WORKSPACE}"/share/vulkan/icd.d
