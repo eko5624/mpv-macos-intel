@@ -1581,6 +1581,9 @@ if build "mpv" "master"; then
   cd mpv
   #git reset --hard 5dd2d19519a31998f2bea5c697a11d8c547b1e70
   #export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
+  #cocoa-cb: add support for macOS color space transformation (EDR/HDR)
+  curl -OL https://patch-diff.githubusercontent.com/raw/mpv-player/mpv/pull/14017.patch
+  git apply 14017.patch
   meson setup build \
     --buildtype=release \
     --libdir="${WORKSPACE}"/lib \
