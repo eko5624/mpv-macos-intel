@@ -609,6 +609,24 @@ if build "libdovi" "main"; then
   build_done "libdovi" "main"
 fi
 
+if build "svtav1" "master"; then
+  cd $PACKAGES
+  git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
+  cd SVT-AV1
+  make_dir build
+  cd build || exit
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
+    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
+    -DCMAKE_BUILD_TYPE=Release
+  cmake --build .
+  cmake --install .
+  cp SvtAv1Enc.pc "${WORKSPACE}/lib/pkgconfig/"
+  cp SvtAv1Dec.pc "${WORKSPACE}/lib/pkgconfig/"
+  build_done "svtav1" "master"
+fi  
+CONFIGURE_OPTIONS+=("--enable-libsvtav1")
+
 if build "shaderc" "main"; then
   cd $PACKAGES
   git clone https://github.com/google/shaderc.git --branch main
