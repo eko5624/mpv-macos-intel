@@ -603,7 +603,7 @@ if build "libdovi" "main"; then
   export PATH="$WORKSPACE/.rustup/toolchains/stable-x86_64-apple-darwin/bin:$PATH"
   export CARGO_BUILD_TARGET_DIR=build
   export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-  cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --release --library-type=staticlib
+  cargo cinstall --manifest-path=Cargo.toml --prefix="${WORKSPACE}" --target=x86_64-apple-darwin --release --library-type=staticlib
   build_done "libdovi" "main"
 fi
 
