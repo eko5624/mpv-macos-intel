@@ -1204,14 +1204,14 @@ if build "libssh" "master"; then
   export ZLIB_ROOT_DIR="${WORKSPACE}"
   make_dir build
   cd build || exit
-  execute cmake ../ \
+  cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_STATIC_LIB=ON \
     -DWITH_SYMBOL_VERSIONING=OFF
-  execute make -j $MJOBS
-  execute make install
+  make -j $MJOBS
+  make install
 
   build_done "libssh" "master"
 fi
