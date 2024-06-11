@@ -1198,7 +1198,7 @@ CONFIGURE_OPTIONS+=("--enable-librist")
 
 if build "libssh" "master"; then
   cd $PACKAGES
-  git clone https://gitlab.com/libssh/libssh-mirror.git --branch master --depth 1
+  git clone https://gitlab.com/libssh/libssh-mirror.git --branch libssh-0.9.8 --depth 1
   cd libssh-mirror
   export OPENSSL_ROOT_DIR="${WORKSPACE}"
   export ZLIB_ROOT_DIR="${WORKSPACE}"
