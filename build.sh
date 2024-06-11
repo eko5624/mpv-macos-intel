@@ -1208,6 +1208,7 @@ if build "libssh" "master"; then
     -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
     -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
     -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_STATIC_LIB=ON \
     -DWITH_SYMBOL_VERSIONING=OFF
   execute make -j $MJOBS
   execute make install
