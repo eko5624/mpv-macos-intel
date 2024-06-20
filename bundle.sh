@@ -56,7 +56,6 @@ for f in "${all_deps[@]}"; do
     find $SWIFT_PATH -name "$(basename $f)" -print0 | xargs -0 -I {} cp {} $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
   fi  
 done
-cp $WORKSPACE/lib/libMoltenVK.dylib $PACKAGES/mpv/build/mpv.app/Contents/MacOS/lib
 
 #removing rpath definitions towards dev tools
 rpaths=($(otool -l $PACKAGES/mpv/build/mpv.app/Contents/MacOS/mpv | grep -A2 LC_RPATH | grep path | awk '{ print $2 }'))

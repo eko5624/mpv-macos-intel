@@ -662,49 +662,6 @@ if build "shaderc" "main"; then
   build_done "shaderc" "main"
 fi
 
-if build "vulkan" "main"; then
-  cd $PACKAGES
-  git clone https://github.com/KhronosGroup/Vulkan-Headers.git --branch main
-  git clone https://github.com/KhronosGroup/Vulkan-Loader.git --branch main
-  cd Vulkan-Headers
-  #git reset --hard ea45703effcb01df0856628286f8a890dd313ecd
-  make_dir build
-  cd build || exit
-  cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release
-  cmake --install .
-  cd $PACKAGES/Vulkan-Loader
-  make_dir build
-  cd build || exit
-  cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${WORKSPACE}" \
-    -DCMAKE_INSTALL_NAME_DIR="${WORKSPACE}"/lib \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DVULKAN_HEADERS_INSTALL_DIR="${WORKSPACE}"
-  cmake --build .
-  cmake --install .
-  sed -i "" 's/lvulkan/lMoltenVK/g' "${WORKSPACE}"/lib/pkgconfig/vulkan.pc
-
-  build_done "vulkan" "main"
-fi
-
-if build "MoltenVK" "main"; then
-  cd $PACKAGES
-  git clone https://github.com/KhronosGroup/MoltenVK.git --branch main
-  cd MoltenVK
-  ./fetchDependencies --macos
-  make macos MVK_CONFIG_LOG_LEVEL=1
-  sed -i '' "s|./libMoltenVK|$WORKSPACE/lib/libMoltenVK|g" Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
-  cat Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json
-  mkdir -p "${WORKSPACE}"/share/vulkan/icd.d
-  install -vm755 Package/Latest/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib "${WORKSPACE}"/lib
-  install -vm644 Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json "${WORKSPACE}"/share/vulkan/icd.d
-
-  build_done "MoltenVK" "main"
-fi
-
 if build "libplacebo" "master"; then
   cd $PACKAGES
   git clone --recursive https://github.com/haasn/libplacebo.git --branch master
@@ -712,8 +669,7 @@ if build "libplacebo" "master"; then
   meson setup build \
     --prefix="${WORKSPACE}" \
     --buildtype=release \
-    -Dvulkan-registry="${WORKSPACE}"/share/vulkan/registry/vk.xml \
-    -Dvulkan=enabled \
+    -Dvulkan=disabled \
     -Dshaderc=enabled \
     -Dlcms=enabled \
     -Dopengl=enabled \
