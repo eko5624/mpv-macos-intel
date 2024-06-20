@@ -4,7 +4,7 @@
 
 This repository provides unofficial git desktop builds of [mpv-player/mpv](https://github.com/mpv-player/mpv) for macOS.
 
-### OS support: 10.13 and later (release 2023-03-08-2023-08-14)
+### OS support: 10.13 and later (release 2023-03-08-2023-03-27)
 
 | macOS | version | compatibility |
 | :------------- | -------------: | :-------------: |
