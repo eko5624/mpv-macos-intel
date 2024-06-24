@@ -621,8 +621,6 @@ if build "svtav1" "master"; then
     -DCMAKE_BUILD_TYPE=Release
   cmake --build .
   cmake --install .
-  cp SvtAv1Enc.pc "${WORKSPACE}/lib/pkgconfig/"
-  cp SvtAv1Dec.pc "${WORKSPACE}/lib/pkgconfig/"
   build_done "svtav1" "master"
 fi  
 CONFIGURE_OPTIONS+=("--enable-libsvtav1")
