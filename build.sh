@@ -1598,7 +1598,7 @@ if build "mpv" "master"; then
   cd $PACKAGES
   git clone https://github.com/mpv-player/mpv.git
   cd mpv
-  #git reset --hard 5dd2d19519a31998f2bea5c697a11d8c547b1e70
+  git reset --hard cb75ecf19f28cfa00ecd348da13bca2550e85963
   #export TOOLCHAINS=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" /Library/Developer/Toolchains/swift-latest.xctoolchain/Info.plist)
   meson setup build \
     --buildtype=release \
