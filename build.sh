@@ -918,13 +918,13 @@ if build "fontconfig" "main"; then
   cd $PACKAGES
   git clone https://gitlab.freedesktop.org/fontconfig/fontconfig.git --branch main --depth 1
   cd fontconfig
-  execute ./autogen.sh
-  execute ./configure \
+  ./autogen.sh
+  ./configure \
     --prefix="${WORKSPACE}" \
     --disable-docs \
     --enable-static
-  execute make -j $MJOBS
-  execute make install
+  make -j $MJOBS
+  make install
 
   build_done "fontconfig" "main"
 fi
