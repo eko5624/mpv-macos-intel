@@ -846,13 +846,13 @@ if build "freetype" "master"; then
   cd freetype
   #Fix glibtoolize: command not found
   sed -i "" 's/glibtoolize/libtoolize/g' autogen.sh
-  execute ./autogen.sh
-  execute ./configure \
+  ./autogen.sh
+  ./configure \
     --prefix="${WORKSPACE}" \
     --enable-freetype-config \
     --without-harfbuzz
-  execute make -j $MJOBS
-  execute make install
+  make -j $MJOBS
+  make install
   build_done "freetype" "master"
 fi
 CONFIGURE_OPTIONS+=("--enable-libfreetype")
