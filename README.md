@@ -4,6 +4,8 @@
 
 This repository provides unofficial git desktop builds of [mpv-player/mpv](https://github.com/mpv-player/mpv) for macOS.
 
+New repo: https://github.com/eko5624/mpv-mac
+
 ### OS support: 11 and later
 
 | macOS | version | compatibility |
